@@ -8,8 +8,8 @@ source of data.
 
 ## Dependencies
 
-Mysql2 or JDBC-Mysql connector
-Rake
+- Mysql2 or JDBC-Mysql connector
+- Rake
 
 ## Installation
 
@@ -33,7 +33,7 @@ create table `users` (
   `secret` varchar(255) NOT NULL COMMENT 'The users answer to the secret question for account recovery', 
   `updated_at` TIMESTAMP COMMENT 'Rails convention - date time the record was last updated',
   `created_at` DATETIME COMMENT 'Rails convention - date time the record was initially created'
-) COMMENT 'User are people who can login to the system and create interesting posts and witty comments';
+) COMMENT 'Users are people who can login to the system and create interesting posts and witty comments';
 
 create table `posts` (
   `id` int(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -100,7 +100,7 @@ OUTPUT_FOLDERS = {
 
 and run the rake commands in the workspace directory
 
-#### define any tabes to ignore
+#### define any tables to ignore
 ```
 IGNORE_TABLES = ['dodgy_table1','dummy_table2']
 ```
@@ -117,5 +117,5 @@ generates the application artifacts in the output folder using the generated tes
 
 ##  TODO
 
-Create Rspec, Cucumber and CoffeeScript generators
+Create Rspec, Cucumber and CoffeeScript generators - please fork and contribute
 
