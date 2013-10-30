@@ -4,7 +4,7 @@ builder
 Rake driven application builder from a database schema. 
 
 A set of rake tasks and ruby classes to generate various types of application artifacts using a database schema as the 
-source of data.  
+source of data.  This is useful if you want to create a Ruby On Rails (with AngularJS) application and you already have a legacy database or you prefer to create the database DDL manually to take advantage of the powerful features of your database engine.
 
 ## Dependencies
 
@@ -117,5 +117,8 @@ generates the application artifacts in the output folder using the generated tes
 
 ##  TODO
 
-Create Rspec, Cucumber and CoffeeScript generators - please fork and contribute
+- Create Rspec, Cucumber and CoffeeScript generators
+- Create schema extractors for other database engines
+
+please fork and contribute
 
