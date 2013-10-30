@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @last_insert_id.name %>
+</p>
+
+<p>
+  <strong>Value:</strong>
+  <%= @last_insert_id.value %>
+</p>
+
+<%= link_to 'Edit', edit_last_insert_id_path(@last_insert_id) %> |
+<%= link_to 'Back', last_insert_ids_path %>

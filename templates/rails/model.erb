@@ -1,0 +1,24 @@
+class <%= model_name %> < ActiveRecord::Base
+
+<%
+
+    text = ""
+    required = ''
+
+    schema['columns'].each_pair do |name,column|
+        required << ":#{name}, " if name != 'id' && column['is_nullable'] == 'NO'
+    end
+    
+    if required.length > 0
+      text << 'validates ' + required + ' presence: true' + "\n" 
+    end
+    
+    text << ('  has_many ' + schema['has_many'].keys.
+        map{ |key| ':'+key}.join(', ') + "\n" ) unless schema['has_many'].size == 0
+    
+    text << ('  belongs_to ' + schema['belongs_to'].keys.
+        map{ |key| ':'+key}.join(', ') + "\n" ) unless schema['belongs_to'].size == 0
+
+%>
+	<%= text %>
+end

@@ -1,0 +1,43 @@
+<h1>Listing policies</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Friendly name</th>
+      <th>Policy type</th>
+      <th>Is default</th>
+      <th>Dn</th>
+      <th>Policy xml</th>
+      <th>Tombstoned</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @policies.each do |policy| %>
+      <tr>
+        <td><%= policy.id %></td>
+        <td><%= policy.friendly_name %></td>
+        <td><%= policy.policy_type %></td>
+        <td><%= policy.is_default %></td>
+        <td><%= policy.dn %></td>
+        <td><%= policy.policy_xml %></td>
+        <td><%= policy.tombstoned %></td>
+        <td><%= policy.updated_at %></td>
+        <td><%= policy.updated_by %></td>
+        <td><%= link_to 'Show', policy %></td>
+        <td><%= link_to 'Edit', edit_policy_path(policy) %></td>
+        <td><%= link_to 'Destroy', policy, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Policy', new_policy_path %>

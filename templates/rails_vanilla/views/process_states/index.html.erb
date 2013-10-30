@@ -1,0 +1,45 @@
+<h1>Listing process_states</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Process name</th>
+      <th>Process action</th>
+      <th>Process state</th>
+      <th>Process info</th>
+      <th>Process pid</th>
+      <th>Simulate only</th>
+      <th>Start time</th>
+      <th>End time</th>
+      <th>Region</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @process_states.each do |process_state| %>
+      <tr>
+        <td><%= process_state.id %></td>
+        <td><%= process_state.process_name %></td>
+        <td><%= process_state.process_action %></td>
+        <td><%= process_state.process_state %></td>
+        <td><%= process_state.process_info %></td>
+        <td><%= process_state.process_pid %></td>
+        <td><%= process_state.simulate_only %></td>
+        <td><%= process_state.start_time %></td>
+        <td><%= process_state.end_time %></td>
+        <td><%= process_state.region %></td>
+        <td><%= link_to 'Show', process_state %></td>
+        <td><%= link_to 'Edit', edit_process_state_path(process_state) %></td>
+        <td><%= link_to 'Destroy', process_state, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Process state', new_process_state_path %>

@@ -1,0 +1,12 @@
+'use strict';
+
+/* Services */
+
+angular.module('myappServices', ['ngResource']).
+<% services.each do |service| %>
+factory('<%= service.to_model_name %>', function($resource){
+  return $resource('<%= service.pluralize %>/:<%= service %>Id.json', {}, {
+    query: {method:'GET', params:{<%= service %>Id:'<%= service.pluralize %>'}, isArray:true}
+  });
+})
+<% end %>

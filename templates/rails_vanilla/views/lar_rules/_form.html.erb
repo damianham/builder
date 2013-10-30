@@ -1,0 +1,65 @@
+<%= form_for(@lar_rule) do |f| %>
+  <% if @lar_rule.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@lar_rule.errors.count, "error") %> prohibited this lar_rule from being saved:</h2>
+
+      <ul>
+      <% @lar_rule.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :id %><br>
+    <%= f.number_field :id %>
+  </div>
+  <div class="field">
+    <%= f.label :feature %><br>
+    <%= f.text_field :feature %>
+  </div>
+  <div class="field">
+    <%= f.label :feature_id %><br>
+    <%= f.number_field :feature_id %>
+  </div>
+  <div class="field">
+    <%= f.label :country %><br>
+    <%= f.text_field :country %>
+  </div>
+  <div class="field">
+    <%= f.label :sitecode %><br>
+    <%= f.text_field :sitecode %>
+  </div>
+  <div class="field">
+    <%= f.label :company %><br>
+    <%= f.text_field :company %>
+  </div>
+  <div class="field">
+    <%= f.label :allow %><br>
+    <%= f.check_box :allow %>
+  </div>
+  <div class="field">
+    <%= f.label :active %><br>
+    <%= f.check_box :active %>
+  </div>
+  <div class="field">
+    <%= f.label :activation_date %><br>
+    <%= f.datetime_select :activation_date %>
+  </div>
+  <div class="field">
+    <%= f.label :comments %><br>
+    <%= f.text_area :comments %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_at %><br>
+    <%= f.datetime_select :updated_at %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_by %><br>
+    <%= f.text_field :updated_by %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

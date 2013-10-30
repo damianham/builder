@@ -1,0 +1,135 @@
+<h1>Listing users</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Employee type</th>
+      <th>Guid</th>
+      <th>Sip uri</th>
+      <th>Mail</th>
+      <th>Account name</th>
+      <th>Title</th>
+      <th>Given name</th>
+      <th>Sn</th>
+      <th>Computer user</th>
+      <th>Mail nickname</th>
+      <th>Description</th>
+      <th>Display name</th>
+      <th>Country</th>
+      <th>Sitecode</th>
+      <th>Department</th>
+      <th>Location</th>
+      <th>Office name</th>
+      <th>Mobile</th>
+      <th>Telephone number</th>
+      <th>Other telephone</th>
+      <th>Dn</th>
+      <th>Domain name</th>
+      <th>Ad disabled</th>
+      <th>Company</th>
+      <th>Location profile</th>
+      <th>Federation</th>
+      <th>Remote access</th>
+      <th>Archiving</th>
+      <th>Option flags</th>
+      <th>Pic</th>
+      <th>Rcc</th>
+      <th>P2p audio</th>
+      <th>P2p video</th>
+      <th>Anonymous meetings</th>
+      <th>Uc</th>
+      <th>Tel uri</th>
+      <th>Comments</th>
+      <th>Group cache</th>
+      <th>Policy cache</th>
+      <th>Frozen from</th>
+      <th>Frozen until</th>
+      <th>Proxy addresses</th>
+      <th>User account control</th>
+      <th>Shell department number</th>
+      <th>Shell default billing</th>
+      <th>Shell customer billing code</th>
+      <th>Shell telephone extension</th>
+      <th>Shell email node</th>
+      <th>Shell gender</th>
+      <th>Shell known by name</th>
+      <th>Shell modify auth</th>
+      <th>Shell office locality</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.employee_type %></td>
+        <td><%= user.guid %></td>
+        <td><%= user.sip_uri %></td>
+        <td><%= user.mail %></td>
+        <td><%= user.account_name %></td>
+        <td><%= user.title %></td>
+        <td><%= user.given_name %></td>
+        <td><%= user.sn %></td>
+        <td><%= user.computer_user_id %></td>
+        <td><%= user.mail_nickname %></td>
+        <td><%= user.description %></td>
+        <td><%= user.display_name %></td>
+        <td><%= user.country %></td>
+        <td><%= user.sitecode %></td>
+        <td><%= user.department %></td>
+        <td><%= user.location %></td>
+        <td><%= user.office_name %></td>
+        <td><%= user.mobile %></td>
+        <td><%= user.telephone_number %></td>
+        <td><%= user.other_telephone %></td>
+        <td><%= user.dn %></td>
+        <td><%= user.domain_name %></td>
+        <td><%= user.ad_disabled %></td>
+        <td><%= user.company %></td>
+        <td><%= user.location_profile %></td>
+        <td><%= user.federation %></td>
+        <td><%= user.remote_access %></td>
+        <td><%= user.archiving %></td>
+        <td><%= user.option_flags %></td>
+        <td><%= user.pic %></td>
+        <td><%= user.rcc %></td>
+        <td><%= user.p2p_audio %></td>
+        <td><%= user.p2p_video %></td>
+        <td><%= user.anonymous_meetings %></td>
+        <td><%= user.uc %></td>
+        <td><%= user.tel_uri %></td>
+        <td><%= user.comments %></td>
+        <td><%= user.group_cache %></td>
+        <td><%= user.policy_cache %></td>
+        <td><%= user.frozen_from %></td>
+        <td><%= user.frozen_until %></td>
+        <td><%= user.proxy_addresses %></td>
+        <td><%= user.user_account_control %></td>
+        <td><%= user.shell_department_number %></td>
+        <td><%= user.shell_default_billing %></td>
+        <td><%= user.shell_customer_billing_code %></td>
+        <td><%= user.shell_telephone_extension %></td>
+        <td><%= user.shell_email_node_id %></td>
+        <td><%= user.shell_gender %></td>
+        <td><%= user.shell_known_by_name %></td>
+        <td><%= user.shell_modify_auth %></td>
+        <td><%= user.shell_office_locality %></td>
+        <td><%= user.updated_at %></td>
+        <td><%= user.updated_by %></td>
+        <td><%= link_to 'Show', user %></td>
+        <td><%= link_to 'Edit', edit_user_path(user) %></td>
+        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New User', new_user_path %>

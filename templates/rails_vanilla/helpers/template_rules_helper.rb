@@ -1,0 +1,2 @@
+module TemplateRulesHelper
+end

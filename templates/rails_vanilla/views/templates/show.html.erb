@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Id:</strong>
+  <%= @template.id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @template.name %>
+</p>
+
+<p>
+  <strong>Language:</strong>
+  <%= @template.language %>
+</p>
+
+<p>
+  <strong>Subject:</strong>
+  <%= @template.subject %>
+</p>
+
+<p>
+  <strong>Body content:</strong>
+  <%= @template.body_content %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @template.comment %>
+</p>
+
+<p>
+  <strong>Updated at:</strong>
+  <%= @template.updated_at %>
+</p>
+
+<p>
+  <strong>Updated by:</strong>
+  <%= @template.updated_by %>
+</p>
+
+<%= link_to 'Edit', edit_template_path(@template) %> |
+<%= link_to 'Back', templates_path %>

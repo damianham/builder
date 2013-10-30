@@ -1,0 +1,105 @@
+<%= form_for(@queue_op) do |f| %>
+  <% if @queue_op.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@queue_op.errors.count, "error") %> prohibited this queue_op from being saved:</h2>
+
+      <ul>
+      <% @queue_op.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :country %><br>
+    <%= f.text_field :country %>
+  </div>
+  <div class="field">
+    <%= f.label :sitecode %><br>
+    <%= f.text_field :sitecode %>
+  </div>
+  <div class="field">
+    <%= f.label :company %><br>
+    <%= f.text_field :company %>
+  </div>
+  <div class="field">
+    <%= f.label :feature %><br>
+    <%= f.text_field :feature %>
+  </div>
+  <div class="field">
+    <%= f.label :user_id %><br>
+    <%= f.number_field :user_id %>
+  </div>
+  <div class="field">
+    <%= f.label :qid %><br>
+    <%= f.number_field :qid %>
+  </div>
+  <div class="field">
+    <%= f.label :operation %><br>
+    <%= f.text_field :operation %>
+  </div>
+  <div class="field">
+    <%= f.label :new_value %><br>
+    <%= f.text_field :new_value %>
+  </div>
+  <div class="field">
+    <%= f.label :old_value %><br>
+    <%= f.text_field :old_value %>
+  </div>
+  <div class="field">
+    <%= f.label :event_id %><br>
+    <%= f.number_field :event_id %>
+  </div>
+  <div class="field">
+    <%= f.label :old_num %><br>
+    <%= f.text_field :old_num %>
+  </div>
+  <div class="field">
+    <%= f.label :new_num %><br>
+    <%= f.text_field :new_num %>
+  </div>
+  <div class="field">
+    <%= f.label :comment %><br>
+    <%= f.text_field :comment %>
+  </div>
+  <div class="field">
+    <%= f.label :on_hold %><br>
+    <%= f.check_box :on_hold %>
+  </div>
+  <div class="field">
+    <%= f.label :rule_table %><br>
+    <%= f.text_field :rule_table %>
+  </div>
+  <div class="field">
+    <%= f.label :rule_id %><br>
+    <%= f.number_field :rule_id %>
+  </div>
+  <div class="field">
+    <%= f.label :rule_source %><br>
+    <%= f.text_field :rule_source %>
+  </div>
+  <div class="field">
+    <%= f.label :transaction_id %><br>
+    <%= f.text_field :transaction_id %>
+  </div>
+  <div class="field">
+    <%= f.label :priority %><br>
+    <%= f.check_box :priority %>
+  </div>
+  <div class="field">
+    <%= f.label :simulate_only %><br>
+    <%= f.check_box :simulate_only %>
+  </div>
+  <div class="field">
+    <%= f.label :domain_name %><br>
+    <%= f.text_field :domain_name %>
+  </div>
+  <div class="field">
+    <%= f.label :dn %><br>
+    <%= f.text_field :dn %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

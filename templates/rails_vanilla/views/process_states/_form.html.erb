@@ -1,0 +1,57 @@
+<%= form_for(@process_state) do |f| %>
+  <% if @process_state.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@process_state.errors.count, "error") %> prohibited this process_state from being saved:</h2>
+
+      <ul>
+      <% @process_state.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :id %><br>
+    <%= f.number_field :id %>
+  </div>
+  <div class="field">
+    <%= f.label :process_name %><br>
+    <%= f.text_field :process_name %>
+  </div>
+  <div class="field">
+    <%= f.label :process_action %><br>
+    <%= f.text_field :process_action %>
+  </div>
+  <div class="field">
+    <%= f.label :process_state %><br>
+    <%= f.text_field :process_state %>
+  </div>
+  <div class="field">
+    <%= f.label :process_info %><br>
+    <%= f.text_area :process_info %>
+  </div>
+  <div class="field">
+    <%= f.label :process_pid %><br>
+    <%= f.number_field :process_pid %>
+  </div>
+  <div class="field">
+    <%= f.label :simulate_only %><br>
+    <%= f.check_box :simulate_only %>
+  </div>
+  <div class="field">
+    <%= f.label :start_time %><br>
+    <%= f.datetime_select :start_time %>
+  </div>
+  <div class="field">
+    <%= f.label :end_time %><br>
+    <%= f.datetime_select :end_time %>
+  </div>
+  <div class="field">
+    <%= f.label :region %><br>
+    <%= f.text_field :region %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

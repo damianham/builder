@@ -1,0 +1,53 @@
+<h1>Listing feature_rules</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Feature</th>
+      <th>Feature</th>
+      <th>Country</th>
+      <th>Sitecode</th>
+      <th>Company</th>
+      <th>Department</th>
+      <th>User type</th>
+      <th>Deny</th>
+      <th>Active</th>
+      <th>Activation date</th>
+      <th>Comments</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @feature_rules.each do |feature_rule| %>
+      <tr>
+        <td><%= feature_rule.id %></td>
+        <td><%= feature_rule.feature %></td>
+        <td><%= feature_rule.feature_id %></td>
+        <td><%= feature_rule.country %></td>
+        <td><%= feature_rule.sitecode %></td>
+        <td><%= feature_rule.company %></td>
+        <td><%= feature_rule.department %></td>
+        <td><%= feature_rule.user_type %></td>
+        <td><%= feature_rule.deny %></td>
+        <td><%= feature_rule.active %></td>
+        <td><%= feature_rule.activation_date %></td>
+        <td><%= feature_rule.comments %></td>
+        <td><%= feature_rule.updated_at %></td>
+        <td><%= feature_rule.updated_by %></td>
+        <td><%= link_to 'Show', feature_rule %></td>
+        <td><%= link_to 'Edit', edit_feature_rule_path(feature_rule) %></td>
+        <td><%= link_to 'Destroy', feature_rule, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Feature rule', new_feature_rule_path %>

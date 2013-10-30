@@ -1,0 +1,63 @@
+<h1>Listing attribute_rules</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Country</th>
+      <th>Sitecode</th>
+      <th>Company</th>
+      <th>Department</th>
+      <th>User type</th>
+      <th>Attribute</th>
+      <th>Attribute value</th>
+      <th>Member of</th>
+      <th>Operation</th>
+      <th>Update attribute</th>
+      <th>New value</th>
+      <th>Feature</th>
+      <th>Group</th>
+      <th>Active</th>
+      <th>Activation date</th>
+      <th>Comments</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @attribute_rules.each do |attribute_rule| %>
+      <tr>
+        <td><%= attribute_rule.id %></td>
+        <td><%= attribute_rule.country %></td>
+        <td><%= attribute_rule.sitecode %></td>
+        <td><%= attribute_rule.company %></td>
+        <td><%= attribute_rule.department %></td>
+        <td><%= attribute_rule.user_type %></td>
+        <td><%= attribute_rule.attribute %></td>
+        <td><%= attribute_rule.attribute_value %></td>
+        <td><%= attribute_rule.member_of %></td>
+        <td><%= attribute_rule.operation %></td>
+        <td><%= attribute_rule.update_attribute %></td>
+        <td><%= attribute_rule.new_value %></td>
+        <td><%= attribute_rule.feature %></td>
+        <td><%= attribute_rule.group %></td>
+        <td><%= attribute_rule.active %></td>
+        <td><%= attribute_rule.activation_date %></td>
+        <td><%= attribute_rule.comments %></td>
+        <td><%= attribute_rule.updated_at %></td>
+        <td><%= attribute_rule.updated_by %></td>
+        <td><%= link_to 'Show', attribute_rule %></td>
+        <td><%= link_to 'Edit', edit_attribute_rule_path(attribute_rule) %></td>
+        <td><%= link_to 'Destroy', attribute_rule, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Attribute rule', new_attribute_rule_path %>

@@ -1,0 +1,2 @@
+module LastInsertIdsHelper
+end

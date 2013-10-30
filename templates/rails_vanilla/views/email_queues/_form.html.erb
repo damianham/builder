@@ -1,0 +1,69 @@
+<%= form_for(@email_queue) do |f| %>
+  <% if @email_queue.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@email_queue.errors.count, "error") %> prohibited this email_queue from being saved:</h2>
+
+      <ul>
+      <% @email_queue.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :id %><br>
+    <%= f.number_field :id %>
+  </div>
+  <div class="field">
+    <%= f.label :event_id %><br>
+    <%= f.number_field :event_id %>
+  </div>
+  <div class="field">
+    <%= f.label :user_id %><br>
+    <%= f.number_field :user_id %>
+  </div>
+  <div class="field">
+    <%= f.label :transaction_id %><br>
+    <%= f.text_field :transaction_id %>
+  </div>
+  <div class="field">
+    <%= f.label :queue_id %><br>
+    <%= f.number_field :queue_id %>
+  </div>
+  <div class="field">
+    <%= f.label :old_moc_number %><br>
+    <%= f.text_field :old_moc_number %>
+  </div>
+  <div class="field">
+    <%= f.label :new_moc_number %><br>
+    <%= f.text_field :new_moc_number %>
+  </div>
+  <div class="field">
+    <%= f.label :change_date %><br>
+    <%= f.text_field :change_date %>
+  </div>
+  <div class="field">
+    <%= f.label :revoke_date %><br>
+    <%= f.text_field :revoke_date %>
+  </div>
+  <div class="field">
+    <%= f.label :headers %><br>
+    <%= f.text_area :headers %>
+  </div>
+  <div class="field">
+    <%= f.label :sent_at %><br>
+    <%= f.datetime_select :sent_at %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_at %><br>
+    <%= f.datetime_select :updated_at %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_by %><br>
+    <%= f.text_field :updated_by %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

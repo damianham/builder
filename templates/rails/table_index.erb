@@ -1,0 +1,18 @@
+<h1>Table Index</h1>
+<table id="table-index">
+<%  comments.each do |data| %>
+     
+<tr>
+	<th valign="top">
+		<a href="<%= data[:route] %>" title="<%= data[:comment] %>">
+		<%= data[:model_name].titleize %>
+		</a>
+	</th>
+	<td valign="top">
+		<%= data[:comment] %>
+	</td>
+</tr>
+<% end %>
+      
+</table>
+

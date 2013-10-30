@@ -1,0 +1,49 @@
+<h1>Listing lar_rules</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Feature</th>
+      <th>Feature</th>
+      <th>Country</th>
+      <th>Sitecode</th>
+      <th>Company</th>
+      <th>Allow</th>
+      <th>Active</th>
+      <th>Activation date</th>
+      <th>Comments</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @lar_rules.each do |lar_rule| %>
+      <tr>
+        <td><%= lar_rule.id %></td>
+        <td><%= lar_rule.feature %></td>
+        <td><%= lar_rule.feature_id %></td>
+        <td><%= lar_rule.country %></td>
+        <td><%= lar_rule.sitecode %></td>
+        <td><%= lar_rule.company %></td>
+        <td><%= lar_rule.allow %></td>
+        <td><%= lar_rule.active %></td>
+        <td><%= lar_rule.activation_date %></td>
+        <td><%= lar_rule.comments %></td>
+        <td><%= lar_rule.updated_at %></td>
+        <td><%= lar_rule.updated_by %></td>
+        <td><%= link_to 'Show', lar_rule %></td>
+        <td><%= link_to 'Edit', edit_lar_rule_path(lar_rule) %></td>
+        <td><%= link_to 'Destroy', lar_rule, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Lar rule', new_lar_rule_path %>

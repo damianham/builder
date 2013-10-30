@@ -1,0 +1,49 @@
+<h1>Listing sweepers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Object class</th>
+      <th>Object</th>
+      <th>Object name</th>
+      <th>Dn</th>
+      <th>Treebase</th>
+      <th>Rfc2254 filter</th>
+      <th>Action type</th>
+      <th>Action date</th>
+      <th>Comments</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sweepers.each do |sweeper| %>
+      <tr>
+        <td><%= sweeper.id %></td>
+        <td><%= sweeper.object_class %></td>
+        <td><%= sweeper.object_id %></td>
+        <td><%= sweeper.object_name %></td>
+        <td><%= sweeper.dn %></td>
+        <td><%= sweeper.treebase %></td>
+        <td><%= sweeper.rfc2254_filter %></td>
+        <td><%= sweeper.action_type %></td>
+        <td><%= sweeper.action_date %></td>
+        <td><%= sweeper.comments %></td>
+        <td><%= sweeper.updated_at %></td>
+        <td><%= sweeper.updated_by %></td>
+        <td><%= link_to 'Show', sweeper %></td>
+        <td><%= link_to 'Edit', edit_sweeper_path(sweeper) %></td>
+        <td><%= link_to 'Destroy', sweeper, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Sweeper', new_sweeper_path %>

@@ -1,0 +1,69 @@
+<h1>Listing queue_ops</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Country</th>
+      <th>Sitecode</th>
+      <th>Company</th>
+      <th>Feature</th>
+      <th>User</th>
+      <th>Qid</th>
+      <th>Operation</th>
+      <th>New value</th>
+      <th>Old value</th>
+      <th>Event</th>
+      <th>Old num</th>
+      <th>New num</th>
+      <th>Comment</th>
+      <th>On hold</th>
+      <th>Rule table</th>
+      <th>Rule</th>
+      <th>Rule source</th>
+      <th>Transaction</th>
+      <th>Priority</th>
+      <th>Simulate only</th>
+      <th>Domain name</th>
+      <th>Dn</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @queue_ops.each do |queue_op| %>
+      <tr>
+        <td><%= queue_op.country %></td>
+        <td><%= queue_op.sitecode %></td>
+        <td><%= queue_op.company %></td>
+        <td><%= queue_op.feature %></td>
+        <td><%= queue_op.user_id %></td>
+        <td><%= queue_op.qid %></td>
+        <td><%= queue_op.operation %></td>
+        <td><%= queue_op.new_value %></td>
+        <td><%= queue_op.old_value %></td>
+        <td><%= queue_op.event_id %></td>
+        <td><%= queue_op.old_num %></td>
+        <td><%= queue_op.new_num %></td>
+        <td><%= queue_op.comment %></td>
+        <td><%= queue_op.on_hold %></td>
+        <td><%= queue_op.rule_table %></td>
+        <td><%= queue_op.rule_id %></td>
+        <td><%= queue_op.rule_source %></td>
+        <td><%= queue_op.transaction_id %></td>
+        <td><%= queue_op.priority %></td>
+        <td><%= queue_op.simulate_only %></td>
+        <td><%= queue_op.domain_name %></td>
+        <td><%= queue_op.dn %></td>
+        <td><%= link_to 'Show', queue_op %></td>
+        <td><%= link_to 'Edit', edit_queue_op_path(queue_op) %></td>
+        <td><%= link_to 'Destroy', queue_op, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Queue op', new_queue_op_path %>

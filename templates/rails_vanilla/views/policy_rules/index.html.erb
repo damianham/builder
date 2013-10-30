@@ -1,0 +1,51 @@
+<h1>Listing policy_rules</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Country</th>
+      <th>Company</th>
+      <th>Sitecode</th>
+      <th>Department</th>
+      <th>User type</th>
+      <th>Policy</th>
+      <th>Is default</th>
+      <th>Active</th>
+      <th>Activation date</th>
+      <th>Comments</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @policy_rules.each do |policy_rule| %>
+      <tr>
+        <td><%= policy_rule.id %></td>
+        <td><%= policy_rule.country %></td>
+        <td><%= policy_rule.company %></td>
+        <td><%= policy_rule.sitecode %></td>
+        <td><%= policy_rule.department %></td>
+        <td><%= policy_rule.user_type %></td>
+        <td><%= policy_rule.policy_id %></td>
+        <td><%= policy_rule.is_default %></td>
+        <td><%= policy_rule.active %></td>
+        <td><%= policy_rule.activation_date %></td>
+        <td><%= policy_rule.comments %></td>
+        <td><%= policy_rule.updated_at %></td>
+        <td><%= policy_rule.updated_by %></td>
+        <td><%= link_to 'Show', policy_rule %></td>
+        <td><%= link_to 'Edit', edit_policy_rule_path(policy_rule) %></td>
+        <td><%= link_to 'Destroy', policy_rule, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Policy rule', new_policy_rule_path %>

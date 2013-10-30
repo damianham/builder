@@ -1,0 +1,62 @@
+<% 
+  default_namefield = nil
+  singlename = singular_table_name
+  columns = schema['columns']
+     	
+  columns.each_pair do |name,column| 
+    # get the name of the first field that is not called 'id' as default  
+    if default_namefield.nil? && name != 'id'  && name !~ /_id/  
+    	# use this column unless it is the id primary key or a foreign key
+      default_namefield = column
+    end 
+  end 
+  
+  # determine the display field names
+  namefield = columns['name'] || columns['title'] || default_namefield
+  descfield = columns['description'] || columns['info'] || 
+  		columns['summary'] || columns['comment'] || columns['snippet']
+%>
+
+<!--
+	enable if the class has a main image
+<img ng-src="{{mainImageUrl}}" class="<%= singlename %>">
+-->
+
+<h1>{{<%= singlename %>.<%= namefield['column_name'] %>}}</h1>
+
+<% unless descfield.nil? %>
+  <p>{{<%= singlename %>.descfield['column_name']}}</p>
+<% end %>
+
+<!--          
+	enable and rename accordingly if the class has an array of images
+<ul class="<%= singlename %>-thumbs">
+  <li ng-repeat="img in <%= singlename %>.images">
+    <img ng-src="{{img}}" ng-click="setImage(img)">
+  </li>
+</ul>
+-->
+
+<ul class="specs">
+  <li>
+    <span><%= model_name.titleize %> Detail</span>
+
+     <dl>
+    	<% columns.each_pair do |name,column|  %> 
+    	  <dt><%= name.titleize %></dt>
+    	  <dd>{{<%= singlename %>.<%= name %>}}</dd>
+ 
+
+     	<% end %>
+     	
+		<!-- 
+			replace any field that contains multiple values with
+			       <dt>field title</dt>
+        <dd ng-repeat="item in object.array">{{item}}</dd>
+			-->      
+ 
+        
+    </dl>
+  </li>
+  
+</ul>

@@ -1,0 +1,81 @@
+<%= form_for(@special_rule) do |f| %>
+  <% if @special_rule.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@special_rule.errors.count, "error") %> prohibited this special_rule from being saved:</h2>
+
+      <ul>
+      <% @special_rule.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :id %><br>
+    <%= f.number_field :id %>
+  </div>
+  <div class="field">
+    <%= f.label :sip_uri %><br>
+    <%= f.text_field :sip_uri %>
+  </div>
+  <div class="field">
+    <%= f.label :requestor %><br>
+    <%= f.text_field :requestor %>
+  </div>
+  <div class="field">
+    <%= f.label :feature_id %><br>
+    <%= f.number_field :feature_id %>
+  </div>
+  <div class="field">
+    <%= f.label :feature %><br>
+    <%= f.text_field :feature %>
+  </div>
+  <div class="field">
+    <%= f.label :operation %><br>
+    <%= f.text_field :operation %>
+  </div>
+  <div class="field">
+    <%= f.label :new_value %><br>
+    <%= f.text_field :new_value %>
+  </div>
+  <div class="field">
+    <%= f.label :old_value %><br>
+    <%= f.text_field :old_value %>
+  </div>
+  <div class="field">
+    <%= f.label :comments %><br>
+    <%= f.text_area :comments %>
+  </div>
+  <div class="field">
+    <%= f.label :on_hold %><br>
+    <%= f.check_box :on_hold %>
+  </div>
+  <div class="field">
+    <%= f.label :week_before_email %><br>
+    <%= f.check_box :week_before_email %>
+  </div>
+  <div class="field">
+    <%= f.label :activated_email %><br>
+    <%= f.check_box :activated_email %>
+  </div>
+  <div class="field">
+    <%= f.label :valid_from %><br>
+    <%= f.date_select :valid_from %>
+  </div>
+  <div class="field">
+    <%= f.label :valid_until %><br>
+    <%= f.date_select :valid_until %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_at %><br>
+    <%= f.datetime_select :updated_at %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_by %><br>
+    <%= f.text_field :updated_by %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Company code:</strong>
+  <%= @company.company_code %>
+</p>
+
+<p>
+  <strong>Dn:</strong>
+  <%= @company.dn %>
+</p>
+
+<p>
+  <strong>Company description:</strong>
+  <%= @company.company_description %>
+</p>
+
+<p>
+  <strong>Business category:</strong>
+  <%= @company.business_category %>
+</p>
+
+<p>
+  <strong>Updated at:</strong>
+  <%= @company.updated_at %>
+</p>
+
+<p>
+  <strong>Updated by:</strong>
+  <%= @company.updated_by %>
+</p>
+
+<%= link_to 'Edit', edit_company_path(@company) %> |
+<%= link_to 'Back', companies_path %>

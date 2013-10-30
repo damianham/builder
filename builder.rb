@@ -1,0 +1,10 @@
+
+require File.expand_path( './lib/base.rb', File.dirname(__FILE__)  )
+require File.expand_path( './lib/inflections.rb', File.dirname(__FILE__))
+require File.expand_path( './lib/string.rb', File.dirname(__FILE__))
+require File.expand_path( './lib/angular_rails.rb', File.dirname(__FILE__))
+require File.expand_path( './lib/rails.rb', File.dirname(__FILE__))
+require File.expand_path( './lib/rails_vanilla.rb', File.dirname(__FILE__))
+require File.expand_path( './lib/rspec.rb', File.dirname(__FILE__))
+require File.expand_path( './lib/cucumber.rb', File.dirname(__FILE__))
+require File.expand_path( './lib/coffee.rb', File.dirname(__FILE__))

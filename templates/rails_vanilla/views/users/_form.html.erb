@@ -1,0 +1,237 @@
+<%= form_for(@user) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :id %><br>
+    <%= f.number_field :id %>
+  </div>
+  <div class="field">
+    <%= f.label :employee_type %><br>
+    <%= f.text_field :employee_type %>
+  </div>
+  <div class="field">
+    <%= f.label :guid %><br>
+    <%= f.text_field :guid %>
+  </div>
+  <div class="field">
+    <%= f.label :sip_uri %><br>
+    <%= f.text_field :sip_uri %>
+  </div>
+  <div class="field">
+    <%= f.label :mail %><br>
+    <%= f.text_field :mail %>
+  </div>
+  <div class="field">
+    <%= f.label :account_name %><br>
+    <%= f.text_field :account_name %>
+  </div>
+  <div class="field">
+    <%= f.label :title %><br>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :given_name %><br>
+    <%= f.text_field :given_name %>
+  </div>
+  <div class="field">
+    <%= f.label :sn %><br>
+    <%= f.text_field :sn %>
+  </div>
+  <div class="field">
+    <%= f.label :computer_user_id %><br>
+    <%= f.text_field :computer_user_id %>
+  </div>
+  <div class="field">
+    <%= f.label :mail_nickname %><br>
+    <%= f.text_field :mail_nickname %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :display_name %><br>
+    <%= f.text_field :display_name %>
+  </div>
+  <div class="field">
+    <%= f.label :country %><br>
+    <%= f.text_field :country %>
+  </div>
+  <div class="field">
+    <%= f.label :sitecode %><br>
+    <%= f.text_field :sitecode %>
+  </div>
+  <div class="field">
+    <%= f.label :department %><br>
+    <%= f.text_field :department %>
+  </div>
+  <div class="field">
+    <%= f.label :location %><br>
+    <%= f.text_field :location %>
+  </div>
+  <div class="field">
+    <%= f.label :office_name %><br>
+    <%= f.text_field :office_name %>
+  </div>
+  <div class="field">
+    <%= f.label :mobile %><br>
+    <%= f.text_field :mobile %>
+  </div>
+  <div class="field">
+    <%= f.label :telephone_number %><br>
+    <%= f.text_field :telephone_number %>
+  </div>
+  <div class="field">
+    <%= f.label :other_telephone %><br>
+    <%= f.text_field :other_telephone %>
+  </div>
+  <div class="field">
+    <%= f.label :dn %><br>
+    <%= f.text_field :dn %>
+  </div>
+  <div class="field">
+    <%= f.label :domain_name %><br>
+    <%= f.text_field :domain_name %>
+  </div>
+  <div class="field">
+    <%= f.label :ad_disabled %><br>
+    <%= f.check_box :ad_disabled %>
+  </div>
+  <div class="field">
+    <%= f.label :company %><br>
+    <%= f.text_field :company %>
+  </div>
+  <div class="field">
+    <%= f.label :location_profile %><br>
+    <%= f.text_field :location_profile %>
+  </div>
+  <div class="field">
+    <%= f.label :federation %><br>
+    <%= f.check_box :federation %>
+  </div>
+  <div class="field">
+    <%= f.label :remote_access %><br>
+    <%= f.check_box :remote_access %>
+  </div>
+  <div class="field">
+    <%= f.label :archiving %><br>
+    <%= f.check_box :archiving %>
+  </div>
+  <div class="field">
+    <%= f.label :option_flags %><br>
+    <%= f.number_field :option_flags %>
+  </div>
+  <div class="field">
+    <%= f.label :pic %><br>
+    <%= f.check_box :pic %>
+  </div>
+  <div class="field">
+    <%= f.label :rcc %><br>
+    <%= f.check_box :rcc %>
+  </div>
+  <div class="field">
+    <%= f.label :p2p_audio %><br>
+    <%= f.check_box :p2p_audio %>
+  </div>
+  <div class="field">
+    <%= f.label :p2p_video %><br>
+    <%= f.check_box :p2p_video %>
+  </div>
+  <div class="field">
+    <%= f.label :anonymous_meetings %><br>
+    <%= f.check_box :anonymous_meetings %>
+  </div>
+  <div class="field">
+    <%= f.label :uc %><br>
+    <%= f.check_box :uc %>
+  </div>
+  <div class="field">
+    <%= f.label :tel_uri %><br>
+    <%= f.text_field :tel_uri %>
+  </div>
+  <div class="field">
+    <%= f.label :comments %><br>
+    <%= f.text_field :comments %>
+  </div>
+  <div class="field">
+    <%= f.label :group_cache %><br>
+    <%= f.text_field :group_cache %>
+  </div>
+  <div class="field">
+    <%= f.label :policy_cache %><br>
+    <%= f.text_field :policy_cache %>
+  </div>
+  <div class="field">
+    <%= f.label :frozen_from %><br>
+    <%= f.date_select :frozen_from %>
+  </div>
+  <div class="field">
+    <%= f.label :frozen_until %><br>
+    <%= f.date_select :frozen_until %>
+  </div>
+  <div class="field">
+    <%= f.label :proxy_addresses %><br>
+    <%= f.text_field :proxy_addresses %>
+  </div>
+  <div class="field">
+    <%= f.label :user_account_control %><br>
+    <%= f.number_field :user_account_control %>
+  </div>
+  <div class="field">
+    <%= f.label :shell_department_number %><br>
+    <%= f.text_field :shell_department_number %>
+  </div>
+  <div class="field">
+    <%= f.label :shell_default_billing %><br>
+    <%= f.text_field :shell_default_billing %>
+  </div>
+  <div class="field">
+    <%= f.label :shell_customer_billing_code %><br>
+    <%= f.text_field :shell_customer_billing_code %>
+  </div>
+  <div class="field">
+    <%= f.label :shell_telephone_extension %><br>
+    <%= f.text_field :shell_telephone_extension %>
+  </div>
+  <div class="field">
+    <%= f.label :shell_email_node_id %><br>
+    <%= f.text_field :shell_email_node_id %>
+  </div>
+  <div class="field">
+    <%= f.label :shell_gender %><br>
+    <%= f.text_field :shell_gender %>
+  </div>
+  <div class="field">
+    <%= f.label :shell_known_by_name %><br>
+    <%= f.text_field :shell_known_by_name %>
+  </div>
+  <div class="field">
+    <%= f.label :shell_modify_auth %><br>
+    <%= f.text_field :shell_modify_auth %>
+  </div>
+  <div class="field">
+    <%= f.label :shell_office_locality %><br>
+    <%= f.text_field :shell_office_locality %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_at %><br>
+    <%= f.datetime_select :updated_at %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_by %><br>
+    <%= f.text_field :updated_by %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

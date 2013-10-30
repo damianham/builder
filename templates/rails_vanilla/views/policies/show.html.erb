@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Id:</strong>
+  <%= @policy.id %>
+</p>
+
+<p>
+  <strong>Friendly name:</strong>
+  <%= @policy.friendly_name %>
+</p>
+
+<p>
+  <strong>Policy type:</strong>
+  <%= @policy.policy_type %>
+</p>
+
+<p>
+  <strong>Is default:</strong>
+  <%= @policy.is_default %>
+</p>
+
+<p>
+  <strong>Dn:</strong>
+  <%= @policy.dn %>
+</p>
+
+<p>
+  <strong>Policy xml:</strong>
+  <%= @policy.policy_xml %>
+</p>
+
+<p>
+  <strong>Tombstoned:</strong>
+  <%= @policy.tombstoned %>
+</p>
+
+<p>
+  <strong>Updated at:</strong>
+  <%= @policy.updated_at %>
+</p>
+
+<p>
+  <strong>Updated by:</strong>
+  <%= @policy.updated_by %>
+</p>
+
+<%= link_to 'Edit', edit_policy_path(@policy) %> |
+<%= link_to 'Back', policies_path %>

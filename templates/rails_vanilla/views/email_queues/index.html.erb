@@ -1,0 +1,51 @@
+<h1>Listing email_queues</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Event</th>
+      <th>User</th>
+      <th>Transaction</th>
+      <th>Queue</th>
+      <th>Old moc number</th>
+      <th>New moc number</th>
+      <th>Change date</th>
+      <th>Revoke date</th>
+      <th>Headers</th>
+      <th>Sent at</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @email_queues.each do |email_queue| %>
+      <tr>
+        <td><%= email_queue.id %></td>
+        <td><%= email_queue.event_id %></td>
+        <td><%= email_queue.user_id %></td>
+        <td><%= email_queue.transaction_id %></td>
+        <td><%= email_queue.queue_id %></td>
+        <td><%= email_queue.old_moc_number %></td>
+        <td><%= email_queue.new_moc_number %></td>
+        <td><%= email_queue.change_date %></td>
+        <td><%= email_queue.revoke_date %></td>
+        <td><%= email_queue.headers %></td>
+        <td><%= email_queue.sent_at %></td>
+        <td><%= email_queue.updated_at %></td>
+        <td><%= email_queue.updated_by %></td>
+        <td><%= link_to 'Show', email_queue %></td>
+        <td><%= link_to 'Edit', edit_email_queue_path(email_queue) %></td>
+        <td><%= link_to 'Destroy', email_queue, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Email queue', new_email_queue_path %>

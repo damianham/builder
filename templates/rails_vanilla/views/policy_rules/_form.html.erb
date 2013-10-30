@@ -1,0 +1,69 @@
+<%= form_for(@policy_rule) do |f| %>
+  <% if @policy_rule.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@policy_rule.errors.count, "error") %> prohibited this policy_rule from being saved:</h2>
+
+      <ul>
+      <% @policy_rule.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :id %><br>
+    <%= f.number_field :id %>
+  </div>
+  <div class="field">
+    <%= f.label :country %><br>
+    <%= f.text_field :country %>
+  </div>
+  <div class="field">
+    <%= f.label :company %><br>
+    <%= f.text_field :company %>
+  </div>
+  <div class="field">
+    <%= f.label :sitecode %><br>
+    <%= f.text_field :sitecode %>
+  </div>
+  <div class="field">
+    <%= f.label :department %><br>
+    <%= f.text_field :department %>
+  </div>
+  <div class="field">
+    <%= f.label :user_type %><br>
+    <%= f.text_field :user_type %>
+  </div>
+  <div class="field">
+    <%= f.label :policy_id %><br>
+    <%= f.number_field :policy_id %>
+  </div>
+  <div class="field">
+    <%= f.label :is_default %><br>
+    <%= f.check_box :is_default %>
+  </div>
+  <div class="field">
+    <%= f.label :active %><br>
+    <%= f.check_box :active %>
+  </div>
+  <div class="field">
+    <%= f.label :activation_date %><br>
+    <%= f.datetime_select :activation_date %>
+  </div>
+  <div class="field">
+    <%= f.label :comments %><br>
+    <%= f.text_area :comments %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_at %><br>
+    <%= f.datetime_select :updated_at %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_by %><br>
+    <%= f.text_field :updated_by %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

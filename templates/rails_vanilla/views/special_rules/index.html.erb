@@ -1,0 +1,57 @@
+<h1>Listing special_rules</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Sip uri</th>
+      <th>Requestor</th>
+      <th>Feature</th>
+      <th>Feature</th>
+      <th>Operation</th>
+      <th>New value</th>
+      <th>Old value</th>
+      <th>Comments</th>
+      <th>On hold</th>
+      <th>Week before email</th>
+      <th>Activated email</th>
+      <th>Valid from</th>
+      <th>Valid until</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @special_rules.each do |special_rule| %>
+      <tr>
+        <td><%= special_rule.id %></td>
+        <td><%= special_rule.sip_uri %></td>
+        <td><%= special_rule.requestor %></td>
+        <td><%= special_rule.feature_id %></td>
+        <td><%= special_rule.feature %></td>
+        <td><%= special_rule.operation %></td>
+        <td><%= special_rule.new_value %></td>
+        <td><%= special_rule.old_value %></td>
+        <td><%= special_rule.comments %></td>
+        <td><%= special_rule.on_hold %></td>
+        <td><%= special_rule.week_before_email %></td>
+        <td><%= special_rule.activated_email %></td>
+        <td><%= special_rule.valid_from %></td>
+        <td><%= special_rule.valid_until %></td>
+        <td><%= special_rule.updated_at %></td>
+        <td><%= special_rule.updated_by %></td>
+        <td><%= link_to 'Show', special_rule %></td>
+        <td><%= link_to 'Edit', edit_special_rule_path(special_rule) %></td>
+        <td><%= link_to 'Destroy', special_rule, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Special rule', new_special_rule_path %>

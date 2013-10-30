@@ -1,0 +1,39 @@
+<h1>Listing debug_infos</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>User</th>
+      <th>Transaction</th>
+      <th>Debug data</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @debug_infos.each do |debug_info| %>
+      <tr>
+        <td><%= debug_info.id %></td>
+        <td><%= debug_info.name %></td>
+        <td><%= debug_info.user_id %></td>
+        <td><%= debug_info.transaction_id %></td>
+        <td><%= debug_info.debug_data %></td>
+        <td><%= debug_info.updated_at %></td>
+        <td><%= debug_info.updated_by %></td>
+        <td><%= link_to 'Show', debug_info %></td>
+        <td><%= link_to 'Edit', edit_debug_info_path(debug_info) %></td>
+        <td><%= link_to 'Destroy', debug_info, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Debug info', new_debug_info_path %>

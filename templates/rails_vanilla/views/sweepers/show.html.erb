@@ -1,0 +1,64 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Id:</strong>
+  <%= @sweeper.id %>
+</p>
+
+<p>
+  <strong>Object class:</strong>
+  <%= @sweeper.object_class %>
+</p>
+
+<p>
+  <strong>Object:</strong>
+  <%= @sweeper.object_id %>
+</p>
+
+<p>
+  <strong>Object name:</strong>
+  <%= @sweeper.object_name %>
+</p>
+
+<p>
+  <strong>Dn:</strong>
+  <%= @sweeper.dn %>
+</p>
+
+<p>
+  <strong>Treebase:</strong>
+  <%= @sweeper.treebase %>
+</p>
+
+<p>
+  <strong>Rfc2254 filter:</strong>
+  <%= @sweeper.rfc2254_filter %>
+</p>
+
+<p>
+  <strong>Action type:</strong>
+  <%= @sweeper.action_type %>
+</p>
+
+<p>
+  <strong>Action date:</strong>
+  <%= @sweeper.action_date %>
+</p>
+
+<p>
+  <strong>Comments:</strong>
+  <%= @sweeper.comments %>
+</p>
+
+<p>
+  <strong>Updated at:</strong>
+  <%= @sweeper.updated_at %>
+</p>
+
+<p>
+  <strong>Updated by:</strong>
+  <%= @sweeper.updated_by %>
+</p>
+
+<%= link_to 'Edit', edit_sweeper_path(@sweeper) %> |
+<%= link_to 'Back', sweepers_path %>

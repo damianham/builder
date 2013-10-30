@@ -1,0 +1,84 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Id:</strong>
+  <%= @special_rule.id %>
+</p>
+
+<p>
+  <strong>Sip uri:</strong>
+  <%= @special_rule.sip_uri %>
+</p>
+
+<p>
+  <strong>Requestor:</strong>
+  <%= @special_rule.requestor %>
+</p>
+
+<p>
+  <strong>Feature:</strong>
+  <%= @special_rule.feature_id %>
+</p>
+
+<p>
+  <strong>Feature:</strong>
+  <%= @special_rule.feature %>
+</p>
+
+<p>
+  <strong>Operation:</strong>
+  <%= @special_rule.operation %>
+</p>
+
+<p>
+  <strong>New value:</strong>
+  <%= @special_rule.new_value %>
+</p>
+
+<p>
+  <strong>Old value:</strong>
+  <%= @special_rule.old_value %>
+</p>
+
+<p>
+  <strong>Comments:</strong>
+  <%= @special_rule.comments %>
+</p>
+
+<p>
+  <strong>On hold:</strong>
+  <%= @special_rule.on_hold %>
+</p>
+
+<p>
+  <strong>Week before email:</strong>
+  <%= @special_rule.week_before_email %>
+</p>
+
+<p>
+  <strong>Activated email:</strong>
+  <%= @special_rule.activated_email %>
+</p>
+
+<p>
+  <strong>Valid from:</strong>
+  <%= @special_rule.valid_from %>
+</p>
+
+<p>
+  <strong>Valid until:</strong>
+  <%= @special_rule.valid_until %>
+</p>
+
+<p>
+  <strong>Updated at:</strong>
+  <%= @special_rule.updated_at %>
+</p>
+
+<p>
+  <strong>Updated by:</strong>
+  <%= @special_rule.updated_by %>
+</p>
+
+<%= link_to 'Edit', edit_special_rule_path(@special_rule) %> |
+<%= link_to 'Back', special_rules_path %>

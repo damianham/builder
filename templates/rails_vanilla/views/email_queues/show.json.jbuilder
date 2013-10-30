@@ -1,0 +1,1 @@
+json.extract! @email_queue, :id, :event_id, :user_id, :transaction_id, :queue_id, :old_moc_number, :new_moc_number, :change_date, :revoke_date, :headers, :sent_at, :updated_at, :updated_by, :created_at, :updated_at

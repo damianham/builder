@@ -1,0 +1,29 @@
+<h1>Listing last_insert_ids</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Value</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @last_insert_ids.each do |last_insert_id| %>
+      <tr>
+        <td><%= last_insert_id.name %></td>
+        <td><%= last_insert_id.value %></td>
+        <td><%= link_to 'Show', last_insert_id %></td>
+        <td><%= link_to 'Edit', edit_last_insert_id_path(last_insert_id) %></td>
+        <td><%= link_to 'Destroy', last_insert_id, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Last insert', new_last_insert_id_path %>

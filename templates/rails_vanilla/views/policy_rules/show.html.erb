@@ -1,0 +1,69 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Id:</strong>
+  <%= @policy_rule.id %>
+</p>
+
+<p>
+  <strong>Country:</strong>
+  <%= @policy_rule.country %>
+</p>
+
+<p>
+  <strong>Company:</strong>
+  <%= @policy_rule.company %>
+</p>
+
+<p>
+  <strong>Sitecode:</strong>
+  <%= @policy_rule.sitecode %>
+</p>
+
+<p>
+  <strong>Department:</strong>
+  <%= @policy_rule.department %>
+</p>
+
+<p>
+  <strong>User type:</strong>
+  <%= @policy_rule.user_type %>
+</p>
+
+<p>
+  <strong>Policy:</strong>
+  <%= @policy_rule.policy_id %>
+</p>
+
+<p>
+  <strong>Is default:</strong>
+  <%= @policy_rule.is_default %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @policy_rule.active %>
+</p>
+
+<p>
+  <strong>Activation date:</strong>
+  <%= @policy_rule.activation_date %>
+</p>
+
+<p>
+  <strong>Comments:</strong>
+  <%= @policy_rule.comments %>
+</p>
+
+<p>
+  <strong>Updated at:</strong>
+  <%= @policy_rule.updated_at %>
+</p>
+
+<p>
+  <strong>Updated by:</strong>
+  <%= @policy_rule.updated_by %>
+</p>
+
+<%= link_to 'Edit', edit_policy_rule_path(@policy_rule) %> |
+<%= link_to 'Back', policy_rules_path %>

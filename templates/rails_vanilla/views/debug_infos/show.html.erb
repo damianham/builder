@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Id:</strong>
+  <%= @debug_info.id %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @debug_info.name %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @debug_info.user_id %>
+</p>
+
+<p>
+  <strong>Transaction:</strong>
+  <%= @debug_info.transaction_id %>
+</p>
+
+<p>
+  <strong>Debug data:</strong>
+  <%= @debug_info.debug_data %>
+</p>
+
+<p>
+  <strong>Updated at:</strong>
+  <%= @debug_info.updated_at %>
+</p>
+
+<p>
+  <strong>Updated by:</strong>
+  <%= @debug_info.updated_by %>
+</p>
+
+<%= link_to 'Edit', edit_debug_info_path(@debug_info) %> |
+<%= link_to 'Back', debug_infos_path %>

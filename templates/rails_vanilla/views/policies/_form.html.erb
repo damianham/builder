@@ -1,0 +1,53 @@
+<%= form_for(@policy) do |f| %>
+  <% if @policy.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@policy.errors.count, "error") %> prohibited this policy from being saved:</h2>
+
+      <ul>
+      <% @policy.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :id %><br>
+    <%= f.number_field :id %>
+  </div>
+  <div class="field">
+    <%= f.label :friendly_name %><br>
+    <%= f.text_field :friendly_name %>
+  </div>
+  <div class="field">
+    <%= f.label :policy_type %><br>
+    <%= f.text_field :policy_type %>
+  </div>
+  <div class="field">
+    <%= f.label :is_default %><br>
+    <%= f.check_box :is_default %>
+  </div>
+  <div class="field">
+    <%= f.label :dn %><br>
+    <%= f.text_field :dn %>
+  </div>
+  <div class="field">
+    <%= f.label :policy_xml %><br>
+    <%= f.text_area :policy_xml %>
+  </div>
+  <div class="field">
+    <%= f.label :tombstoned %><br>
+    <%= f.check_box :tombstoned %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_at %><br>
+    <%= f.datetime_select :updated_at %>
+  </div>
+  <div class="field">
+    <%= f.label :updated_by %><br>
+    <%= f.text_field :updated_by %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

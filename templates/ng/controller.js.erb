@@ -1,0 +1,101 @@
+app.controller('<%= controller_name %>', function ( $scope, $location, $dialog, <%= model_name %>, <%= model_name %>Properties) {
+    // Define persisted object
+    $scope.<%= plural_table_name %>  = <%= model_name %>.query();
+
+    $scope.$watch('<%= plural_table_name %>', function() {
+        if ($scope.<%= plural_table_name %>.length === 0) {<%= model_name %>Properties.unset<%= model_name %>Exists();} else {<%= model_name %>Properties.set<%= model_name %>Exists();}
+
+    }, true);
+
+    $scope.new<%= model_name %> = "";
+
+    $scope.add<%= model_name %> = function() {
+        if ( !$scope.new<%= model_name %>.length ) {
+            return;
+        }
+        var new<%= model_name %> = new <%= model_name %>();
+        new<%= model_name %>.title= $scope.new<%= model_name %>;
+        new<%= model_name %>.activated = false;
+        // If it is first activate it
+        if ($scope.<%= plural_table_name %>.length === 0) {
+            new<%= model_name %>.activated = true;
+
+        }
+
+        $scope.<%= plural_table_name %>.push(new<%= model_name %>);
+        new<%= model_name %>.$save(new<%= model_name %>);
+
+        $scope.new<%= model_name %> = '';
+    };
+
+    $scope.edited<%= model_name %> = null;
+    $scope.edit<%= model_name %> = function( <%= model_name %> ) {
+        $scope.edited<%= model_name %> = <%= model_name %>;
+    };
+
+    $scope.doneEditing = function( <%= model_name %> ) {
+        console.log(<%= model_name %>);
+        // Persist to DB
+        $scope.edited<%= model_name %>.$update($scope.edited<%= model_name %>.id);
+        $scope.edited<%= model_name %> = null;
+        if ( !<%= model_name %>.title ) {
+            $scope.remove<%= model_name %>(<%= model_name %>);
+        }
+        console.log("id ", $scope.edited<%= model_name %>);
+    };
+
+    $scope.remove<%= model_name %> = function(<%= model_name %>){
+        var msgbox = $dialog.messageBox('Delete <%= model_name %>', 'Are you sure you want to delete <%= model_name %> ' + '"' + <%= model_name %>.title + '"' + '?', [{label:'Yes', result: 'yes', cssClass:'btn btn-primary'},{label:'No', result: 'no'}]);
+        msgbox.open().then(function(result){
+            if(result === 'yes') {
+                $scope.<%= plural_table_name %>.splice($scope.<%= plural_table_name %>.indexOf(<%= model_name %>), 1);
+                console.log(<%= model_name %>.id);
+                if (<%= model_name %>.activated) {
+                    // Remove
+                    <%= model_name %>.$remove();
+                    // sort to find latest added <%= model_name %>
+                    var <%= model_name %>ToActivate =  getLatestAdded<%= model_name %>();
+                    // and set another one to active
+                    if (<%= model_name %>ToActivate){
+                        $scope.activate<%= model_name %>(<%= model_name %>ToActivate);
+                    }
+                }
+                else {
+                    <%= model_name %>.$remove();
+                }
+            }
+        });
+    };
+
+    $scope.activate<%= model_name %> = function( <%= model_name %> ) {
+        $scope.<%= plural_table_name %>.forEach(function( <%= model_name %>Item ) {
+            <%= model_name %>Item.activated = false;
+            <%= model_name %>Item.$update();
+        });
+
+        <%= model_name %>.activated = true;
+        <%= model_name %>.$update();
+    };
+
+    function getLatestAdded<%= model_name %>() {
+        return $scope.<%= plural_table_name %>.sort(function(a,b)
+        {
+            var aTime = new Date();
+            aTime.setUTCHours(
+                parseInt(a.created_at.substr(0, 2), 10),
+                parseInt(a.created_at.substr(3, 2), 10),
+                0,
+                0
+            );
+            var bTime = new Date();
+            bTime.setUTCHours(
+                parseInt(b.created_at.substr(0, 2), 10),
+                parseInt(b.created_at.substr(3, 2), 10),
+                0,
+                0
+            );
+            return bTime - aTime
+        })[0];
+    }
+});
+

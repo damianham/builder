@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Id:</strong>
+  <%= @template_rule.id %>
+</p>
+
+<p>
+  <strong>Company:</strong>
+  <%= @template_rule.company %>
+</p>
+
+<p>
+  <strong>Country:</strong>
+  <%= @template_rule.country %>
+</p>
+
+<p>
+  <strong>Sitecode:</strong>
+  <%= @template_rule.sitecode %>
+</p>
+
+<p>
+  <strong>Event:</strong>
+  <%= @template_rule.event_id %>
+</p>
+
+<p>
+  <strong>Template:</strong>
+  <%= @template_rule.template_id %>
+</p>
+
+<p>
+  <strong>Comment:</strong>
+  <%= @template_rule.comment %>
+</p>
+
+<p>
+  <strong>Updated at:</strong>
+  <%= @template_rule.updated_at %>
+</p>
+
+<p>
+  <strong>Updated by:</strong>
+  <%= @template_rule.updated_by %>
+</p>
+
+<%= link_to 'Edit', edit_template_rule_path(@template_rule) %> |
+<%= link_to 'Back', template_rules_path %>

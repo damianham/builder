@@ -1,0 +1,41 @@
+<h1>Listing profile_rules</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Sitecode</th>
+      <th>Profile</th>
+      <th>Active</th>
+      <th>Activation date</th>
+      <th>Comments</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @profile_rules.each do |profile_rule| %>
+      <tr>
+        <td><%= profile_rule.id %></td>
+        <td><%= profile_rule.sitecode %></td>
+        <td><%= profile_rule.profile %></td>
+        <td><%= profile_rule.active %></td>
+        <td><%= profile_rule.activation_date %></td>
+        <td><%= profile_rule.comments %></td>
+        <td><%= profile_rule.updated_at %></td>
+        <td><%= profile_rule.updated_by %></td>
+        <td><%= link_to 'Show', profile_rule %></td>
+        <td><%= link_to 'Edit', edit_profile_rule_path(profile_rule) %></td>
+        <td><%= link_to 'Destroy', profile_rule, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Profile rule', new_profile_rule_path %>

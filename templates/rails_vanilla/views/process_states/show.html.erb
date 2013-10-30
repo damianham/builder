@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Id:</strong>
+  <%= @process_state.id %>
+</p>
+
+<p>
+  <strong>Process name:</strong>
+  <%= @process_state.process_name %>
+</p>
+
+<p>
+  <strong>Process action:</strong>
+  <%= @process_state.process_action %>
+</p>
+
+<p>
+  <strong>Process state:</strong>
+  <%= @process_state.process_state %>
+</p>
+
+<p>
+  <strong>Process info:</strong>
+  <%= @process_state.process_info %>
+</p>
+
+<p>
+  <strong>Process pid:</strong>
+  <%= @process_state.process_pid %>
+</p>
+
+<p>
+  <strong>Simulate only:</strong>
+  <%= @process_state.simulate_only %>
+</p>
+
+<p>
+  <strong>Start time:</strong>
+  <%= @process_state.start_time %>
+</p>
+
+<p>
+  <strong>End time:</strong>
+  <%= @process_state.end_time %>
+</p>
+
+<p>
+  <strong>Region:</strong>
+  <%= @process_state.region %>
+</p>
+
+<%= link_to 'Edit', edit_process_state_path(@process_state) %> |
+<%= link_to 'Back', process_states_path %>

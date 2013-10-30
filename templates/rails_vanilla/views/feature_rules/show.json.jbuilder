@@ -1,0 +1,1 @@
+json.extract! @feature_rule, :id, :feature, :feature_id, :country, :sitecode, :company, :department, :user_type, :deny, :active, :activation_date, :comments, :updated_at, :updated_by, :created_at, :updated_at

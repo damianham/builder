@@ -1,0 +1,43 @@
+<h1>Listing template_rules</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Company</th>
+      <th>Country</th>
+      <th>Sitecode</th>
+      <th>Event</th>
+      <th>Template</th>
+      <th>Comment</th>
+      <th>Updated at</th>
+      <th>Updated by</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @template_rules.each do |template_rule| %>
+      <tr>
+        <td><%= template_rule.id %></td>
+        <td><%= template_rule.company %></td>
+        <td><%= template_rule.country %></td>
+        <td><%= template_rule.sitecode %></td>
+        <td><%= template_rule.event_id %></td>
+        <td><%= template_rule.template_id %></td>
+        <td><%= template_rule.comment %></td>
+        <td><%= template_rule.updated_at %></td>
+        <td><%= template_rule.updated_by %></td>
+        <td><%= link_to 'Show', template_rule %></td>
+        <td><%= link_to 'Edit', edit_template_rule_path(template_rule) %></td>
+        <td><%= link_to 'Destroy', template_rule, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Template rule', new_template_rule_path %>

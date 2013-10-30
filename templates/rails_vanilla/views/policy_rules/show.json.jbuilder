@@ -1,0 +1,1 @@
+json.extract! @policy_rule, :id, :country, :company, :sitecode, :department, :user_type, :policy_id, :is_default, :active, :activation_date, :comments, :updated_at, :updated_by, :created_at, :updated_at
