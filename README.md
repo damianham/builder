@@ -10,6 +10,7 @@ source of data.  This is useful if you want to create a Ruby On Rails (with Angu
 
 - Mysql2 or JDBC-Mysql connector
 - Rake
+- Erubis
 
 ## Installation
 

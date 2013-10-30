@@ -33,9 +33,6 @@ def build_unit(table_name,columns)
       builder.build_route
     end
 
-    # build the artifacts that contain data for all classes e.g. menus
-    builder.finalize_artifacts
-
   end
 
 end
@@ -53,6 +50,15 @@ task :build_classes, :database do |t, args|
 
     # build the artifacts for this table
     build_unit(table_name, columns) unless IGNORE_TABLES.include?(table_name)
+
+  end
+  
+  # finalize the builder 
+  @builders.each do |klass|
+    builder = klass.new(OUTPUT_FOLDERS[klass],'dummy',{'columns' => {}})
+    
+    # build the artifacts that contain data for all classes e.g. menus
+    builder.finalize_artifacts
 
   end
 

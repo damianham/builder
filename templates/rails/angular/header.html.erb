@@ -1,0 +1,49 @@
+<header id="header" ng-controller="HeaderController">
+    <div class="row">
+        <div class="span10">
+            <ul class="breadcrumb nav nav-tabs pull-left">
+                <li ng-class="{active: routeIs('/dashboard')}">
+                    <a href="#/dashboard"><i class="icon-home"></i> Dashboard</a>
+                </li>
+                <li ng-class="{active: routeIs('/checklist')}">
+                    <a  href="{{buildUrl('#/checklist')}}"><i class="icon-ok-sign"></i> Checklist</a>
+                </li>
+                <li ng-class="{active: routeIs('/canvas')}">
+                    <a ng-href="{{buildUrl('#/canvas')}}" ng-class=isDisabled()><i class="icon-credit-card"></i> Canvas</a>
+                </li>
+                <li ng-class="{active: routeIs('/experiments')}">
+                    <a  ng-click="toastr.info('Thank you for your interest. We are working on this!', 'Coming soon!')" ng-class=isDisabled()><i class="icon-beaker"></i> Experiments</a>
+                </li>
+            </ul>
+        </div>
+        <div class="span5">
+            <div class="pull-right">
+                    <ul class="breadcrumb nav nav-tabs pull-right">
+                        <li>
+                            <a class="dropdown-toggle" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+                                <i class="icon-user"></i> {{currentUser.email}} <b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <li>
+                                    <a href="#">Settings</a>
+                                </li>
+                                <li>
+                                    <a href="/users/sign_out" data-method="delete" rel="nofollow">Logout...</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                <ul class="breadcrumb nav nav-tabs pull-right">
+                    <li ng-class="{active: routeIs('/help')}"><a  ng-click="toastr.info('Thank you for your interest. We are working on this!', 'Coming soon!')"><i class="icon-question-sign"></i> Help</a>
+                    </li>
+                    <!--<li ng-class="{active: routeIs('/help')}"><a  href="#/help"><i class="icon-question-sign"></i> Help</a>-->
+                    <!--</li>-->
+                    <li ng-class="{active: routeIs('/export')}"><a  href="#/export"><i class="icon-share"></i> Export</a>
+                    </li>
+
+
+                </ul>
+
+            </div>
+        </div>
+
+</header>

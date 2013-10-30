@@ -137,7 +137,9 @@ class AngularRailsBuilder < Builder::Base
     
     # create the navigation menu
     finalize_menu
-
+    
+    # copy the angular library into the application
+    finalize_angular_lib
   end
   
   def finalize_menu
@@ -156,6 +158,14 @@ class AngularRailsBuilder < Builder::Base
       end
 
     end
+  end
+  
+  # copy the angular library to the destination
+  def finalize_angular_lib
+    src = template("ng/lib")
+    dest = "#{destination}/lib"
+    puts "copying recursively #{src} to #{dest}"
+    FileUtils.cp_r src, destination
   end
 
 end
