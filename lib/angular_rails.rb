@@ -166,6 +166,27 @@ class AngularRailsBuilder < Builder::Base
     dest = "#{destination}/lib"
     puts "copying recursively #{src} to #{dest}"
     FileUtils.cp_r src, destination
+    
+    # integrate the angular libs into the application.js in the right order
+    filename = "#{destination}/application.js"
+    
+    content = File.read(filename)
+    
+    libs = "//= require lib/angular/angular
+//= require lib/angular/angular-resource
+//= require lib/angular-ui
+//= require app/app
+//= require_tree ./models
+//= require_tree ./controllers/
+"
+    
+    unless content.include? libs
+      content.sub!(/require turbolinks\s*$/) {|matched| matched + "\n#{libs}"}
+    end
+
+ 
+    
+    write_artifact("","application.js",content)
   end
 
 end
