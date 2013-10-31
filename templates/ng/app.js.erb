@@ -12,8 +12,8 @@ app.config(["$httpProvider", function(provider) {
 app.config(function ($routeProvider) {
         $routeProvider.
 <% models.each do |model|   %>
- when('/<%= model.pluralize %>', {templateUrl:  '/assets/partials/<%= model %>-list.html',controller: <%= model.to_model_name %>ListCtrl}).
- when('/<%= model.pluralize %>/:<%= model %>Id', {templateUrl: '/assets/partials/<%= model %>-detail.html',controller: <%= model.to_model_name %>DetailCtrl}).
+ when('/<%= model.pluralize %>', {templateUrl:  '/assets/partials/<%= model %>-list.html',controller: '<%= model.to_model_name %>ListCtrl'}).
+ when('/<%= model.pluralize %>/:<%= model %>Id', {templateUrl: '/assets/partials/<%= model %>-detail.html',controller: '<%= model.to_model_name %>DetailCtrl'}).
 <% end %>
 otherwise({redirectTo: '/'});
 });
