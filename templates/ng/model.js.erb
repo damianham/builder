@@ -10,6 +10,7 @@
 app.factory("<%= model_name %>", function($resource) {
     return $resource("/<%= plural_table_name %>/:id", {id: "@id"}, {
     	update: {method: "PUT"},
-    	query: {method:'GET', params:{<%= singular_table_name %>Id:'<%= plural_table_name %>'}, isArray:true}
+    	query: {method:'GET',  isArray:true},
+    	get: {method:'GET', params:{id:"@id"} }
     	});
 });
