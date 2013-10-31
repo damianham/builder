@@ -1,6 +1,8 @@
 'use strict';
 
 /*
+ * ngResource default actions
+ */
  $update used for updating
  $save for saving
  $remove for removing
@@ -9,8 +11,6 @@
  */
 app.factory("<%= model_name %>", function($resource) {
     return $resource("/<%= plural_table_name %>/:id", {id: "@id"}, {
-    	update: {method: "PUT"},
-    	query: {method:'GET',  isArray:true},
-    	get: {method:'GET', params:{id:"@id"} }
+    	update: {method: "PUT"}
     	});
 });
