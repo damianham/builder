@@ -7,13 +7,6 @@ require 'yaml'
 require 'jdbc/mysql'
 require "java"
 
-
-require './lib/inflections.rb'
-require './lib/string.rb'
-
-require './ng.rb'
-require './rails.rb'
-
 Jdbc::MySQL.load_driver
 
 
