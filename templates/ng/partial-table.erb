@@ -1,0 +1,69 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span2">
+      <!--Sidebar content-->
+
+      Search: <input ng-model="query">
+      Sort by:
+      <select ng-model="orderProp">
+ 
+ 		<!-- rename the fields and enable accordingly
+        <option value="name">Alphabetical</option>
+        <option value="age">Newest</option>
+        -->
+        
+     	<% 
+     	  default_namefield = nil
+     	  singlename = singular_table_name
+     	  columns = schema['columns']
+     	
+     	  columns.each_pair do |name,column|  %> 
+     	  <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
+     	  <%
+     	  # get the name of the first field that is not called 'id' as default  
+     	  if default_namefield.nil? && name != 'id' && name !~ /_id/  
+    		# use this column unless it is the id primary key or a foreign key
+     	    default_namefield = column
+     	  end %>
+     	<% end %>
+      </select>
+
+
+    </div>
+    <div class="span10">
+      <!--Body content-->
+      
+      <%  # determine the display field names
+      namefield = columns['name'] || columns['title'] || default_namefield
+      descfield = columns['description'] || columns['info'] || 
+      		columns['summary'] || columns['comment'] || columns['snippet']
+      %>
+
+      <table class="<%= model_name %>">
+      	<thead>
+      		<tr>
+      	  <% unless columns['imageUrl'].nil?   %>
+            <th> </th>
+          <% end %>
+          <% columns.keys.reject{|key| key == 'imageUrl' || key == 'id'}.each do |key| %>
+            <th><%= key.titleize %> </th>
+          <% end %>
+          </tr>
+      	</thead>
+      	<tbody>
+        <tr ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp" class="thumbnail">
+           <% unless columns['imageUrl'].nil?   %>
+            <td>
+            <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}" class="thumb"><img ng-src="{{<%= singlename %>.imageUrl}}"></a>
+            </td>
+          <% end %>
+          <% columns.keys.reject{|key| key == 'imageUrl'|| key == 'id' }.each do |key| %>
+            <td>{{<%= singlename %>.<%= key %>}}</td>
+          <% end %>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
