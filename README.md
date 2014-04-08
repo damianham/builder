@@ -72,7 +72,7 @@ rails new mywebapp
 
 ### Step 3 - Configure the builder
 
-#### Edit tasks/builder.rake to define the generators and their output folders
+#### Copy and edit builder_config.rb to define the generators and their output folders
 
 The builders are defined in a hash with the name of the builder as the key and the output folder as the value.  The default
 builders are
@@ -101,7 +101,7 @@ then you would set the output folders to the following values
 
 ```
 
-and run the rake commands in the workspace directory
+and run the rake commands in the workspace directory with the builder_config.rb file in the workspace directory
 
 #### define any tables to ignore
 ```
