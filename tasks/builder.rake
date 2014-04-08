@@ -4,8 +4,7 @@ require 'rubygems'
 require 'yaml'
 
 require File.expand_path( '../builder.rb', File.dirname(__FILE__)  )
-
-#@builders = [RailsBuilder,AngularRailsBuilder]  
+ 
 # use RailsVanillaBuilder instead for standard rails artifacts using the rails scaffold generator
  
 # define the builders with their output destinations
