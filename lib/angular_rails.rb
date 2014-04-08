@@ -8,7 +8,10 @@ class AngularRailsBuilder < Builder::Base
   @@ng_routes = []
   @@menus = []
   @@services = []
-  
+
+# define to 'list' to use the list template, grid to use ngGrid template 
+# or 'table' to use the table template
+  LIST_TYPE = 'table'
  
   def build_controller 
     puts "build Ng controller for #{model_name}"
@@ -32,10 +35,6 @@ class AngularRailsBuilder < Builder::Base
     puts "build Ng route for #{model_name}"
     
     @@ng_routes << singular_table_name
-    
-    #Hash.new(:model_name => model_name, 
-    #  :table_name => plural_table_name,
-    #  :single_table_name => singular_table_name)
 
    end
 
@@ -61,9 +60,9 @@ class AngularRailsBuilder < Builder::Base
   def build_list_partial 
 
     filename = "#{singular_table_name}-list.html"
-    puts "build Ng list partial for #{model_name} in app/partials/#{filename}"
+    puts "build Ng #{LIST_TYPE} list partial for #{model_name} in app/partials/#{filename}"
 
-    template = File.read(template("ng/partial-list.erb"))
+    template = File.read(template("ng/partial-#{LIST_TYPE}.erb"))
 
     text = Erubis::Eruby.new(template).result(:model_name => model_name,
     :singular_table_name => singular_table_name,
@@ -122,7 +121,7 @@ class AngularRailsBuilder < Builder::Base
   
   def build_menu
     puts "build Ng menu for #{model_name}"
-    @@menus << ""
+    @@menus << plural_table_name
   end
 
   def finalize_artifacts
@@ -140,6 +139,10 @@ class AngularRailsBuilder < Builder::Base
     
     # copy the angular library into the application
     finalize_angular_lib
+    
+    # integrate the angular stylesheets
+    finalize_angular_stylesheets
+    
   end
   
   def finalize_menu
@@ -154,10 +157,25 @@ class AngularRailsBuilder < Builder::Base
 /* Menu */")
 
       @@menus.each do |text|
-        f.puts(text) 
+        f.puts('//' + text)  # write it as a comment for now until I work out what to do
       end
 
     end
+    
+    filename = 'services.js'
+    # build the angular header
+    template = File.read(template("ng/services.js.erb"))
+
+    text = Erubis::Eruby.new(template).result(:model_name => model_name,
+    :singular_table_name => singular_table_name,
+    :plural_table_name => plural_table_name,
+    :controller_name => controller_name,
+    :model_symbol => ':' + singular_table_name,
+    :schema => schema)
+    
+    # generate the output
+    write_artifact("app",filename,text)
+    
   end
   
   # copy the angular library to the destination
@@ -184,9 +202,31 @@ class AngularRailsBuilder < Builder::Base
       content.sub!(/require turbolinks\s*$/) {|matched| matched + "\n#{libs}"}
     end
 
- 
-    
     write_artifact("","application.js",content)
+  end
+  
+  def finalize_angular_stylesheets
+    # integrate the angular libs into the application.js in the right order
+    filename = "#{destination}/../stylesheets/application.css"
+    
+    content = File.read(filename)
+    
+    libs = "*= require angular-ui
+ *= require select2
+ *= require bootstrap
+ *= require bootstrap-responsive
+ *= require font-awesome.min
+ *= require font-awesome-ie7.min
+ *= require style
+ *= require jquery-ui
+ *= require toastr
+"
+    
+    unless content.include? libs
+      content.sub!(/require self\s*$/) {|matched| matched + "\n#{libs}"}
+    end
+
+    write_artifact("../stylesheets","application.css",content)
   end
 
 end

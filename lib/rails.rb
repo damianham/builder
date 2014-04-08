@@ -306,7 +306,9 @@ class RailsBuilder < Builder::Base
         
     content = File.read(filename)
     
-    routes = ["get 'angular/angular' => 'angular#angular'", "root :to => 'angular#angular'"]
+    routes = ["get 'angular/fetch_current_user' => 'angular#fetch_current_user'",
+      "get 'angular/angular' => 'angular#angular'", 
+      "root :to => 'angular#angular'"]
     
     add_routes(routes)
   end
