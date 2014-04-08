@@ -1,11 +1,15 @@
-<h1>Table Index</h1>
+
 <ul>
+	<li ng-class="{active: routeIs('/')}">
+		 <a href="#/"><i class="icon-home"></i> Home</a>
+    </li>
+                
 <%  comments.each do |data| %>
      
-<li>
-
+ <li ng-class="{active: routeIs('<%= data[:route] %>')}">
+               
 		<a href="<%= data[:route] %>" title="<%= data[:comment] %>">
-		<%= data[:model_name].titleize %>
+		<%= data[:model_name].titleize.pluralize %>
 		</a>
 
 </li>

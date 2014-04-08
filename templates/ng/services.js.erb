@@ -1,12 +1,36 @@
 'use strict';
 
-/* Services */
+/* Extra services */
 
-angular.module('myappServices', ['ngResource']).
-<% services.each do |service| %>
-factory('<%= service.to_model_name %>', function($resource){
-  return $resource('<%= service.pluralize %>/:<%= service %>Id.json', {}, {
-    query: {method:'GET', params:{<%= service %>Id:'<%= service.pluralize %>'}, isArray:true}
-  });
-})
-<% end %>
+app.controller('HeaderController', function ($scope, $location, CurrentUser ){
+    $scope.currentUser = {};
+    $scope.currentUser.email = "";
+  
+    CurrentUser.getUser(function(data){
+        $scope.currentUser.email = data.email;
+    });
+
+    $scope.routeIs = function(routeName) {
+        return $location.path() === routeName;
+    };
+
+    $scope.toastr = toastr;
+});
+
+app.factory("CurrentUser", function($http) {
+    return {
+        getUser: function(callback) {
+            $http.get('/angular/fetch_current_user').success(
+                function(data, status, headers, config) {
+                    callback(data);
+                });
+        },
+        getUsers: function(q, callback) {
+            $http.post('/angular/get_users_select2').success(
+                function(data, status, headers, config) {
+                    callback(data);
+                });
+        }
+    }
+});
+

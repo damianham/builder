@@ -5,5 +5,9 @@ class AngularController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def fetch_current_user
+	render :json => current_user
+  end
 end
 

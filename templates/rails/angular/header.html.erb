@@ -1,0 +1,24 @@
+<header id="header" ng-controller="HeaderController">
+    <div class="row">
+        <div class="span10">
+            <ul class="breadcrumb nav nav-tabs pull-left">
+
+	<li ng-class="{active: routeIs('/')}">
+		 <a href="#/"><i class="icon-home"></i> Home</a>
+    </li>
+                
+<%  @@comments.each do |data| %>
+     
+ <li ng-class="{active: routeIs('<%= data[:route] %>')}">
+               
+		<a href="/#<%= data[:route] %>" title="<%= data[:comment] %>">
+		<%= data[:model_name].titleize.pluralize %>
+		</a>
+
+</li>
+<% end %>
+
+            </ul>
+        </div>
+    </div>
+</header>

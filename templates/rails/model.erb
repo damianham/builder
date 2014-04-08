@@ -13,12 +13,14 @@ class <%= model_name %> < ActiveRecord::Base
       text << 'validates ' + required + ' presence: true' + "\n" 
     end
     
-    text << ('  has_many ' + schema['has_many'].keys.
-        map{ |key| ':'+key}.join(', ') + "\n" ) unless schema['has_many'].size == 0
-    
-    text << ('  belongs_to ' + schema['belongs_to'].keys.
-        map{ |key| ':'+key}.join(', ') + "\n" ) unless schema['belongs_to'].size == 0
-
+    schema['has_many'].each_key do |key|
+    	text << ('  has_many :' + key + "\n")
+    end
+ 
+    schema['belongs_to'].each_key do |key|
+      text << ('  belongs_to :' + key + "\n")
+    end
+   
 %>
 	<%= text %>
 end
