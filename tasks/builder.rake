@@ -5,11 +5,11 @@ require 'yaml'
 
 require File.expand_path( '../builder.rb', File.dirname(__FILE__)  )
 
-@builders = [RailsBuilder,AngularRailsBuilder]  
+#@builders = [RailsBuilder,AngularRailsBuilder]  
 # use RailsVanillaBuilder instead for standard rails artifacts using the rails scaffold generator
-
-# define the output destinations
-OUTPUT_FOLDERS = {
+ 
+# define the builders with their output destinations
+@builders = {
   RailsBuilder => './myapp',
   AngularRailsBuilder => './myapp/app/assets/javascripts'
 }
@@ -19,8 +19,8 @@ IGNORE_TABLES = []
 
 def build_unit(table_name,columns)
 
-  @builders.each do |klass|
-    builder = klass.new(OUTPUT_FOLDERS[klass],table_name,columns)
+  @builders.each_pair do |klass,output|
+    builder = klass.new(output,table_name,columns)
 
     if builder.respond_to? :scaffold
       builder.scaffold
@@ -54,8 +54,8 @@ task :build_classes, :database do |t, args|
   end
   
   # finalize the builder 
-  @builders.each do |klass|
-    builder = klass.new(OUTPUT_FOLDERS[klass],'dummy',{'columns' => {}})
+  @builders.each_pair do |klass,output|
+    builder = klass.new(output,'dummy',{'columns' => {}})
     
     # build the artifacts that contain data for all classes e.g. menus
     builder.finalize_artifacts
