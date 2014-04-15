@@ -95,14 +95,17 @@ then you would set the output folders to the following values
 
 ```
 #### define the output destinations relative to where you run the rake command
-@builders = {
-  RailsBuilder => './mywebapp',
-  AngularRailsBuilder => './mywebapp/app/assets/javascripts'
-}
 
+@builders = {
+  RailsBuilder => {:output => './mywebapp', :namespace => 'mynamespace' },
+  AngularRailsBuilder => {:output => './mywebapp/app/assets/javascripts', 
+    :namespace => 'mynamespace'}
+}
 ```
 
-and run the rake commands in the workspace directory with the builder_config.rb file in the workspace directory
+and run the rake commands in the workspace directory with the builder_config.rb file in the workspace directory.
+The namespace option will place the artifacts in a subfolder with that namespace and it should be the same value for both
+Angular and Rails generators
 
 #### define any tables to ignore
 ```

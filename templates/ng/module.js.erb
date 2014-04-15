@@ -39,8 +39,7 @@ angular.module('<%= namespace || "mainapp" %>')
  .controller('<%= model_name %>DetailCtrl', [ '$scope',  '$routeParams',  '<%= model_name %>',
     function($scope, $routeParams, <%= model_name %>) {
       
-      $scope.<%= singular_table_name %> = <%= model_name %>
-      .get({<%= singular_table_name %>Id: $routeParams.<%= singular_table_name %>Id});
+      $scope.<%= singular_table_name %> = <%= model_name %>.get({<%= singular_table_name %>Id: $routeParams.<%= singular_table_name %>Id});
     
     }]);
   
