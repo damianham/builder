@@ -1,7 +1,137 @@
-<div class="container" ng-app="mainapp">
+<div class="container" >
     <div ng-include src="'<%%= asset_path('partials/header.html') %>'">
     </div>
     <div id="main" ng-view></div>
     <div ng-include src="'<%%= asset_path('partials/footer.html') %>'">
     </div>
 </div>
+
+
+
+    <!-- Main -->
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <!-- Left column -->
+          <a href="#/"><strong><i class="glyphicon glyphicon-wrench"></i> Tools</strong></a>  
+
+          <hr>
+
+          <ul class="list-unstyled">
+            
+            <div ng-include src="'/assets/alcm/partials/menu.html'">
+          
+            <li class="nav-header"> <a href="#/" data-toggle="collapse" data-target="#menu2">
+                <h5>Reports <i class="glyphicon glyphicon-chevron-right"></i></h5>
+              </a>
+
+              <ul class="list-unstyled collapse" id="menu2">
+                <li><a href="#/">Information &amp; Stats</a>
+                </li>
+                <li><a href="#/">Views</a>
+                </li>
+                <li><a href="#/">Requests</a>
+                </li>
+                <li><a href="#/">Timetable</a>
+                </li>
+                <li><a href="#/">Alerts</a>
+                </li>
+              </ul>
+            </li>
+            
+            
+            <li class="nav-header">
+              <a href="#/" data-toggle="collapse" data-target="#menu3">
+                <h5>Social Media <i class="glyphicon glyphicon-chevron-right"></i></h5>
+              </a>
+
+              <ul class="list-unstyled collapse" id="menu3">
+                <li><a href="#/"><i class="glyphicon glyphicon-circle"></i> Facebook</a></li>
+                <li><a href="#/"><i class="glyphicon glyphicon-circle"></i> Twitter</a></li>
+              </ul>
+            </li>
+          </ul>
+
+        
+
+          <hr>
+        </div><!-- /col-3 -->
+        <div class="col-md-9">
+
+          <!-- column 2 -->	
+          <ul class="list-inline pull-right">
+            <li><a href="#/"><i class="glyphicon glyphicon-cog"></i></a></li>
+            <li class="dropdown"><a href="#/" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-comment"></i><span class="count">3</span></a><ul class="dropdown-menu" role="menu"><li><a href="#/">1. Is there a way..</a></li><li><a href="#/">2. Hello, admin. I would..</a></li><li><a href="#/"><strong>All messages</strong></a></li></ul></li>
+            <li><a href="#/"><i class="glyphicon glyphicon-user"></i></a></li>
+            <li><a title="Add Widget" data-toggle="modal" href="#/addWidgetModal"><span class="glyphicon glyphicon-plus-sign"></span> Add Widget</a></li>
+          </ul>
+          <a href="#/"><strong><i class="glyphicon glyphicon-dashboard"></i> My Dashboard</strong></a>  
+
+          <hr>
+
+          <div class="row">
+
+
+
+            <!-- center left-->	
+            <div class="col-md-6">
+              <div class="well">Inbox Messages <span class="badge pull-right">3</span></div>
+
+              <hr>
+
+              <div class="btn-group btn-group-justified">
+                <a href="#/" class="btn btn-primary col-sm-3">
+                  <i class="glyphicon glyphicon-plus"></i><br>
+                  Service
+                </a>
+                <a href="#/" class="btn btn-primary col-sm-3">
+                  <i class="glyphicon glyphicon-cloud"></i><br>
+                  Cloud
+                </a>
+                <a href="#/" class="btn btn-primary col-sm-3">
+                  <i class="glyphicon glyphicon-cog"></i><br>
+                  Tools
+                </a>
+                <a href="#/" class="btn btn-primary col-sm-3">
+                  <i class="glyphicon glyphicon-question-sign"></i><br>
+                  Help
+                </a>
+              </div>
+
+              <hr>
+
+              <div class="panel panel-default">
+                <div class="panel-heading"><h4>Reports</h4></div>
+
+              </div><!--/panel-->
+
+              <hr>              
+ 
+
+              <!--/tabs-->
+
+              <hr>
+
+              <div class="panel panel-default">
+                <div class="panel-heading"><h4>New Requests</h4></div>
+               
+              </div>
+
+            </div><!--/col-->
+            <div class="col-md-6">
+              <div class="panel panel-default">
+                <div class="panel-heading"><h4>Notices</h4></div>
+               
+              </div>
+
+
+
+
+            </div><!--/col-span-6-->
+
+          </div><!--/row-->
+
+        </div><!--/col-span-9-->
+      </div>
+    </div>
+    <!-- /Main -->

@@ -40,28 +40,32 @@
       %>
 
       <table class="<%= model_name %>">
-      	<thead>
+        <thead>
       		<tr>
-      	  <% unless columns['imageUrl'].nil?   %>
-            <th> </th>
-          <% end %>
-          <% columns.keys.reject{|key| key == 'imageUrl' || key == 'id'}.each do |key| %>
+      	  
+            <th><!-- link column --></th>
+          
+          <% columns.keys.reject{|key| key == 'id'}.each do |key| %>
             <th><%= key.titleize %> </th>
           <% end %>
           </tr>
       	</thead>
-      	<tbody>
-        <tr ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp" class="thumbnail">
-           <% unless columns['imageUrl'].nil?   %>
+          
+        <tbody>
+        <tr ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp" ng-class="rowClass(<%= singlename %>)">
+           
             <td>
-            <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}" class="thumb"><img ng-src="{{<%= singlename %>.imageUrl}}"></a>
+            <a href="#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename %>.id}}" >
+            <i class="glyphicon glyphicon-search"></i>
+            </a>
             </td>
-          <% end %>
-          <% columns.keys.reject{|key| key == 'imageUrl'|| key == 'id' }.each do |key| %>
+          
+          <% columns.keys.reject{|key| key == 'id' }.each do |key| %>
             <td>{{<%= singlename %>.<%= key %>}}</td>
           <% end %>
         </tr>
         </tbody>
+       
       </table>
 
     </div>

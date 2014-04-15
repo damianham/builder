@@ -40,10 +40,12 @@
       %>
 
       <ul class="<%= model_name %>">
-        <li ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp" class="thumbnail">
-           <% unless columns['imageUrl'].nil?   %>
-            <a href="#/<%= plural_table_name %>/{{<%= singlename%>.id}}" class="thumb"><img ng-src="{{<%= singlename %>.imageUrl}}"></a>
-          <% end %>
+        <li ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp" >
+           
+            <a href="#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename%>.id}}" >
+            <i class="glyphicon glyphicon-search"></i>
+            </a>
+          
           <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}">{{<%= singlename %>.<%= namefield['column_name'] %>}}</a>
           <% unless descfield.nil?  %>
             <p>{{<%= singlename %>.descfield['column_name']}}</p>

@@ -14,8 +14,10 @@ class RailsVanillaBuilder
   attr_accessor :singular_table_name, :plural_table_name, :human_name, 
         :schema, :model_name, :controller_name, :attributes
   
-  def initialize(name,schema)
-    @schema = schema
+  def initialize(options)
+    @schema = options[:schema]
+      
+    name = options[:name]
     @singular_table_name = name.singularize
     @human_name = @singular_table_name.humanize
     @plural_table_name = name.pluralize

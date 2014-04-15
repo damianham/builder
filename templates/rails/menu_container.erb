@@ -1,10 +1,10 @@
 
 <ul>
-	<li ng-class="{active: routeIs('/')}">
-		 <a href="#/"><i class="icon-home"></i> Home</a>
+    <li ng-class="{active: routeIs('/')}">
+      <a href="#/"><i class="icon-home"></i> Home</a>
     </li>
                 
-<%  comments.each do |data| %>
+<%  menus.each do |data| %>
      
  <li ng-class="{active: routeIs('<%= data[:route] %>')}">
                

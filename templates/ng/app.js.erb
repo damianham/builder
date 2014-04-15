@@ -2,18 +2,30 @@
 
 /* App Module */
 
-var app = angular.module("mainapp", ["ngResource",'ui']);
+var app = angular.module('<%= namespace || "mainapp" %>' , ["ngResource",'ngRoute' ]);
 
 // Gets authentication token injected in the DOM
 app.config(["$httpProvider", function(provider) {
   provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
 }]);
 
+angular.module('alcm')
+ // enclose dependencies as strings within brackets to avoid minification and create the
+ // controller as an anonymous function
+ .controller('HomeCtrl', ['$scope', '$http',
+  function ($scope, $http) {
+    $http.get('/angular/dashboard.json').success(function(data) {
+      $scope.dashboard_data = data;
+    });
+ 
+  }]);
+
 app.config(function ($routeProvider) {
-        $routeProvider.
-<% models.each do |model|   %>
- when('/<%= model.pluralize %>', {templateUrl:  '/assets/partials/<%= model %>-list.html',controller: '<%= model.to_model_name %>ListCtrl'}).
- when('/<%= model.pluralize %>/:<%= model %>Id', {templateUrl: '/assets/partials/<%= model %>-detail.html',controller: '<%= model.to_model_name %>DetailCtrl'}).
+        $routeProvider
+        // the home controller could be namespaced i.e '/assets/<%= namespace || "" %>/partials/home.html'
+.when('/', {templateUrl:  '/assets/partials/home.html' ,controller: 'HomeCtrl'})
+<% models.each do |model|   %>     
+.when('<%= model[:url] %>', {templateUrl:  '<%= model[:template] %>' ,controller: '<%= model[:controller] %>'})
 <% end %>
-otherwise({redirectTo: '/'});
+.otherwise({redirectTo: '/'});
 });

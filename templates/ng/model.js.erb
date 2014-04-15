@@ -7,9 +7,11 @@
  $remove for removing
  query() to fetch all
  get to fetch specific
- */
-app.factory("<%= model_name %>", function($resource) {
+
+angular.module("mainapp").factory("<%= model_name %>", function($resource) {
     return $resource("/<%= plural_table_name %>/:id", {id: "@id"}, {
     	update: {method: "PUT"}
     	});
 });
+
+ */

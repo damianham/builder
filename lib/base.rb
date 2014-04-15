@@ -4,13 +4,17 @@ module Builder
     
     RESERVED_YAML_KEYWORDS = %w(y yes n no true false on off null)
     
-      attr_accessor :singular_table_name, :plural_table_name, :human_name, 
+      attr_accessor :namespace, :singular_table_name, :plural_table_name, :human_name, 
         :schema, :model_name, :controller_name, :attributes, :destination
   
    
-    def initialize(destination,name,schema)
-      @destination ||= destination
-      @schema = schema
+    def initialize(options)
+      @options = options
+      @namespace ||= options[:namespace]
+      @destination ||= options[:output]
+      @schema = options[:schema]
+      
+      name = options[:name]
       @singular_table_name = name.singularize
       @human_name = @singular_table_name.humanize
       @plural_table_name = name.pluralize
@@ -20,7 +24,7 @@ module Builder
       @attributes = schema['columns'].map{|col| 
         FieldDefinition.new(col[1])}.reject{|col| col.name == "id"}
         
-        puts "initialize " + self.class.name + " with " +destination
+      puts "initialize " + self.class.name + " with " +destination
     end
   
     def columns
@@ -34,19 +38,47 @@ module Builder
        "#{key}: #{value}"
      end
     end
+    
+    # namespace is prefix
+    def module_path(filepath,filename)
+      
+      path = "#{filepath}/#{filename}"
+      if ! namespace.nil?
+        path = "#{namespace}/#{filepath}/#{filename}"
+      end
+      path
+    end
+    
+    # namespace is infix
+    def namespaced_path(filepath,filename)
+      
+      path = "#{filepath}/#{filename}"
+      if ! namespace.nil?
+        path = "#{filepath}/#{namespace}/#{filename}"
+      end
+      path
+    end
+    
+    def namespaced_url(url_path)
+      result = url_path
+      if ! namespace.nil?
+        result = '/' + namespace + '/' + url_path
+      end
+      result
+    end
    
     # write content to a file ensuring the enclosing folder exists
-    def write_artifact(filepath,filename,content = nil)
+    def write_artifact(filename,content = nil)
     
+       path = "#{destination}/#{filename}"
+       
       # ensure the target folder exists
-      FileUtils.mkdir_p("#{destination}/#{filepath}")
-    
-      filename = "#{destination}/#{filepath}/#{filename}"
+      FileUtils.mkdir_p(File.dirname(path))
       
-      puts "write to " + filename
+      #puts "write to " + filename
     
       # write the given content or yield the open output file to a block
-      File.open(filename, 'wb') { |file| 
+      File.open(path, 'wb') { |file| 
         if block_given?
           yield file
         else
@@ -60,6 +92,31 @@ module Builder
     def template(filename)
       File.expand_path("../../templates", __FILE__) + "/#{filename}"
     end
+    
+    # getter/setter of hash values
+  def method_missing(method,*args, &block)
+
+    if @options.nil?
+      return super
+    end
+
+    # ensure methodname is a String not a Symbol
+    methodname = method.id2name
+
+    # ensure there is no leading/trailing spaces
+    methodname.strip!
+
+    if methodname[-1] == 61   # '=' character
+      methodname.chop!
+      result = @options.store(methodname.to_sym,*args)
+    elsif @options.has_key? method
+      result = @options.fetch(method)
+    else
+      raise("invalid option name " + methodname)
+    end
+
+    result
+  end
     
     # default implementations that do nothing
     def build_controller 

@@ -12,40 +12,43 @@ class RailsBuilder < Builder::Base
   @@menus = []
   @@comments = []
   
-  def namespace
-    # define the namespace here or nil
-    nil
+  # wrap the content in a module
+  def write_module_artifact(filename,content = nil)
+    if namespace
+      content = indent(content).chomp
+    content = "module #{namespace.capitalize}\n#{content}\nend\n"
+    end
+     
+    write_artifact(filename,content)
   end
  
-  # create a controller for a table in app/controllers
+  # create a controller for a table 
   def build_controller
     filename = plural_table_name + '_controller.rb'
-    puts "build Rails controller for #{controller_name} in app/controllers"
-
+    
     template = File.read(template("rails/controller.erb"))
 
-    text = Erubis::Eruby.new(template).result(:model_name => model_name,
-    :singular_table_name => singular_table_name,
-    :plural_table_name => plural_table_name,
-    :controller_name => controller_name,
-    :model_symbol => ':' + singular_table_name,
-    :schema => schema)
+    text = Erubis::Eruby.new(template).evaluate( self )
     
-    write_artifact("app/controllers",filename,text)
+    path = namespaced_path("app/controllers",filename)
+    puts "build Rails controller for #{controller_name} in #{path}"
+    write_module_artifact(path,text)
 
   end
+  
+  #content = wrap_with_namespace(content) if namespace
 
-  # build a model for a table in app/models
+  # build a model for a table 
   def build_model
 
     filename = singular_table_name + '.rb'
 
-    puts "build Rails model for #{model_name} in app/models"
-
     template = File.read(template("rails/model.erb"))
-    text = Erubis::Eruby.new(template).result(:model_name => model_name, :schema => schema)
+    text = Erubis::Eruby.new(template).evaluate( self )
 
-    write_artifact("app/models",filename,text)
+    path = namespaced_path("app/models",filename)
+    puts "build Rails model for #{model_name} in #{path}"
+    write_module_artifact(path,text)
 
   end
 
@@ -86,19 +89,23 @@ class RailsBuilder < Builder::Base
 
   # build the Rails views for a table
   def build_view 
-    puts "build Rails views for #{model_name} in app/views"
+    
   # build edit _form index new show
   
     ['_form','edit','new','index','show'].each do |file|
       
     
       template = File.read(template("rails/views/#{file}.html.erb"))
-      text = ERB.new(template, nil, '-').result(binding)
-    
-      filename = "#{file}.html.erb"
-      puts "build Rails view in app/views/#{plural_table_name}/#{filename}"
       
-      write_artifact("app/views/#{plural_table_name}",filename,text)
+      # need to use ERB for these templates
+      text = ERB.new(template, nil, '-').result(binding)
+
+      filename = "#{file}.html.erb"
+      #puts "build Rails view"
+      
+      path = namespaced_path("app/views","#{plural_table_name}/"+filename)
+      puts "build Rails #{file} view for #{model_name} in #{path}"
+      write_module_artifact(path,text)
          
     end
     
@@ -109,9 +116,11 @@ class RailsBuilder < Builder::Base
       text = ERB.new(template, nil, '-').result(binding)
     
       filename = "#{file}.json.jbuilder"
-      puts "build Rails view in app/views/#{plural_table_name}/#{filename}"
+      #puts "build Rails JSON view "
       
-      write_artifact("app/views/#{plural_table_name}",filename,text)
+      path = namespaced_path("app/views","#{plural_table_name}/"+filename)
+      puts "build Rails #{file} JSON view for #{model_name} in #{path}"
+      write_artifact(path,text)
          
     end
   
@@ -124,9 +133,11 @@ class RailsBuilder < Builder::Base
   # build model test
       
     template = File.read(template("rails/test/unit_test.rb"))
-    text = ERB.new(template, nil, '-').result(binding)
+    #text = ERB.new(template, nil, '-').result(binding)
+    text = Erubis::Eruby.new(template).evaluate( self )
 
-    write_artifact("test/models",filename,text)
+    path = namespaced_path("test/models",filename)
+    write_artifact(path,text)
   end
   
   # build the controller test for a table
@@ -136,9 +147,11 @@ class RailsBuilder < Builder::Base
     puts "build Rails functional test for #{model_name} in test/controllers"
 
     template = File.read(template("rails/test/functional_test.rb"))
-    text = ERB.new(template, nil, '-').result(binding)
+    #text = ERB.new(template, nil, '-').result(binding)
+    text = Erubis::Eruby.new(template).evaluate( self )
 
-    write_artifact("test/controllers",filename,text)
+    path = namespaced_path("test/controllers",filename)
+    write_artifact(path,text) 
   end
 
   # build the integration test for a table
@@ -148,9 +161,11 @@ class RailsBuilder < Builder::Base
     puts "build Rails integration test for #{model_name} in test/integration"
 
     template = File.read(template("rails/test/integration_test.rb"))
-    text = ERB.new(template, nil, '-').result(binding)
+    #text = ERB.new(template, nil, '-').result(binding)
+    text = Erubis::Eruby.new(template).evaluate( self )
 
-    write_artifact("test/integration",filename,text)
+    path = namespaced_path("test/integration",filename)
+    write_artifact(path,text)  
   end
 
   # build the test fixtures for a table
@@ -159,9 +174,11 @@ class RailsBuilder < Builder::Base
     
     filename = "#{plural_table_name}.yml"
     template = File.read(template("rails/test/fixtures.yml"))
-    text = ERB.new(template, nil, '-').result(binding)
+    #text = ERB.new(template, nil, '-').result(binding)
+    text = Erubis::Eruby.new(template).evaluate( self )
 
-    write_artifact("test/fixtures",filename,text)
+    path = namespaced_path("test/fixtures",filename)
+    write_artifact(path,text)  
   end
   
   # build the test helper for a table
@@ -170,9 +187,11 @@ class RailsBuilder < Builder::Base
     filename = "#{plural_table_name}_helper_test.rb"
 
     template = File.read(template("rails/test/helper_test.rb"))
-    text = ERB.new(template, nil, '-').result(binding)
+    #text = ERB.new(template, nil, '-').result(binding)
+    text = Erubis::Eruby.new(template).evaluate( self )
 
-    write_artifact("test/helpers",filename,text)
+    path = namespaced_path("test/helpers",filename)
+    write_artifact(path,text)  
   end
   
   # build the test artifacts
@@ -190,7 +209,7 @@ class RailsBuilder < Builder::Base
     #puts "build Rails menu for #{model_name} (#{comment}) in app/views/shared"
     @@menus << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
     
-    @@comments << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
+    #@@comments << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
   end
 
   # add the table to the routes
@@ -213,7 +232,7 @@ class RailsBuilder < Builder::Base
       end
     end
     
-    write_artifact("config","routes.rb",content)
+    write_artifact(filename,content)
   end
   
   # finalize the routes and menus
@@ -230,39 +249,46 @@ class RailsBuilder < Builder::Base
     
   end
   
+  def menus
+    @@menus
+  end
   # build the menu system
   def finalize_menu
     
     # save the menu items in a partial for inclusion in main menu
     template = File.read(template("rails/menu_container.erb"))
 
-    text = Erubis::Eruby.new(template).result(:menus => @@menus, :comments => @@comments)
+    #text = Erubis::Eruby.new(template).result(:menus => @@menus, :comments => @@comments)
     
-    filename = "_menu.html.erb"
-    puts "finalize Rails menu in app/views/shared/#{filename}"
+    text = Erubis::Eruby.new(template).evaluate( self )
+    
+    filename = "app/views/shared/_menu.html.erb"
+    puts "finalize Rails menu in #{filename}"
 
     # generate the output
-    write_artifact("app/views/shared",filename,text)
+    write_artifact(filename,text)
     
     # create a single page that lists the database tables with their comments
     template = File.read(template("rails/table_index.erb"))
 
-    text = Erubis::Eruby.new(template).result(:menus => @@menus, :comments => @@comments)
+    #text = Erubis::Eruby.new(template).result(:menus => @@menus, :comments => @@comments)
     
-    filename = "_index.html.erb"
-    puts "finalize Rails menu index in app/views/shared/#{filename}"
+    text = Erubis::Eruby.new(template).evaluate( self )
+    
+    filename = "app/views/shared/_index.html.erb"
+    puts "finalize Rails menu index in #{filename}"
 
     # generate the output
-    write_artifact("app/views/shared",filename,text)
+    write_artifact(filename,text)
     
   end
   
   # build the artifacts to hook AngularJS into the rails app
   def finalize_angular_root
-    finalize_angular_root_controller
-    finalize_angular_root_view
+    #finalize_angular_root_controller
+    #finalize_angular_root_view
     finalize_angular_root_route
-    finalize_angular_root_partials
+    
   end
   
   # buils the angular root controller
@@ -272,14 +298,10 @@ class RailsBuilder < Builder::Base
 
     template = File.read(template("rails/angular/angular_controller.erb"))
 
-    text = Erubis::Eruby.new(template).result(:model_name => model_name,
-    :singular_table_name => singular_table_name,
-    :plural_table_name => plural_table_name,
-    :controller_name => controller_name,
-    :model_symbol => ':' + singular_table_name,
-    :schema => schema)
+    text = Erubis::Eruby.new(template).evaluate( self )
     
-    write_artifact("app/controllers",filename,text)
+    path = namespaced_path("app/controllers",filename)
+    write_artifact(path,text) 
   end
   
   # build the angular root view
@@ -289,14 +311,10 @@ class RailsBuilder < Builder::Base
 
     template = File.read(template("rails/angular/angular_root_view.erb"))
 
-    text = Erubis::Eruby.new(template).result(:model_name => model_name,
-    :singular_table_name => singular_table_name,
-    :plural_table_name => plural_table_name,
-    :controller_name => controller_name,
-    :model_symbol => ':' + singular_table_name,
-    :schema => schema)
+    text = Erubis::Eruby.new(template).evaluate( self )
     
-    write_artifact("app/views/angular",filename,text)
+    path = namespaced_path("app/views/angular",filename)
+    write_artifact(path,text) 
   end
   
   # add the root routes to config/routes.rb
@@ -313,19 +331,6 @@ class RailsBuilder < Builder::Base
     add_routes(routes)
   end
   
-  # build header and footer angular root partials
-  def finalize_angular_root_partials
-    ['header','footer'].each do |file|
-      template = File.read(template("rails/angular/#{file}.html.erb"))
-      text = ERB.new(template, nil, '-').result(binding)
-    
-      filename = "#{file}.html.erb"
-      puts "build Angular partial in app/assets/javascripts/partials/#{filename}"
-      
-      write_artifact("app/assets/javascripts/partials",filename,text)
-    end
-
-  end
 
 
 end  # end class
