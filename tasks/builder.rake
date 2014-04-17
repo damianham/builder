@@ -6,13 +6,6 @@ require 'yaml'
 require File.expand_path( '../builder.rb', File.dirname(__FILE__)  )
  
 require './builder_config'
- 
-task :build_args, :database,:namespace do |t, args|
-
-  puts "Args with defaults were: #{args}"
-  
-  puts 'namespace == ' + args['namespace']
-end
 
 desc "Build the classes"
 
