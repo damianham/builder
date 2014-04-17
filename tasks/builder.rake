@@ -7,19 +7,16 @@ require File.expand_path( '../builder.rb', File.dirname(__FILE__)  )
  
 require './builder_config'
  
-def build_unit(context,table_name,columns)
+task :build_args, :database,:namespace do |t, args|
 
-  @builders.each_pair do |klass,options|
-    
-    
-
-  end
-
+  puts "Args with defaults were: #{args}"
+  
+  puts 'namespace == ' + args['namespace']
 end
 
 desc "Build the classes"
 
-task :build_classes, :database do |t, args|
+task :build_classes, :database,:namespace do |t, args|
 
   #puts "Args with defaults were: #{args}"
 
@@ -30,6 +27,8 @@ task :build_classes, :database do |t, args|
   @builders.each_pair do |klass,options|
     
     builder = nil
+    
+    options.merge!( { :namespace => args['namespace'] }) unless args['namespace'].nil? 
     
     schema['schema'].each_pair do |table_name, columns|
 

@@ -97,15 +97,13 @@ then you would set the output folders to the following values
 #### define the output destinations relative to where you run the rake command
 
 @builders = {
-  RailsBuilder => {:output => './mywebapp', :namespace => 'mynamespace' },
-  AngularRailsBuilder => {:output => './mywebapp/app/assets/javascripts', 
-    :namespace => 'mynamespace'}
+  RailsBuilder => {:output => './mywebapp' },
+  AngularRailsBuilder => {:output => './mywebapp/app/assets/javascripts'}
 }
 ```
 
 and run the rake commands in the workspace directory with the builder_config.rb file in the workspace directory.
-The namespace option will place the artifacts in a subfolder with that namespace and it should be the same value for both
-Angular and Rails generators
+
 
 #### define any tables to ignore
 ```
@@ -125,13 +123,21 @@ define the type of list template to use - either 'list', 'grid' or 'table'
 
 Uses the partial-table.erb template to produce the partial-list.html for each class
 
-### Step 4  - generate the application artifacts
+### Step 4  - customize the templates in the templates folder to your liking
+
+
+### Step 5  - generate the application artifacts
 
 ```
-rake -f builder/tasks/builder.rake build_classes[testdb]
+rake -f builder/tasks/builder.rake build_classes[testdb,namespace]
 ```
 
 generates the application artifacts in the output folder using the generated testdb_column_info.yml file as input
+The namespace argument will place the artifacts in a subfolder with that namespace 
+
+
+### Step 6  - integrate angular into your rails web application
+
 
 ##  TODO
 

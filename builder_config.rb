@@ -1,13 +1,12 @@
 
 
 # define the builders with their output destinations
-# :namespace - create the artifacts in namespace subfolders
 # 
 
 @builders = {
-  RailsBuilder => {:output => './myapp', :namespace => 'mynamespace' },
-  AngularRailsBuilder => {:output => './myapp/app/assets/javascripts', 
-    :namespace => 'mynamespace'}
+  RailsBuilder => {:output => './myapp'  },
+  AngularRailsBuilder => {:output => './myapp/app/assets/javascripts'
+}
 }
 
 # use RailsVanillaBuilder instead of RailsBuilder 
