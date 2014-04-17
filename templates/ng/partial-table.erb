@@ -1,71 +1,82 @@
+<style type="text/css">
+
+  table.<%= model_name %>List th, table.<%= model_name %>List td {
+    padding: 2px;
+    border: 1px solid #428bca;
+    empty-cells: hide;
+  }
+</style>
+
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span2">
+    <div class="span2" style="margin:5px;">
       <!--Sidebar content-->
 
       Search: <input ng-model="query">
       Sort by:
       <select ng-model="orderProp">
- 
- 		<!-- rename the fields and enable accordingly
-        <option value="name">Alphabetical</option>
-        <option value="age">Newest</option>
+
+        <!-- rename the fields and enable accordingly
+<option value="name">Alphabetical</option>
+<option value="age">Newest</option>
         -->
-        
-     	<% 
-     	  default_namefield = nil
-     	  singlename = singular_table_name
-     	  columns = schema['columns']
-     	
-     	  columns.each_pair do |name,column|  %> 
-     	  <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
-     	  <%
-     	  # get the name of the first field that is not called 'id' as default  
-     	  if default_namefield.nil? && name != 'id' && name !~ /_id/  
-    		# use this column unless it is the id primary key or a foreign key
-     	    default_namefield = column
-     	  end %>
-     	<% end %>
+
+        <% 
+        default_namefield = nil
+        singlename = singular_table_name
+        columns = schema['columns']
+
+        columns.each_pair do |name,column|  %> 
+          <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
+          <%
+          # get the name of the first field that is not called 'id' as default  
+          if default_namefield.nil? && name != 'id' && name !~ /_id/  
+            # use this column unless it is the id primary key or a foreign key
+            default_namefield = column
+          end %>
+        <% end %>
       </select>
 
 
     </div>
     <div class="span10">
       <!--Body content-->
-      
+
       <%  # determine the display field names
       namefield = columns['name'] || columns['title'] || default_namefield
       descfield = columns['description'] || columns['info'] || 
-      		columns['summary'] || columns['comment'] || columns['snippet']
-      %>
+        columns['summary'] || columns['comment'] || columns['snippet']
 
-      <table class="<%= model_name %>">
+      rejected_columns = ['id','updated_at','updated_by','comments']
+    %>
+
+      <table class="<%= model_name %>List">
         <thead>
-      		<tr>
-      	  
+          <tr>
+
             <th><!-- link column --></th>
-          
-          <% columns.keys.reject{|key| key == 'id'}.each do |key| %>
-            <th><%= key.titleize %> </th>
-          <% end %>
+
+            <% columns.keys.reject{|key| rejected_columns.include?(key)  }.each do |key| %>
+              <th><%= key.titleize %> </th>
+            <% end %>
           </tr>
-      	</thead>
-          
+        </thead>
+
         <tbody>
-        <tr ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp" ng-class="rowClass(<%= singlename %>)">
-           
+          <tr ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp" ng-class="rowClass(<%= singlename %>)">
+
             <td>
-            <a href="#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename %>.id}}" >
-            <i class="glyphicon glyphicon-search"></i>
-            </a>
+              <a href="#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename %>.id}}" >
+                <i class="glyphicon glyphicon-search"></i>
+              </a>
             </td>
-          
-          <% columns.keys.reject{|key| key == 'id' }.each do |key| %>
-            <td>{{<%= singlename %>.<%= key %>}}</td>
-          <% end %>
-        </tr>
+
+            <% columns.keys.reject{|key| rejected_columns.include?(key) }.each do |key| %>
+              <td>{{<%= singlename %>.<%= key %>}}</td>
+            <% end %>
+          </tr>
         </tbody>
-       
+
       </table>
 
     </div>

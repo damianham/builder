@@ -1,7 +1,46 @@
+<% 
+default_namefield = nil
+
+schema['columns'].each_pair do |name,column| 
+  # get the name of the first field that is not called 'id' as default  
+  if default_namefield.nil? && name != 'id' && name !~ /_id/  
+    # use this column unless it is the id primary key or a foreign key
+    default_namefield = column
+  end 
+end 
+namefield = schema['columns']['name'] || schema['columns']['title'] || default_namefield
+%>
 
 class <%= controller_name %> < ApplicationController
-  before_action :set_<%= singular_table_name %>, only: [:show, :edit, :update, :destroy]
+  before_action :set_<%= singular_table_name %>, only: [:show, :edit, :update, :destroy, :related, :bridged]
  
+  def fields
+    # get the fields for a table - not required as the view templates are generated for each table
+    <%= schema['columns'].keys.collect.inspect %>
+  end
+  
+  def range
+    # get a named range from a table 
+    values = <%= model_name %>.all
+    values.each.collect{|item| [item.id,item.<%= namefield['column_name'] %>]}
+  end
+  
+  def related
+    # get the records that are related to an object instance by the named relation
+    # - a one-to-many relationship the relation parameter holds the name of the related objects
+    values = @<%= singular_table_name %>.send(params['relation'].to_sym)
+  end
+  
+  def bridged
+    # get the records that are related to an object instance by the named relation
+    # via a bridging table i.e. user_groups - a many-to-many relationship
+    # this is the same as the related method - we use Rails magic in the model to specify a through relation 
+    # e.g User.rb  --> has_many :policies, through: :user_policies
+    # sending the method :policies to the object will get the related policies via the user_policies table
+    values = @<%= singular_table_name %>.send(params['relation'].to_sym)
+  end
+
+  
  def search
    @<%= plural_table_name %> = <%= model_name %>.where(:where => params[:where])
    
