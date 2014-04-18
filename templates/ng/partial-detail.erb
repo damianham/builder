@@ -3,7 +3,7 @@ default_namefield = nil
 singlename = singular_table_name
 columns = schema['columns']
 
-rejected_columns = ['id','updated_at','updated_by','comments']
+rejected_columns = ['id' ]
 
 columns.each_pair do |name,column| 
   # get the name of the first field that is not called 'id' as default  
@@ -54,3 +54,5 @@ descfield = columns['description'] || columns['info'] ||
   </tbody>
 
 </table>
+
+<!-- include te standard links   [back, edit, new, delete, history] -->
