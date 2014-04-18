@@ -33,8 +33,8 @@ class AngularRailsBuilder < Builder::Base
   end
 
   def build_list_partial 
-
-    #filename = "#{singular_table_name}-list.html"
+    
+    return if skip_method(__method__)
     
     template = File.read(template("ng/partial-#{LIST_TYPE}.erb"))
     
@@ -59,8 +59,8 @@ class AngularRailsBuilder < Builder::Base
   end
 
   def build_detail_partial  
-
-    #filename = "#{singular_table_name}-detail.html"
+    
+    return if skip_method(__method__)
 
     template = File.read(template("ng/partial-detail.erb"))
     
@@ -81,26 +81,55 @@ class AngularRailsBuilder < Builder::Base
     write_artifact(path,text)
 
   end
+  
+  def build_form_partial
+    
+    return if skip_method(__method__)
+
+    template = File.read(template("ng/partial-form.erb"))
+    
+    filename = "#{singular_table_name}/form.html"
+    
+    text = Erubis::Eruby.new(template).evaluate( self )
+    
+    # add a route for this partial
+    @@ng_routes << {
+      :template => '/assets/' + module_path('modules', filename),
+      :controller => model_name + 'FormCtrl',
+      :url => namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id'
+      }
+      
+    # generate the output
+    path = module_path("modules",filename)
+    puts "build Ng form partial for #{model_name} in #{path}"
+    write_artifact(path,text)
+  end
 
   def build_view 
+    return if skip_method(__method__)
     build_list_partial 
     build_detail_partial 
+    build_form_partial
   end
 
 
   def build_unit_test 
+    return if skip_method(__method__)
     puts "build unit test for #{model_name} in test/unit"
   end
 
   def build_e2e_test 
+    return if skip_method(__method__)
     puts "build e2e test for #{model_name} in test/e2e"
   end
 
   def build_test_fixtures 
+    return if skip_method(__method__)
     puts "build fixture for #{model_name} in test/fixtures"
   end
   
   def build_test
+    return if skip_method(__method__)
     build_test_fixtures
     build_unit_test
     build_e2e_test
@@ -121,6 +150,9 @@ class AngularRailsBuilder < Builder::Base
   end
 
   def finalize_artifacts
+    
+    return if skip_method(__method__)
+    
     filename = "app.js"
  
     template = File.read(template("ng/app.js.erb"))
@@ -140,16 +172,18 @@ class AngularRailsBuilder < Builder::Base
     finalize_menu
     
     # copy the angular library into the application
-    #finalize_angular_lib
+    finalize_angular_lib
     
     # integrate the angular stylesheets
-    #finalize_angular_stylesheets
+    finalize_angular_stylesheets
     
-    #finalize_angular_root_partials
+    finalize_angular_root_partials
     
   end
   
   def finalize_modules
+    
+    return if skip_method(__method__)
     
     @@ng_modules.each do |mod|
     
@@ -168,6 +202,9 @@ class AngularRailsBuilder < Builder::Base
   
   # build header and footer angular root partials
   def finalize_angular_root_partials
+    
+    return if skip_method(__method__)
+    
     ['header','footer','home'].each do |file|
       template = File.read(template("ng/#{file}.html.erb"))
       text = ERB.new(template, nil, '-').result(binding)
@@ -182,6 +219,8 @@ class AngularRailsBuilder < Builder::Base
   end
   
   def finalize_menu
+    
+    return if skip_method(__method__)
       
     filename = "menu.html"
     template = File.read(template("ng/menu.html.erb"))
@@ -206,12 +245,19 @@ class AngularRailsBuilder < Builder::Base
     
   end
   
+  def copy_angular_lib
+    return if skip_method(__method__)
+    
+    src = template("ng/lib")
+    #dest = "#{destination}/lib"
+    puts "copying recursively #{src} to #{destination}"
+    FileUtils.cp_r src, destination
+    
+  end
   # copy the angular library to the destination
   def finalize_angular_lib
-    #src = template("ng/lib")
-    #dest = "#{destination}/lib"
-    #puts "copying recursively #{src} to #{dest}"
-    #FileUtils.cp_r src, destination
+    
+    copy_angular_lib
     
     # integrate the angular libs into the application.js in the right order
     filename = "#{destination}/application.js"
@@ -226,26 +272,35 @@ class AngularRailsBuilder < Builder::Base
 //= require lib/angular/angular-touch.min
 //= require lib/angular/angular-animate.min
 //= require lib/bootstrap.min
+// now include application modules
 "
+
+    # add the angular libs and boot strap first
+    unless content.include? libs
+      content.sub!(/require turbolinks\s*$/) {|matched| matched + "\n#{libs}\n"}
+    end
     
     if namespace
-      libs << "//= require #{namespace}/app/app
+      libs = "//= require #{namespace}/app/app
 //= require #{namespace}/app/services
-//= require_tree ./#{namespace}/modules"
+//= require_tree #{namespace}/modules"
     else
-      libs << "//= require app/app
+      libs = "//= require app/app
 //= require app/services
-//= require_tree ./modules"
+//= require_tree modules"
     end
     
     unless content.include? libs
-      content.sub!(/require turbolinks\s*$/) {|matched| matched + "\n#{libs}\n"}
+      content.sub!(/now include application modules\s*$/) {|matched| matched + "\n#{libs}\n"}
     end
 
     write_artifact("application.js",content) 
   end
   
   def finalize_angular_stylesheets
+    
+    return if skip_method(__method__)
+    
     # integrate the angular styles into the application.css in the right order
     filename = "#{destination}/../stylesheets/application.css"
     

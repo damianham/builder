@@ -26,6 +26,12 @@ module Builder
         
       puts "initialize " + self.class.name + " with " +destination
     end
+    
+    # skip the named method based on the contents of the :only and :except options
+    def skip_method(methodname)
+      (@options[:only] && ! @options[:only].include?(methodname) ) || 
+        (@options[:except] && @options[:except].include?(methodname))
+    end
   
     def columns
      schema['columns']

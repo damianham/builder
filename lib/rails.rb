@@ -24,6 +24,9 @@ class RailsBuilder < Builder::Base
  
   # create a controller for a table 
   def build_controller
+    
+    return if skip_method(__method__)
+    
     filename = plural_table_name + '_controller.rb'
     
     template = File.read(template("rails/controller.erb"))
@@ -40,6 +43,8 @@ class RailsBuilder < Builder::Base
 
   # build a model for a table 
   def build_model
+    
+    return if skip_method(__method__)
 
     filename = singular_table_name + '.rb'
 
@@ -90,6 +95,8 @@ class RailsBuilder < Builder::Base
   # build the Rails views for a table
   def build_view 
     
+    return if skip_method(__method__)
+    
   # build edit _form index new show
   
     ['_form','edit','new','index','show'].each do |file|
@@ -128,6 +135,9 @@ class RailsBuilder < Builder::Base
   
   # build the unit test for a table
   def build_unit_test 
+    
+    return if skip_method(__method__)
+    
     filename = "#{singular_table_name}_test.rb"
     puts "build Rails unit test for #{model_name} in test/models"
   # build model test
@@ -142,6 +152,8 @@ class RailsBuilder < Builder::Base
   
   # build the controller test for a table
   def build_functional_test 
+    
+    return if skip_method(__method__)
 
     filename = "#{singular_table_name}_controller_test.rb"
     puts "build Rails functional test for #{model_name} in test/controllers"
@@ -156,6 +168,8 @@ class RailsBuilder < Builder::Base
 
   # build the integration test for a table
   def build_integration_test 
+    
+    return if skip_method(__method__)
 
     filename = "#{plural_table_name}_test.rb"
     puts "build Rails integration test for #{model_name} in test/integration"
@@ -170,6 +184,9 @@ class RailsBuilder < Builder::Base
 
   # build the test fixtures for a table
   def build_test_fixtures 
+    
+    return if skip_method(__method__)
+    
     puts "build Rails fixture for #{model_name} in test/fixtures"
     
     filename = "#{plural_table_name}.yml"
@@ -183,6 +200,9 @@ class RailsBuilder < Builder::Base
   
   # build the test helper for a table
   def build_test_helper 
+    
+    return if skip_method(__method__)
+    
     puts "build Rails test helper for #{model_name} in test/helpers"
     filename = "#{plural_table_name}_helper_test.rb"
 
@@ -196,6 +216,9 @@ class RailsBuilder < Builder::Base
   
   # build the test artifacts
   def build_test
+    
+    return if skip_method(__method__)
+    
     build_test_fixtures
     build_test_helper
     build_functional_test
@@ -209,7 +232,6 @@ class RailsBuilder < Builder::Base
     #puts "build Rails menu for #{model_name} (#{comment}) in app/views/shared"
     @@menus << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
     
-    #@@comments << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
   end
 
   # add the table to the routes
@@ -222,6 +244,9 @@ class RailsBuilder < Builder::Base
   
   # add the given routes to the Rails config/routes.rb file
   def add_routes(routes)
+    
+    return if skip_method(__method__)
+    
     filename = "#{destination}/config/routes.rb"
     
     content = File.read(filename)
@@ -237,6 +262,9 @@ class RailsBuilder < Builder::Base
   
   # finalize the routes and menus
   def finalize_artifacts
+    
+    return if skip_method(__method__)
+    
     puts "finalize Rails routes in config/routes.rb"
     
     add_routes(@@rails_routes)
@@ -254,6 +282,8 @@ class RailsBuilder < Builder::Base
   end
   # build the menu system
   def finalize_menu
+    
+    return if skip_method(__method__)    
     
     # save the menu items in a partial for inclusion in main menu
     template = File.read(template("rails/menu_container.erb"))
@@ -285,14 +315,20 @@ class RailsBuilder < Builder::Base
   
   # build the artifacts to hook AngularJS into the rails app
   def finalize_angular_root
-    #finalize_angular_root_controller
-    #finalize_angular_root_view
+    
+    return if skip_method(__method__)
+    
+    finalize_angular_root_controller
+    finalize_angular_root_view
     finalize_angular_root_route
     
   end
   
   # buils the angular root controller
   def finalize_angular_root_controller
+    
+    return if skip_method(__method__)
+    
     filename = 'angular_controller.rb'
     puts "build Rails root controller in app/controllers"
 
@@ -306,6 +342,9 @@ class RailsBuilder < Builder::Base
   
   # build the angular root view
   def finalize_angular_root_view
+    
+    return if skip_method(__method__)
+    
     filename = 'angular.html.erb'
     puts "build Rails root view in app/views"
 
@@ -319,6 +358,9 @@ class RailsBuilder < Builder::Base
   
   # add the root routes to config/routes.rb
   def finalize_angular_root_route
+    
+    return if skip_method(__method__)
+    
     filename = "#{destination}/config/routes.rb"
     puts "add root route"
         

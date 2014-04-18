@@ -104,6 +104,26 @@ then you would set the output folders to the following values
 
 and run the rake commands in the workspace directory with the builder_config.rb file in the workspace directory.
 
+You can also add :only and :except elements to each builder's options hash 
+which are both arrays of method name symbols to limit the actions of each builder.
+
+If the :only option exists then only methods named in the 
+:only array will do anything, all other methods will return immediately.  Any 
+methods named in the :except array will do nothing and return immediately.
+
+```
+#### define the output destinations relative to where you run the rake command
+
+@builders = {
+  RailsBuilder => {:output => './myapp' ,
+  # do not do anything for these methods
+  :except => [:finalize_angular_root, :build_model, :build_controller] },
+
+  AngularRailsBuilder => {:output => './myapp/app/assets/javascripts',
+  # don't do anything except finalize the menu
+  :only => [:finalize_menu]}
+}
+```
 
 #### define any tables to ignore
 ```
@@ -138,9 +158,31 @@ The namespace argument will place the artifacts in a subfolder with that namespa
 
 ### Step 6  - integrate angular into your rails web application
 
+###  complete run through
+
+The following steps will create a running web application from scratch based on
+a mysql database existing called testdb and a database user with the logon 
+username:password credentials of testuser:testpass
+
+```
+# we don't want everything in the home folder so let's use Eclipse convention
+cd ~/workspace  
+git clone https://github.com/damianham/builder.git
+rake -f builder/tasks/mysql2.rake build_schema[testdb,testuser,testpass]
+rails new mywebapp && (cd mywebapp && bundle install)
+rake -f builder/tasks/builder.rake build_classes[testdb,mywebapp]
+```
+
+Finally integrate the Angular app into your web application by adding the ng-app
+attribute to the html opening tag.
+
+```
+<html lang="en" ng-app='mywebapp'>
+```
 
 ##  TODO
 
+- So many things
 - Create Rspec, Cucumber and CoffeeScript generators
 - Create schema extractors for other database engines
 
