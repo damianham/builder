@@ -1,5 +1,11 @@
 'use strict';
 
+<% 
+
+# shorten the accessor name
+singlename = singular_table_name
+%>
+
 /* module */
 
 // model/service
@@ -15,7 +21,8 @@
 angular.module('<%= namespace || "mainapp" %>').factory('<%= model_name %>', ['$resource',
   function($resource){
     return $resource('<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/:<%= singlename %>Id.json', {}, {
-      list: {method:'GET',  isArray:true}
+      list: {method:'GET',  isArray:true},
+      update:   {method:'PUT'}
     });
   }]);
 
@@ -27,7 +34,7 @@ angular.module('<%= namespace || "mainapp" %>')
     function ($scope, <%= model_name %>) {
     
       $scope.<%= plural_table_name %> = <%= model_name %>.list();
- 
+      
       $scope.orderProp = 'id';
     }]);
 
@@ -54,26 +61,46 @@ angular.module('<%= namespace || "mainapp" %>')
       $scope.processForm = function(formData,isvalid) {
       
         $scope.submitted = true;
-        <%= model_name %>.save(formData)
-        .success(function(data) {
-            console.log(data);
-            // bind success message to message
-            $scope.message = data.message;
-        })
-        .error(function(data) {
-            console.log(data);
+        
+        if ($scope.<%= singlename %>.id == null) {
+            <%= model_name %>.save(formData)
+            .success(function(data) {
+              console.log(data);
+              // bind success message to message
+              $scope.message = data.message;
+            })
+            .error(function(data) {
+              console.log(data);
             
-            $scope.<%= singlename %>_errors = data.errors;
-            // bind error message to message
-            $scope.message = data.message;
+              $scope.<%= singlename %>_errors = data.errors;
+              // bind error message to message
+              $scope.message = data.message;
             
-        })
-        ;
+            })
+            ;
+        } else {
+            <%= model_name %>.update({ <%= singlename %>Id:$scope.<%= singlename %>.id },formData)
+            .success(function(data) {
+              console.log(data);
+              // bind success message to message
+              $scope.message = data.message;
+            })
+            .error(function(data) {
+              console.log(data);
+            
+              $scope.<%= singlename %>_errors = data.errors;
+              // bind error message to message
+              $scope.message = data.message;
+            
+            })
+            ;
+        
+        }
       };
       
       // create a blank object to hold our form information or load the record
       // $scope will allow this to pass between controller and view
-      if $routeParams.<%= singlename %>Id == null {
+      if ($routeParams.<%= singlename %>Id == null) {
         $scope.<%= singlename %> = {};
       } else {
         $scope.<%= singlename %> = <%= model_name %>.get({<%= singlename %>Id: $routeParams.<%= singlename %>Id});

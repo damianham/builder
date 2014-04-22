@@ -46,7 +46,7 @@ class AngularRailsBuilder < Builder::Base
     @@ng_routes << {
       :template => '/assets/' + module_path('modules', filename),
       :controller => model_name + 'ListCtrl',
-      :url => namespaced_url(plural_table_name) 
+      :url => '/' + namespaced_url(plural_table_name) 
       }
     
  
@@ -72,7 +72,7 @@ class AngularRailsBuilder < Builder::Base
     @@ng_routes << {
       :template => '/assets/' + module_path('modules', filename),
       :controller => model_name + 'DetailCtrl',
-      :url => namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id'
+      :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id'
       }
       
     # generate the output
@@ -96,8 +96,14 @@ class AngularRailsBuilder < Builder::Base
     @@ng_routes << {
       :template => '/assets/' + module_path('modules', filename),
       :controller => model_name + 'FormCtrl',
-      :url => namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id'
+      :url => '/' + namespaced_url(plural_table_name) + '/new'
       }
+    @@ng_routes << {
+      :template => '/assets/' + module_path('modules', filename),
+      :controller => model_name + 'FormCtrl',
+      :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id/edit'
+      }
+  
       
     # generate the output
     path = module_path("modules",filename)
@@ -107,9 +113,12 @@ class AngularRailsBuilder < Builder::Base
 
   def build_view 
     return if skip_method(__method__)
-    build_list_partial 
-    build_detail_partial 
+     
     build_form_partial
+    
+    build_detail_partial     
+    
+    build_list_partial
   end
 
 
@@ -138,7 +147,7 @@ class AngularRailsBuilder < Builder::Base
   def build_menu
     #puts "build Ng menu for #{model_name}"
     @@menus << { :model_name => model_name, :comment => schema['comment'], 
-      :url => namespaced_url(plural_table_name) }
+      :url => '/' + namespaced_url(plural_table_name) }
   end
   
   def menus
@@ -283,11 +292,11 @@ class AngularRailsBuilder < Builder::Base
     if namespace
       libs = "//= require #{namespace}/app/app
 //= require #{namespace}/app/services
-//= require_tree #{namespace}/modules"
+//= require_tree ./#{namespace}/modules"
     else
       libs = "//= require app/app
 //= require app/services
-//= require_tree modules"
+//= require_tree ./modules"
     end
     
     unless content.include? libs

@@ -1,6 +1,10 @@
 <% 
-default_namefield = nil
+
+# shorten the accessor name
 singlename = singular_table_name
+
+default_namefield = nil
+
 columns = schema['columns']
 
 rejected_columns = ['id','updated_at','updated_by' ]
@@ -37,6 +41,18 @@ descfield = columns['description'] || columns['info'] ||
   .ng-invalid-required 		{  }
   .ng-invalid-minlength 		{  }
   .ng-valid-max-length 		{  }
+  
+   table.<%= model_name %> th, table.<%= model_name %> td {
+    padding: 2px;
+    border: 1px solid #428bca;
+
+  }
+
+  button {
+    padding: 2px;
+    margin: 5px;
+  }
+  
 </style>
 
 <!--
@@ -65,37 +81,51 @@ descfield = columns['description'] || columns['info'] ||
 <!-- SHOW ERROR/SUCCESS MESSAGES -->
 <div id="messages">{{ message }}</div>
 
+
 <!-- pass in the form and if our form is valid or invalid -->
 <form name="<%= singlename %>Form" 
       ng-submit="processForm(<%= singlename %>,<%= singlename %>Form.$valid)" 
       novalidate> <!-- novalidate prevents HTML5 validation since angular will validate -->
-        <% columns.reject{|column| rejected_columns.include?(column['name'])  }.each do |column| %>
-    <div id="<%= column['name'] %>-group" class="form-group"
-         ng-class="{ 'has-error' : <%= singlename %>Form.<%= column['name'] %>.$invalid && !<%= singlename %>Form.<%= column['name'] %>.$pristine && submitted }"
+
+  <% columns.values.reject{|column| rejected_columns.include?(column['column_name'])  }.each do |column| %>
+
+
+    <div id="<%= column['column_name'] %>-group" class="form-group"
+         ng-class="{ 'has-error' : <%= singlename %>Form.<%= column['column_name'] %>.$invalid && !<%= singlename %>Form.<%= column['column_name'] %>.$pristine && submitted }"
          >
-      <label><%= column['name'].titleize %></label>
-      <input type="text" name="<%= column['name'] %>" class="form-control" 
-             placeholder="<%= column['comment'] %>" ng-model="<%= singlename %>.<%= column['name'] %>">
-      <span class="help-block" 
-            ng-show="<%= singlename %>Form.<%= column['name'] %>.$invalid && !<%= singlename %>Form.<%= column['name'] %>.$pristine">
-        This value in this field is invalid
-      </span>
-      <span class="help-block" 
-            ng-show="<%= singlename %>_errors.<%= column['name'] %>">
-        {{ <%= singlename %>_errors.<%= column['name'] %> }}>
-      </span>
+      <label><%= column['column_name'].titleize %></label>
+      <%- if column['data_type'] == 'int' %>
+        <input type="number" <%= form_attributes(column).join(' ') %> ng-model="<%= singlename %>.<%= column['column_name'] %>" />
+        <span ng-show="form.<%= column['column_name'] %>.$error.integer">This is not a valid integer!</span>
+        <span ng-show="form.<%= column['column_name'] %>.$error.min || form.<%= column['column_name'] %>.$error.max">
+          The value must be in range 0 to 4294967295 </span>
+      <% else  # default to char/varchar %>
+        <input type="text" <%= form_attributes(column).join(' ') %>  />
+        <span class="help-block" 
+              ng-show="<%= singlename %>Form.<%= column['column_name'] %>.$invalid && !<%= singlename %>Form.<%= column['column_name'] %>.$pristine">
+          This value in this field is invalid
+        </span>
+        <span class="help-block" 
+              ng-show="<%= singlename %>_errors.<%= column['column_name'] %>">
+          {{ <%= singlename %>_errors.<%= column['column_name'] %> }}>
+        </span>    
+      <% end %>
+
     </div>
   <% end %>
 
-  <button type="submit" class="btn btn-success btn-lg btn-block" 
-          ng-disabled="<%= singlename %>Form.$invalid || isUnchanged(user) || submitted">
+  <button type="submit" class="btn btn-success btn-block" 
+          ng-disabled="<%= singlename %>Form.$invalid || isUnchanged(<%= singlename %>) || submitted" >
     <span class="glyphicon glyphicon-flash"></span> Submit!
   </button>
-  <button ng-click="reset()" ng-disabled="isUnchanged(user)">RESET</button>
-  <button ng-click="update(user)" ng-disabled="<%= singlename %>Form.$invalid || isUnchanged(user) || submitted">SAVE</button>
+  <button ng-click="reset()" ng-disabled="isUnchanged(<%= singlename %>)">RESET</button>
+  <button ng-click="update(user)" ng-disabled="<%= singlename %>Form.$invalid || isUnchanged(<%= singlename %>) || submitted">SAVE</button>
 </form>
+
+
+
 
 <!-- SHOW DATA FROM INPUTS AS THEY ARE BEING TYPED -->
 <pre>
-		{{ formData }}
+		{{ <%= singlename %> }}
 </pre>

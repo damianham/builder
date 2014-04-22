@@ -19,6 +19,19 @@ descfield = columns['description'] || columns['info'] ||
   columns['summary'] || columns['comment'] || columns['snippet']
 %>
 
+<style type="text/css">
+
+  table.<%= model_name %> th, table.<%= model_name %> td {
+    padding: 2px;
+    border: 1px solid #428bca;
+
+  }
+
+  button {
+    padding 2px;
+    margin-right: 10px;
+  }
+</style>
 <!--
         enable if the class has a main image
 <img ng-src="{{mainImageUrl}}" class="<%= singlename %>">
@@ -55,4 +68,29 @@ descfield = columns['description'] || columns['info'] ||
 
 </table>
 
-<!-- include te standard links   [back, edit, new, delete, history] -->
+<!-- include the standard links   [back, edit, new, delete, history] -->
+<div style="margin-top: 10px;">
+  <a class="btn btn-inverse" onclick="javascript:history.go(-1)">Back</a> 
+  <a class="btn btn-warning" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/edit" >Edit</a>
+  <a class="btn btn-success" href="<%= angular_url(plural_table_name) %>/new" >New</a>
+  <a class="btn btn-danger" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/delete" confirm='Are you sure?'>Delete</a>
+  <a class="btn btn-primary" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/history" >History</a>
+
+  <!--
+    other button classes
+    btn-info, btn-inverse
+  -->
+
+</div>
+
+<!--
+as links
+<div>
+  <a href="javascript:history.go(-1)">Back</a>  |
+  <a href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>Id }}/edit" title="Edit this <%= model_name %>">Edit</a> |
+  <a href="<%= angular_url(plural_table_name) %>/new" title="Create a new <%= model_name %>">New</a> |
+  <a href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>Id }}/delete" title="Delete this <%= model_name %>">Delete</a> | 
+  <a href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>Id }}/history" title="View the journal history for this <%= model_name %>">History</a>
+
+</div>
+-->

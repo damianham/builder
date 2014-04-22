@@ -4,8 +4,8 @@ module Builder
     
     RESERVED_YAML_KEYWORDS = %w(y yes n no true false on off null)
     
-      attr_accessor :namespace, :singular_table_name, :plural_table_name, :human_name, 
-        :schema, :model_name, :controller_name, :attributes, :destination
+    attr_accessor :namespace, :singular_table_name, :plural_table_name, :human_name, 
+      :schema, :model_name, :controller_name, :attributes, :destination
   
    
     def initialize(options)
@@ -34,15 +34,15 @@ module Builder
     end
   
     def columns
-     schema['columns']
+      schema['columns']
     end
    
     def yaml_key_value(key, value)
-     if RESERVED_YAML_KEYWORDS.include?(key.downcase)
-       "'#{key}': #{value}"
-     else
-       "#{key}: #{value}"
-     end
+      if RESERVED_YAML_KEYWORDS.include?(key.downcase)
+        "'#{key}': #{value}"
+      else
+        "#{key}: #{value}"
+      end
     end
     
     # namespace is prefix
@@ -65,10 +65,14 @@ module Builder
       path
     end
     
+    def angular_url(url_path)
+      '/#/' + namespaced_url(url_path)
+    end
+    
     def namespaced_url(url_path)
       result = url_path
       if ! namespace.nil?
-        result = '/' + namespace + '/' + url_path
+        result =  namespace + '/' + url_path
       end
       result
     end
@@ -76,7 +80,7 @@ module Builder
     # write content to a file ensuring the enclosing folder exists
     def write_artifact(filename,content = nil)
     
-       path = "#{destination}/#{filename}"
+      path = "#{destination}/#{filename}"
        
       # ensure the target folder exists
       FileUtils.mkdir_p(File.dirname(path))
@@ -100,29 +104,49 @@ module Builder
     end
     
     # getter/setter of hash values
-  def method_missing(method,*args, &block)
+    def method_missing(method,*args, &block)
 
-    if @options.nil?
-      return super
+      if @options.nil?
+        return super
+      end
+
+      # ensure methodname is a String not a Symbol
+      methodname = method.id2name
+
+      # ensure there is no leading/trailing spaces
+      methodname.strip!
+
+      if methodname[-1] == 61   # '=' character
+        methodname.chop!
+        result = @options.store(methodname.to_sym,*args)
+      elsif @options.has_key? method
+        result = @options.fetch(method)
+      else
+        raise("invalid option name " + methodname)
+      end
+
+      result
     end
-
-    # ensure methodname is a String not a Symbol
-    methodname = method.id2name
-
-    # ensure there is no leading/trailing spaces
-    methodname.strip!
-
-    if methodname[-1] == 61   # '=' character
-      methodname.chop!
-      result = @options.store(methodname.to_sym,*args)
-    elsif @options.has_key? method
-      result = @options.fetch(method)
-    else
-      raise("invalid option name " + methodname)
+  
+    def form_attributes(column)
+      attributes = [
+        "name='#{column['column_name']}'" ,
+        "class='form-control'",
+        "placeholder='#{column['column_comment']}'",
+        "ng-model='#{singular_table_name}.#{column['column_name']}'"
+      ]
+      
+      if column['data_type'] == 'int'
+        attributes << "min='0' max='4294967295'"   # max unsigned int
+        attributes << 'integer'
+      elsif column['data_type'] == 'char' || column['data_type'] == 'varchar'
+        attributes << "ng-maxlength='#{column['character_maximum_length']}'"
+      end
+       
+      attributes << 'required' if column['is_nullable'] == 'NO'
+      
+      attributes
     end
-
-    result
-  end
     
     # default implementations that do nothing
     def build_controller 
@@ -185,7 +209,7 @@ module Builder
       when :text                 then :text_area
       when :boolean,:tinyint     then :check_box
       else
-      :text_field
+        :text_field
       end
     end
 
@@ -201,7 +225,7 @@ module Builder
       when :boolean,:tinyint            then false
       when :references, :belongs_to     then nil
       else
-      ""
+        ""
       end
     end
     

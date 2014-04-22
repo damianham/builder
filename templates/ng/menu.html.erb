@@ -14,7 +14,7 @@
 
       <li ng-class="{active: routeIs('<%= data[:route] %>')}">
 
-        <a href="/#<%= data[:url] %>" title="<%= data[:comment] %>">
+        <a href="<%= data[:url] %>" title="<%= data[:comment] %>">
           <i class="glyphicon glyphicon-cog"></i>
           <%= data[:model_name].titleize.pluralize %>
         </a>
