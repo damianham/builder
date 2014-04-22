@@ -63,37 +63,35 @@ angular.module('<%= namespace || "mainapp" %>')
         $scope.submitted = true;
         
         if ($scope.<%= singlename %>.id == null) {
-            <%= model_name %>.save(formData)
-            .success(function(data) {
+             <%= model_name %>.save({  },
+            formData, function(data) {
               console.log(data);
               // bind success message to message
               $scope.message = data.message;
-            })
-            .error(function(data) {
+            },
+            function(data) {
               console.log(data);
             
               $scope.<%= singlename %>_errors = data.errors;
               // bind error message to message
               $scope.message = data.message;
             
-            })
-            ;
+            }) ;
         } else {
-            <%= model_name %>.update({ <%= singlename %>Id:$scope.<%= singlename %>.id },formData)
-            .success(function(data) {
+            <%= model_name %>.update({ <%= singlename %>Id:$scope.<%= singlename %>.id },
+            formData, function(data) {
               console.log(data);
               // bind success message to message
               $scope.message = data.message;
-            })
-            .error(function(data) {
+            },
+            function(data) {
               console.log(data);
             
               $scope.<%= singlename %>_errors = data.errors;
               // bind error message to message
               $scope.message = data.message;
             
-            })
-            ;
+            }) ;
         
         }
       };
@@ -101,7 +99,7 @@ angular.module('<%= namespace || "mainapp" %>')
       // create a blank object to hold our form information or load the record
       // $scope will allow this to pass between controller and view
       if ($routeParams.<%= singlename %>Id == null) {
-        $scope.<%= singlename %> = {};
+        $scope.<%= singlename %> = new <%= model_name %>();
       } else {
         $scope.<%= singlename %> = <%= model_name %>.get({<%= singlename %>Id: $routeParams.<%= singlename %>Id});
       }
