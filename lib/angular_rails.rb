@@ -281,6 +281,7 @@ class AngularRailsBuilder < Builder::Base
 //= require lib/angular/angular-touch.min
 //= require lib/angular/angular-animate.min
 //= require lib/bootstrap.min
+//= require lib/ng-table.min
 // now include application modules
 "
 

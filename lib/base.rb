@@ -148,6 +148,14 @@ module Builder
       attributes
     end
     
+    # if this field_name is suffixed with '_id' and there is a matching key in the
+    # belongs_to hash 
+    def is_foreign_key?(field_name)
+      return false unless field_name =~ /\w*_id$/ 
+      relation = field_name.gsub(/_id$/,'').pluralize
+      schema['belongs_to'][relation] == 1
+    end
+    
     # default implementations that do nothing
     def build_controller 
     end
