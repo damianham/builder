@@ -27,7 +27,7 @@ task :build_classes, :database,:namespace do |t, args|
 
       next if IGNORE_TABLES.include?(table_name)
       
-      table_options = options.merge( { :name => table_name, :schema => columns})
+      table_options = options.merge( { :name => table_name.tableize, :schema => columns})
       
       # build the artifacts for this table
       builder = klass.new(table_options)
