@@ -1,5 +1,7 @@
 <% 
 
+#puts schema.inspect
+
 # shorten the accessor name
 singlename = singular_table_name
 
@@ -41,8 +43,8 @@ descfield = columns['description'] || columns['info'] ||
   .ng-invalid-required 		{  }
   .ng-invalid-minlength 		{  }
   .ng-valid-max-length 		{  }
-  
-   table.<%= model_name %> th, table.<%= model_name %> td {
+
+  table.<%= model_name %> th, table.<%= model_name %> td {
     padding: 2px;
     border: 1px solid #428bca;
 
@@ -52,7 +54,7 @@ descfield = columns['description'] || columns['info'] ||
     padding: 2px;
     margin: 5px;
   }
-  
+
 </style>
 
 <!--
@@ -94,13 +96,25 @@ descfield = columns['description'] || columns['info'] ||
          ng-class="{ 'has-error' : <%= singlename %>Form.<%= column['column_name'] %>.$invalid && !<%= singlename %>Form.<%= column['column_name'] %>.$pristine && submitted }"
          >
       <label><%= column['column_name'].titleize %></label>
-      <%- if column['data_type'] == 'int' %>
+      <%- if column['data_type'] == 'tinyint' %>
+        <input type="checkbox" <%= form_attributes(column).join(' ') %> ng-model="<%= singlename %>.<%= column['column_name'] %>" />
+
+      <%- elsif column['data_type'] == 'int' && is_foreign_key?(column['column_name']) %>
+        <%- fk_name = column['column_name'].gsub(/_id$/,'') %>
+        <!-- get the range for the foreign class  -->
+        <select <%= form_attributes(column).join(' ') %>  
+          ng-model="<%= singlename %>.<%= column['column_name'] %>" 
+          ng-options="<%= fk_name %>.id as <%= fk_name %>.name for <%= fk_name %> in <%= fk_name.pluralize %>">
+          <option value="">Select <%= fk_name.titleize %></option>
+        </select>
+      <%- elsif column['data_type'] == 'int' %>
+
         <input type="number" <%= form_attributes(column).join(' ') %> ng-model="<%= singlename %>.<%= column['column_name'] %>" />
         <span ng-show="form.<%= column['column_name'] %>.$error.integer">This is not a valid integer!</span>
         <span ng-show="form.<%= column['column_name'] %>.$error.min || form.<%= column['column_name'] %>.$error.max">
           The value must be in range 0 to 4294967295 </span>
       <% else  # default to char/varchar %>
-        <input type="text" <%= form_attributes(column).join(' ') %>  />
+        <input type="text" <%= form_attributes(column).join(' ') %> ng-model="<%= singlename %>.<%= column['column_name'] %>" />
         <span class="help-block" 
               ng-show="<%= singlename %>Form.<%= column['column_name'] %>.$invalid && !<%= singlename %>Form.<%= column['column_name'] %>.$pristine">
           This value in this field is invalid
@@ -122,10 +136,8 @@ descfield = columns['description'] || columns['info'] ||
   <button ng-click="update(user)" ng-disabled="<%= singlename %>Form.$invalid || isUnchanged(<%= singlename %>) || submitted">SAVE</button>
 </form>
 
+<div>
 
+  <a class="btn btn-inverse" onclick="javascript:history.go(-1)">Back</a> 
 
-
-<!-- SHOW DATA FROM INPUTS AS THEY ARE BEING TYPED -->
-<pre>
-		{{ <%= singlename %> }}
-</pre>
+</div>

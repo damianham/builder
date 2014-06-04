@@ -18,7 +18,7 @@ class <%= model_name %> < ActiveRecord::Base
     end
  
     schema['belongs_to'].each_key do |key|
-      text << ('  belongs_to :' + key + "\n")
+      text << ('  belongs_to :' + key.singularize + "\n")
     end
    
 %>

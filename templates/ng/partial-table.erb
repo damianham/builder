@@ -9,8 +9,8 @@
 
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span2" style="margin:5px;">
-     
+    <div class="span2" style="margin:15px;">
+
 
       Search: <input ng-model="query">
       Sort by:
@@ -50,7 +50,8 @@
       rejected_columns = ['id','updated_at','updated_by','comments']
     %>
 
-      <table class="<%= model_name %>List">
+
+      <table class="<%= model_name %>List table table-striped">
         <thead>
           <tr>
 
@@ -62,8 +63,29 @@
           </tr>
         </thead>
 
+        <tfoot>
+        <td colspan="<%= columns.keys.reject{|key| rejected_columns.include?(key)  }.size() + 1 %>">
+          <div class="pagination pull-right">
+            <ul>
+              <li ng-class="prevPageDisabled()">
+              <a href ng-click="prevPage()">« Prev</a>
+            </li>
+            <li ng-repeat="n in range()"
+              ng-class="{active: n == currentPage}" ng-click="setPage(n)">
+              <a href="#">{{n+1}}</a>
+            </li>
+            <li ng-class="nextPageDisabled()">
+              <a href ng-click="nextPage()">Next »</a>
+            </li>
+            </ul>
+          </div>
+        </td>
+        </tfoot>
+
         <tbody>
-          <tr ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp" ng-class="rowClass(<%= singlename %>)">
+          <!-- pagedItems[currentPage] | orderBy:sortingOrder:reverse 
+            <%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp  -->
+          <tr ng-repeat="<%= singlename %> in <%= plural_table_name %> | offset: currentPage*itemsPerPage | filter:query | orderBy:orderProp:reverse | limitTo: itemsPerPage" ng-class="rowClass(<%= singlename %>)">
 
             <td>
               <a href="#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename %>.id}}" >
