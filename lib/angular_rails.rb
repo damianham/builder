@@ -258,7 +258,7 @@ class AngularRailsBuilder < Builder::Base
     return if skip_method(__method__)
     
     src = template("ng/lib")
-    #dest = "#{destination}/lib"
+
     puts "copying recursively #{src} to #{destination}"
     FileUtils.cp_r src, destination
     

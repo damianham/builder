@@ -251,6 +251,7 @@ class RailsBuilder < Builder::Base
     return if skip_method(__method__)
     
     filename = "#{destination}/config/routes.rb"
+    puts "add routes to #{filename}"
     
     content = File.read(filename)
 
@@ -260,7 +261,7 @@ class RailsBuilder < Builder::Base
       end
     end
     
-    write_artifact(filename,content)
+    write_artifact("config/routes.rb",content)
   end
   
   # finalize the routes and menus
@@ -364,10 +365,7 @@ class RailsBuilder < Builder::Base
     
     return if skip_method(__method__)
     
-    filename = "#{destination}/config/routes.rb"
     puts "add root route"
-        
-    content = File.read(filename)
     
     routes = ["get 'angular/fetch_current_user' => 'angular#fetch_current_user'",
       "get 'angular/angular' => 'angular#angular'", 
