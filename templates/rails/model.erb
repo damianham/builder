@@ -13,11 +13,13 @@ class <%= model_name %> < ActiveRecord::Base
       text << 'validates ' + required + ' presence: true' + "\n" 
     end
     
-    schema['has_many'].each_key do |key|
-    	text << ('  has_many :' + key + "\n")
+    schema['has_many'].flatten.each do |key|
+      #key = key[0] if key.is_a? Array
+    	text << ('  has_many :' + key.pluralize + "\n")
     end
  
-    schema['belongs_to'].each_key do |key|
+    schema['belongs_to'].flatten.each do |key|
+      #key = key[0] if key.is_a? Array
       text << ('  belongs_to :' + key.singularize + "\n")
     end
    

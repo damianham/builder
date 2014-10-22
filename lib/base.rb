@@ -153,7 +153,7 @@ module Builder
     def is_foreign_key?(field_name)
       return false unless field_name =~ /\w*_id$/ 
       relation = field_name.gsub(/_id$/,'').pluralize
-      schema['belongs_to'][relation] == 1
+      schema['belongs_to'].flatten.include? relation 
     end
     
     # default implementations that do nothing

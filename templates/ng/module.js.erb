@@ -72,11 +72,11 @@ angular.module('<%= namespace || "mainapp" %>')
   <%  
 # add the belongs_to and has many related classes  
  classes = []
- schema['belongs_to'].keys.each do |key|
+ schema['belongs_to'].flatten.each do |key|
    classes << key.to_model_name
  end
  
- schema['has_many'].keys.each do |key|
+ schema['has_many'].flatten.each do |key|
    classes << key.to_model_name
  end
 %>

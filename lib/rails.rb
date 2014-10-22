@@ -48,6 +48,9 @@ class RailsBuilder < Builder::Base
 
     filename = singular_table_name + '.rb'
 
+    #puts "build Rails model for #{singular_table_name} with #{schema['has_many'].inspect}"
+    #puts "build Rails model with #{schema['belongs_to'].inspect}"
+    
     template = File.read(template("rails/model.erb"))
     text = Erubis::Eruby.new(template).evaluate( self )
 

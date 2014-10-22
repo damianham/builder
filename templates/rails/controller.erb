@@ -124,7 +124,7 @@ class <%= controller_name %> < ApplicationController
     def <%= singular_table_name %>_params
     <% 
       column_symbols = []
-      schema['columns'].keys.reject{|key| key == 'created_at'}.each do |key | 
+      schema['columns'].keys.reject{|key| ['created_at','updated_at','id'].include? key}.each do |key | 
         column_symbols << ":#{key}"
       end
     %>
