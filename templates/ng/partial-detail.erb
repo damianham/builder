@@ -28,7 +28,7 @@ descfield = columns['description'] || columns['info'] ||
   }
 
   button {
-    padding 2px;
+    padding: 2px;
     margin-right: 10px;
   }
 </style>
@@ -73,7 +73,7 @@ descfield = columns['description'] || columns['info'] ||
   <a class="btn btn-inverse" onclick="javascript:history.go(-1)">Back</a> 
   <a class="btn btn-warning" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/edit" >Edit</a>
   <a class="btn btn-success" href="<%= angular_url(plural_table_name) %>/new" >New</a>
-  <a class="btn btn-danger" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/delete" confirm='Are you sure?'>Delete</a>
+  <a class="btn btn-danger" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/delete" data-confirm='Are you sure?'>Delete</a>
   <a class="btn btn-primary" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/history" >History</a>
 
   <!--
