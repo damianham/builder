@@ -80,11 +80,11 @@ class <%= controller_name %> < ApplicationController
     respond_to do |format|
       if @<%= singular_table_name %>.save
         format.html { redirect_to @<%= singular_table_name %>, notice: '<%= model_name.titleize %> was successfully created.' }
-        format.json { render json: message: '<%= model_name.titleize %> was successfully created.'  }
+        format.json { render json: {message: '<%= model_name.titleize %> was successfully created.'}  }
       else
         format.html { render action: 'new' }
         format.json { render json: {errors: @<%= singular_table_name %>.errors, 
-            message '<%= model_name.titleize %> could not be created' }, status: :unprocessable_entity }
+            message: '<%= model_name.titleize %> could not be created' }, status: :unprocessable_entity }
       end
     end
   end
@@ -95,11 +95,11 @@ class <%= controller_name %> < ApplicationController
     respond_to do |format|
       if @<%= singular_table_name %>.update(<%= singular_table_name %>_params)
         format.html { redirect_to @<%= singular_table_name %>, notice: '<%= model_name.titleize %> was successfully updated.' }
-        format.json { render json: message: '<%= model_name.titleize %> was successfully updated.'  }
+        format.json { render json: {message: '<%= model_name.titleize %> was successfully updated.'}  }
       else
         format.html { render action: 'edit' }
         format.json { render json: {errors: @<%= singular_table_name %>.errors, 
-            message '<%= model_name.titleize %> could not be updated' }, status: :unprocessable_entity }
+            message: '<%= model_name.titleize %> could not be updated' }, status: :unprocessable_entity }
       end
     end
   end
@@ -110,7 +110,7 @@ class <%= controller_name %> < ApplicationController
     @<%= singular_table_name %>.destroy
     respond_to do |format|
       format.html { redirect_to <%= plural_table_name %>_url }
-      format.json { render json: message: '<%= model_name.titleize %> was successfully deleted.'}
+      format.json { render json: {message: '<%= model_name.titleize %> was successfully deleted.'} }
     end
   end
  
