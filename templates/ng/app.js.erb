@@ -27,12 +27,12 @@ app.filter('offset', function() {
   };
 });
 
-app.config(function ($routeProvider) {
-        $routeProvider
+app.config(['$routeProvider',   function (provider) {
+        provider
         // the home controller could be namespaced i.e '/assets/<%= namespace || "" %>/partials/home.html'
 .when('/', {templateUrl:  '/assets/partials/home.html' ,controller: 'HomeCtrl'})
 <% models.each do |model|   %>     
 .when('<%= model[:url] %>', {templateUrl:  '<%= model[:template] %>' ,controller: '<%= model[:controller] %>'})
 <% end %>
 .otherwise({redirectTo: '/'});
-});
+}]);
