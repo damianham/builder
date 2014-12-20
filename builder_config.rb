@@ -5,7 +5,7 @@
 
 @builders = {
   RailsBuilder => {:output => './mywebapp'  },
-  AngularRailsBuilder => {:output => './mywebapp/app/assets/javascripts'}
+  AngularRailsBuilder => {:output => './mywebapp'}
 }
 
 =begin

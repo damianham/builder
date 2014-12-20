@@ -77,6 +77,26 @@ module Builder
       result
     end
    
+    def write_asset(filename,content = nil)
+    
+      path = "#{destination}/app/assets/javascripts/#{filename}"
+       
+      # ensure the target folder exists
+      FileUtils.mkdir_p(File.dirname(path))
+      
+      #puts "write to " + filename
+    
+      # write the given content or yield the open output file to a block
+      File.open(path, 'wb') { |file| 
+        if block_given?
+          yield file
+        else
+          file.write(content)
+        end        
+      }
+    
+    end
+    
     # write content to a file ensuring the enclosing folder exists
     def write_artifact(filename,content = nil)
     

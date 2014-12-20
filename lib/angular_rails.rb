@@ -44,14 +44,14 @@ class AngularRailsBuilder < Builder::Base
     
     # add a route for this partial
     @@ng_routes << {
-      :template => '/assets/' + module_path('modules', filename),
+      :template => '/' + module_path('modules', filename),
       :controller => model_name + 'ListCtrl',
       :url => '/' + namespaced_url(plural_table_name) 
       }
     
  
     # generate the output
-    path = module_path("modules",filename)
+    path = 'public/' + module_path("modules",filename)
     puts "build Ng #{LIST_TYPE} list partial for #{model_name} in #{path}"
 
     write_artifact(path,text)
@@ -70,13 +70,13 @@ class AngularRailsBuilder < Builder::Base
     
     # add a route for this partial
     @@ng_routes << {
-      :template => '/assets/' + module_path('modules', filename),
+      :template => '/' + module_path('modules', filename),
       :controller => model_name + 'DetailCtrl',
       :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id'
       }
       
     # generate the output
-    path = module_path("modules",filename)
+    path = 'public/' + module_path("modules",filename)
     puts "build Ng detail partial for #{model_name} in #{path}"
     write_artifact(path,text)
 
@@ -94,19 +94,19 @@ class AngularRailsBuilder < Builder::Base
     
     # add a route for this partial
     @@ng_routes << {
-      :template => '/assets/' + module_path('modules', filename),
+      :template => '/' + module_path('modules', filename),
       :controller => model_name + 'FormCtrl',
       :url => '/' + namespaced_url(plural_table_name) + '/new'
       }
     @@ng_routes << {
-      :template => '/assets/' + module_path('modules', filename),
+      :template => '/' + module_path('modules', filename),
       :controller => model_name + 'FormCtrl',
       :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id/edit'
       }
   
       
     # generate the output
-    path = module_path("modules",filename)
+    path = 'public/' + module_path("modules",filename)
     puts "build Ng form partial for #{model_name} in #{path}"
     write_artifact(path,text)
   end
@@ -165,14 +165,12 @@ class AngularRailsBuilder < Builder::Base
     filename = "app.js"
  
     template = File.read(template("ng/app.js.erb"))
-
-    #text = Erubis::Eruby.new(template).result( :models => @@ng_routes, :namespace => namespace)
     
     text = Erubis::Eruby.new(template).evaluate( self )
 
     # write the routes output
     path = module_path("app",filename)
-    write_artifact(path,text) 
+    write_asset(path,text) 
     
     # create the angular modules
     finalize_modules
@@ -180,11 +178,8 @@ class AngularRailsBuilder < Builder::Base
     # create the navigation menu
     finalize_menu
     
-    # copy the angular library into the application
-    finalize_angular_lib
-    
-    # integrate the angular stylesheets
-    finalize_angular_stylesheets
+    # add the generated javascripts to application.js
+    finalize_application
     
     finalize_angular_root_partials
     
@@ -204,7 +199,7 @@ class AngularRailsBuilder < Builder::Base
       # generate the output 
       path = module_path("modules",filename)
       puts "build Ng module for #{mod.model_name} in #{path}"
-      write_artifact(path,module_text)
+      write_asset(path,module_text)
     end
     
   end
@@ -220,7 +215,7 @@ class AngularRailsBuilder < Builder::Base
     
       filename = "#{file}.html"
       
-      path = module_path("partials",filename)
+      path = 'public/' + module_path("partials",filename)
       puts "build Angular root partial in #{path}"
       write_artifact(path,text)  
     end
@@ -237,7 +232,7 @@ class AngularRailsBuilder < Builder::Base
     text = Erubis::Eruby.new(template).evaluate( self )
     
     # generate the output
-    path = module_path("partials",filename)
+    path = 'public/' + module_path("partials",filename)
     puts "finalize Ng menu in #{path}"
     write_artifact(path,text)
     
@@ -250,45 +245,18 @@ class AngularRailsBuilder < Builder::Base
     # generate the output
     path = module_path("app",filename)
     puts "finalize Ng services in #{path}"
-    write_artifact(path,text)
+    write_asset(path,text)
     
   end
   
-  def copy_angular_lib
-    return if skip_method(__method__)
-    
-    src = template("ng/lib")
 
-    puts "copying recursively #{src} to #{destination}"
-    FileUtils.cp_r src, destination
-    
-  end
-  # copy the angular library to the destination
-  def finalize_angular_lib
-    
-    copy_angular_lib
+  # add the generated javascripts to application.js
+  def finalize_application
     
     # integrate the angular libs into the application.js in the right order
     filename = "#{destination}/application.js"
     
     content = File.read(filename)
-    
-    libs = "//= require lib/angular/angular.min
-//= require lib/angular/angular-resource.min
-//= require lib/angular/angular-route.min
-//= require lib/angular/angular-cookies.min
-//= require lib/angular/angular-sanitize.min
-//= require lib/angular/angular-touch.min
-//= require lib/angular/angular-animate.min
-//= require lib/bootstrap.min
-//= require lib/ng-table.min
-// now include application modules
-"
-
-    # add the angular libs and boot strap first
-    unless content.include? libs
-      content.sub!(/require turbolinks\s*$/) {|matched| matched + "\n#{libs}\n"}
-    end
     
     if namespace
       libs = "//= require #{namespace}/app/app
@@ -304,36 +272,7 @@ class AngularRailsBuilder < Builder::Base
       content.sub!(/now include application modules\s*$/) {|matched| matched + "\n#{libs}\n"}
     end
 
-    write_artifact("application.js",content) 
+    write_asset("application.js",content) 
   end
   
-  def finalize_angular_stylesheets
-    
-    return if skip_method(__method__)
-    
-    # integrate the angular styles into the application.css in the right order
-    filename = "#{destination}/../stylesheets/application.css"
-    
-    content = File.read(filename)
-    
-    libs = "*= require angular-ui
- *= require select2
- *= require bootstrap
- *= require bootstrap-responsive
- *= require font-awesome.min
- *= require font-awesome-ie7.min
- *= require style
- *= require jquery-ui
- *= require toastr
-    "
-=begin
-
-=end    
-    unless content.include? libs
-      content.sub!(/require_self\s*$/) {|matched| matched + "\n#{libs}"}
-    end
-    
-    write_artifact("../stylesheets/application.css",content) 
-  end
-
 end
