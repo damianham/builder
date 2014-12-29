@@ -17,7 +17,7 @@ columns.each_pair do |name,column|
     # use this column unless it is the id primary key or a foreign key
     default_namefield = column
   end 
-end 
+  end 
 
 # determine the display field names
 namefield = columns['name'] || columns['title'] || default_namefield
@@ -26,118 +26,118 @@ descfield = columns['description'] || columns['info'] ||
 %>
 
 <style type="text/css">
-  .css-form input.ng-invalid.ng-dirty {
-    background-color: #FA787E;
-  }
+    .css-form input.ng-invalid.ng-dirty {
+        background-color: #FA787E;
+    }
 
-  .css-form input.ng-valid.ng-dirty {
-    background-color: #78FA89;
-  }
+    .css-form input.ng-valid.ng-dirty {
+        background-color: #78FA89;
+    }
 
-  .ng-valid 		{  }
-  .ng-invalid 	{  }
-  .ng-pristine 	{  }
-  .ng-dirty 		{  }
+    .ng-valid 		{  }
+    .ng-invalid 	{  }
+    .ng-pristine 	{  }
+    .ng-dirty 		{  }
 
-  /* really specific css rules applied by angular */
-  .ng-invalid-required 		{  }
-  .ng-invalid-minlength 		{  }
-  .ng-valid-max-length 		{  }
+    /* really specific css rules applied by angular */
+    .ng-invalid-required 		{  }
+    .ng-invalid-minlength 		{  }
+    .ng-valid-max-length 		{  }
 
-  table.<%= model_name %> th, table.<%= model_name %> td {
-    padding: 2px;
-    border: 1px solid #428bca;
+    table.<%= model_name %> th, table.<%= model_name %> td {
+        padding: 2px;
+        border: 1px solid #428bca;
 
-  }
+    }
 
-  button {
-    padding: 2px;
-    margin: 5px;
-  }
+    button {
+        padding: 2px;
+        margin: 5px;
+    }
 
 </style>
+<div class="container-fluid">
+    <!--
+            enable if the class has a main image
+    <img ng-src="{{mainImageUrl}}" class="<%= singlename %>">
+    -->
 
-<!--
-        enable if the class has a main image
-<img ng-src="{{mainImageUrl}}" class="<%= singlename %>">
--->
+    <h1>{{<%= singlename %>.<%= namefield['column_name'] %>}}</h1>
 
-<h1>{{<%= singlename %>.<%= namefield['column_name'] %>}}</h1>
+    <% unless descfield.nil? %>
+      <p>{{<%= singlename %>.<%=  descfield['column_name']%>}}</p>
+    <% end %>
 
-<% unless descfield.nil? %>
-  <p>{{<%= singlename %>.descfield['column_name']}}</p>
-<% end %>
+    <!--          
+            enable and rename accordingly if the class has an array of images
+    <ul class="<%= singlename %>-thumbs">
+      <li ng-repeat="img in <%= singlename %>.images">
+        <img ng-src="{{img}}" ng-click="setImage(img)">
+      </li>
+    </ul>
+    -->
 
-<!--          
-        enable and rename accordingly if the class has an array of images
-<ul class="<%= singlename %>-thumbs">
-  <li ng-repeat="img in <%= singlename %>.images">
-    <img ng-src="{{img}}" ng-click="setImage(img)">
-  </li>
-</ul>
--->
+    <!-- new or edit -->
+    <span><%= model_name.titleize %> </span>
 
-<!-- new or edit -->
-<span><%= model_name.titleize %> </span>
-
-<!-- SHOW ERROR/SUCCESS MESSAGES -->
-<div id="messages">{{ message }}</div>
-
-
-<!-- pass in the form and if our form is valid or invalid -->
-<form name="<%= singlename %>Form" 
-      ng-submit="processForm(<%= singlename %>,<%= singlename %>Form.$valid)" 
-      novalidate> <!-- novalidate prevents HTML5 validation since angular will validate -->
-
-  <% columns.values.reject{|column| rejected_columns.include?(column['column_name'])  }.each do |column| %>
+    <!-- SHOW ERROR/SUCCESS MESSAGES -->
+    <div id="messages">{{ message}}</div>
 
 
-    <div id="<%= column['column_name'] %>-group" class="form-group"
-         ng-class="{ 'has-error' : <%= singlename %>Form.<%= column['column_name'] %>.$invalid && !<%= singlename %>Form.<%= column['column_name'] %>.$pristine && submitted }"
-         >
-      <label><%= column['column_name'].titleize %></label>
-      <%- if column['data_type'] == 'tinyint' %>
-        <input type="checkbox" <%= form_attributes(column).join(' ') %> ng-model="<%= singlename %>.<%= column['column_name'] %>" />
+    <!-- pass in the form and if our form is valid or invalid -->
+    <form name="<%= singlename %>Form" 
+          ng-submit="processForm(<%= singlename %>,<%= singlename %>Form.$valid)" 
+          novalidate> <!-- novalidate prevents HTML5 validation since angular will validate -->
 
-      <%- elsif column['data_type'] == 'int' && is_foreign_key?(column['column_name']) %>
-        <%- fk_name = column['column_name'].gsub(/_id$/,'') %>
-        <!-- get the range for the foreign class  -->
-        <select <%= form_attributes(column).join(' ') %>  
-          ng-model="<%= singlename %>.<%= column['column_name'] %>" 
-          ng-options="<%= fk_name %>.id as <%= fk_name %>.name for <%= fk_name %> in <%= fk_name.pluralize %>">
-          <option value="">Select <%= fk_name.titleize %></option>
-        </select>
-      <%- elsif column['data_type'] == 'int' %>
+        <% columns.values.reject{|column| rejected_columns.include?(column['column_name'])  }.each do |column| %>
 
-        <input type="number" <%= form_attributes(column).join(' ') %> ng-model="<%= singlename %>.<%= column['column_name'] %>" />
-        <span ng-show="form.<%= column['column_name'] %>.$error.integer">This is not a valid integer!</span>
-        <span ng-show="form.<%= column['column_name'] %>.$error.min || form.<%= column['column_name'] %>.$error.max">
-          The value must be in range 0 to 4294967295 </span>
-      <% else  # default to char/varchar %>
-        <input type="text" <%= form_attributes(column).join(' ') %> ng-model="<%= singlename %>.<%= column['column_name'] %>" />
-        <span class="help-block" 
-              ng-show="<%= singlename %>Form.<%= column['column_name'] %>.$invalid && !<%= singlename %>Form.<%= column['column_name'] %>.$pristine">
-          This value in this field is invalid
-        </span>
-        <span class="help-block" 
-              ng-show="<%= singlename %>_errors.<%= column['column_name'] %>">
-          {{ <%= singlename %>_errors.<%= column['column_name'] %> }}>
-        </span>    
-      <% end %>
+
+          <div id="<%= column['column_name'] %>-group" class="form-group"
+               ng-class="{ 'has-error' : <%= singlename %>Form.<%= column['column_name'] %>.$invalid && !<%= singlename %>Form.<%= column['column_name'] %>.$pristine && submitted }"
+               >
+              <label><%= column['column_name'].titleize %></label>
+              <%- if column['data_type'] == 'tinyint' %>
+                <input type="checkbox" <%= form_attributes(column).join(' ') %>  />
+
+              <%- elsif column['data_type'] == 'int' && is_foreign_key?(column['column_name']) %>
+                <%- fk_name = column['column_name'].gsub(/_id$/,'') %>
+                <!-- get the range for the foreign class  -->
+                <select <%= form_attributes(column).join(' ') %>            
+                    ng-options="<%= fk_name %>.id as <%= fk_name %>.name for <%= fk_name %> in <%= fk_name.pluralize %>">
+                    <option value="">Select <%= fk_name.titleize %></option>
+                </select>
+              <%- elsif column['data_type'] == 'int' %>
+
+                <input type="number" <%= form_attributes(column).join(' ') %>   />
+                <span ng-show="form.<%= column['column_name'] %>.$error.integer">This is not a valid integer!</span>
+                <span ng-show="form.<%= column['column_name'] %>.$error.min || form.<%= column['column_name'] %>.$error.max">
+                    The value must be in range 0 to 4294967295 </span>
+              <% else  # default to char/varchar %>
+                <input type="text" <%= form_attributes(column).join(' ') %>   />
+                <span class="help-block" 
+                      ng-show="<%= singlename %>Form.<%= column['column_name'] %>.$invalid && !<%= singlename %>Form.<%= column['column_name'] %>.$pristine">
+                    This value in this field is invalid
+                </span>
+                <span class="help-block" 
+                      ng-show="<%= singlename %>_errors.<%= column['column_name'] %>">
+                    {{ <%= singlename %>_errors.<%= column['column_name'] %> }}>
+                </span>    
+              <% end %>
+
+          </div>
+        <% end %>
+
+        <button type="submit" class="btn btn-success btn-block" 
+                ng-disabled="<%= singlename %>Form.$invalid || isUnchanged(<%= singlename %>) || submitted" >
+            <span class="glyphicon glyphicon-flash"></span> Submit!
+        </button>
+        <button ng-click="reset()" ng-disabled="isUnchanged(<%= singlename %>)">RESET</button>
+        <button ng-click="update(user)" ng-disabled="<%= singlename %>Form.$invalid || isUnchanged(<%= singlename %>) || submitted">SAVE</button>
+    </form>
+
+    <div>
+
+        <a class="btn btn-inverse" onclick="javascript:history.go( - 1)">Back</a> 
 
     </div>
-  <% end %>
-
-  <button type="submit" class="btn btn-success btn-block" 
-          ng-disabled="<%= singlename %>Form.$invalid || isUnchanged(<%= singlename %>) || submitted" >
-    <span class="glyphicon glyphicon-flash"></span> Submit!
-  </button>
-  <button ng-click="reset()" ng-disabled="isUnchanged(<%= singlename %>)">RESET</button>
-  <button ng-click="update(user)" ng-disabled="<%= singlename %>Form.$invalid || isUnchanged(<%= singlename %>) || submitted">SAVE</button>
-</form>
-
-<div>
-
-  <a class="btn btn-inverse" onclick="javascript:history.go(-1)">Back</a> 
-
 </div>

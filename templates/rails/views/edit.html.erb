@@ -1,6 +1,8 @@
-<h1>Editing <%= singular_table_name %></h1>
+<div class="container-fluid">
+    <h1>Editing <%= singular_table_name %></h1>
 
-<%%= render 'form' %>
+    <%%= render 'form' %>
 
-<%%= link_to 'Show', @<%= singular_table_name %> %> |
-<%%= link_to 'Back', <%= index_helper %>_path %>
+    <%%= link_to 'Show', @<%= singular_table_name %> %> |
+    <%%= link_to 'Back', <%= index_helper %>_path %>
+</div>

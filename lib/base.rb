@@ -77,44 +77,47 @@ module Builder
       result
     end
    
-    def write_asset(filename,content = nil)
-    
-      path = "#{destination}/app/assets/javascripts/#{filename}"
-       
+    def write_file(path,content = nil, block=nil)
       # ensure the target folder exists
       FileUtils.mkdir_p(File.dirname(path))
       
-      #puts "write to " + filename
+      #puts "write to " + path
     
       # write the given content or yield the open output file to a block
       File.open(path, 'wb') { |file| 
-        if block_given?
-          yield file
+        if content.nil?
+          block.call file
         else
           file.write(content)
         end        
       }
+    end
+    
+    def write_asset(filename,content = nil, &block)
+    
+      path = "#{destination}/app/assets/javascripts/#{filename}"
+      write_file(path,content, block)      
+    
+    end
+    
+    def write_partial(filename,content = nil, &block)
+    
+      # this path depends on angular-rails-templates gem
+      path = "#{destination}/app/assets/javascripts/templates/#{filename}"
+      
+      # without the angular-rails-templates gem
+      # path = "#{destination}/public/#{filename}"
+      
+      write_file(path,content, block)
     
     end
     
     # write content to a file ensuring the enclosing folder exists
-    def write_artifact(filename,content = nil)
+    def write_artifact(filename,content = nil, &block)
     
       path = "#{destination}/#{filename}"
        
-      # ensure the target folder exists
-      FileUtils.mkdir_p(File.dirname(path))
-      
-      #puts "write to " + filename
-    
-      # write the given content or yield the open output file to a block
-      File.open(path, 'wb') { |file| 
-        if block_given?
-          yield file
-        else
-          file.write(content)
-        end        
-      }
+      write_file(path,content, block)
     
     end
 

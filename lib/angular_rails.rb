@@ -51,10 +51,10 @@ class AngularRailsBuilder < Builder::Base
     
  
     # generate the output
-    path = 'public/' + module_path("modules",filename)
+    path = module_path("modules",filename)
     puts "build Ng #{LIST_TYPE} list partial for #{model_name} in #{path}"
 
-    write_artifact(path,text)
+    write_partial(path,text)
 
   end
 
@@ -76,9 +76,9 @@ class AngularRailsBuilder < Builder::Base
       }
       
     # generate the output
-    path = 'public/' + module_path("modules",filename)
+    path =  module_path("modules",filename)
     puts "build Ng detail partial for #{model_name} in #{path}"
-    write_artifact(path,text)
+    write_partial(path,text)
 
   end
   
@@ -106,9 +106,9 @@ class AngularRailsBuilder < Builder::Base
   
       
     # generate the output
-    path = 'public/' + module_path("modules",filename)
+    path =  module_path("modules",filename)
     puts "build Ng form partial for #{model_name} in #{path}"
-    write_artifact(path,text)
+    write_partial(path,text)
   end
 
   def build_view 
@@ -215,9 +215,9 @@ class AngularRailsBuilder < Builder::Base
     
       filename = "#{file}.html"
       
-      path = 'public/' + module_path("partials",filename)
+      path = module_path("partials",filename)
       puts "build Angular root partial in #{path}"
-      write_artifact(path,text)  
+      write_partial(path,text)  
     end
 
   end
@@ -232,9 +232,9 @@ class AngularRailsBuilder < Builder::Base
     text = Erubis::Eruby.new(template).evaluate( self )
     
     # generate the output
-    path = 'public/' + module_path("partials",filename)
+    path =  module_path("partials",filename)
     puts "finalize Ng menu in #{path}"
-    write_artifact(path,text)
+    write_partial(path,text)
     
     filename = 'services.js'
     # build the angular header
@@ -254,7 +254,7 @@ class AngularRailsBuilder < Builder::Base
   def finalize_application
     
     # integrate the angular libs into the application.js in the right order
-    filename = "#{destination}/application.js"
+    filename = "#{destination}/app/assets/javascripts/application.js"
     
     content = File.read(filename)
     
