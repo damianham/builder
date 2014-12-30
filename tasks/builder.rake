@@ -23,11 +23,11 @@ task :build_classes, :database,:namespace do |t, args|
     
     options.merge!( { :namespace => args['namespace'] }) unless args['namespace'].nil? 
     
-    schema['schema'].each_pair do |table_name, columns|
+    schema['schema'].each_pair do |table_name, table_info|
 
       next if IGNORE_TABLES.include?(table_name)
       
-      table_options = options.merge( { :name => table_name.tableize, :schema => columns})
+      table_options = options.merge( { :name => table_name.tableize, :schema => schema['schema'],:table_info => table_info})
       
       # build the artifacts for this table
       builder = klass.new(table_options)

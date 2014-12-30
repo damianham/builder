@@ -39,10 +39,10 @@
       		columns['summary'] || columns['comment'] || columns['snippet']
       %>
 
-      <ul class="<%= model_name %>">
+      <ul class="<%= singlename %>-list">
         <li ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp" >
            
-            <a href="#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename%>.id}}" >
+            <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename%>.id}}" >
             <i class="glyphicon glyphicon-search"></i>
             </a>
           

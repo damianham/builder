@@ -12,7 +12,7 @@
         <% 
         default_namefield = nil
         singlename = singular_table_name
-        columns = schema['columns']
+        columns = table_info['columns']
 
         columns.each_pair do |name,column|  %> 
           <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
@@ -39,7 +39,7 @@
     %>
 
 
-      <table class="<%= model_name %>List table table-striped">
+      <table class="<%= singlename %>-table list-table table-striped">
         <thead>
           <tr>
 
@@ -70,13 +70,11 @@
         </td>
         </tfoot>
 
-        <tbody>
-          <!-- pagedItems[currentPage] | orderBy:sortingOrder:reverse 
-            <%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp  -->
+        <tbody> 
           <tr ng-repeat="<%= singlename %> in <%= plural_table_name %> | offset: currentPage*itemsPerPage | filter:query | orderBy:orderProp:reverse | limitTo: itemsPerPage" ng-class="rowClass(<%= singlename %>)">
 
             <td>
-              <a href="#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename %>.id}}" >
+              <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename %>.id}}" >
                 <i class="glyphicon glyphicon-search"></i>
               </a>
             </td>

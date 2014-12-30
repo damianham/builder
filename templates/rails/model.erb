@@ -5,7 +5,7 @@ class <%= model_name %> < ActiveRecord::Base
     text = ""
     required = ''
 
-    schema['columns'].each_pair do |name,column|
+    table_info['columns'].each_pair do |name,column|
         required << ":#{name}, " if name != 'id' && column['is_nullable'] == 'NO'
     end
     
@@ -13,12 +13,12 @@ class <%= model_name %> < ActiveRecord::Base
       text << 'validates ' + required + ' presence: true' + "\n" 
     end
     
-    schema['has_many'].flatten.each do |key|
+    table_info['has_many'].flatten.each do |key|
       #key = key[0] if key.is_a? Array
     	text << ('  has_many :' + key.pluralize + "\n")
     end
  
-    schema['belongs_to'].flatten.each do |key|
+    table_info['belongs_to'].flatten.each do |key|
       #key = key[0] if key.is_a? Array
       text << ('  belongs_to :' + key.singularize + "\n")
     end

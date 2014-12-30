@@ -5,25 +5,12 @@ require 'erb'
 
 # build rails artifacts using the rails scaffold generator
 
-class RailsVanillaBuilder
+class RailsVanillaBuilder < Builder::Base
 
   @@rails_routes = []
   @@menus = []
   @@comments = []
   
-  attr_accessor :singular_table_name, :plural_table_name, :human_name, 
-        :schema, :model_name, :controller_name, :attributes
-  
-  def initialize(options)
-    @schema = options[:schema]
-      
-    name = options[:name]
-    @singular_table_name = name.singularize
-    @human_name = @singular_table_name.humanize
-    @plural_table_name = name.pluralize
-    @model_name = name.to_model_name
-    @controller_name = name.to_controller_name
-  end
 
   def db_type_to_type(type)
     case type 
@@ -40,7 +27,7 @@ class RailsVanillaBuilder
   # build edit _form index new show
   
     # ignore the columns that rails adds
-    attributes = schema['columns'].values.reject{|col| 
+    attributes = table_info['columns'].values.reject{|col| 
       col['column_name'] == "id" ||
       col['column_name'] == "updated_at"
       col['column_name'] == "created_at"
@@ -52,7 +39,7 @@ class RailsVanillaBuilder
     puts "run rails generate scaffold #{model_name} #{text}"
     `rails generate scaffold #{model_name} #{text}`
   
-    comment = schema['comment']
+    comment = table_info['comment']
     puts "build menu for #{model_name} (#{comment}) in app/views/shared"
     @@menus << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
     

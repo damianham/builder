@@ -1,13 +1,11 @@
 <% 
 
-#puts schema.inspect
-
 # shorten the accessor name
 singlename = singular_table_name
 
 default_namefield = nil
 
-columns = schema['columns']
+columns = table_info['columns']
 
 rejected_columns = ['id','updated_at','updated_by' ]
 

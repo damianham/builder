@@ -7,11 +7,11 @@ singlename = singular_table_name
  
 # add the belongs_to and has many related classes  
  classes = []
- schema['belongs_to'].flatten.uniq.each do |key|
+ table_info['belongs_to'].flatten.uniq.each do |key|
    classes << key.to_model_name
  end
  
- schema['has_many'].flatten.uniq.each do |key|
+ table_info['has_many'].flatten.uniq.each do |key|
    classes << key.to_model_name
  end
 %>
@@ -92,13 +92,13 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       $scope.<%= singlename %> = <%= model_name %>.get({<%= singlename %>Id: $routeParams.<%= singlename %>Id});
           
       <% #  get related objects  
-      schema['belongs_to'].flatten.uniq.each do |key| 
+      table_info['belongs_to'].flatten.uniq.each do |key| 
         relation = key.singularize
       %>
         $scope.<%= singlename %>.<%= relation %> = <%= model_name %>.related({<%= singlename %>Id: $routeParams.<%= singlename %>Id,relation:'<%= relation %>'});
       <%  end
  
-      schema['has_many'].flatten.uniq.each do |key| 
+      table_info['has_many'].flatten.uniq.each do |key| 
         relation = key.pluralize
       %>
         $scope.<%= singlename %>.<%= relation %> = <%= model_name %>.related({<%= singlename %>Id: $routeParams.<%= singlename %>Id,relation:'<%= relation %>'});        

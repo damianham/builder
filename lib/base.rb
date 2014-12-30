@@ -5,7 +5,8 @@ module Builder
     RESERVED_YAML_KEYWORDS = %w(y yes n no true false on off null)
     
     attr_accessor :namespace, :singular_table_name, :plural_table_name, :human_name, 
-      :schema, :model_name, :controller_name, :attributes, :destination, :appname
+      :schema, :model_name, :controller_name, :attributes, :destination, :appname,
+      :table_info
   
    
     def initialize(options)
@@ -14,6 +15,7 @@ module Builder
       @appname ||= options[:appname]
       @destination ||= options[:output]
       @schema = options[:schema]
+      @table_info = options[:table_info]
       
       name = options[:name]
       @singular_table_name = name.singularize
@@ -22,7 +24,7 @@ module Builder
       @model_name = name.to_model_name
       @controller_name = name.to_controller_name
       
-      @attributes = schema['columns'].map{|col| 
+      @attributes = table_info['columns'].map{|col| 
         FieldDefinition.new(col[1])}.reject{|col| col.name == "id"}
         
       puts "initialize " + self.class.name + " with " +destination
@@ -35,7 +37,7 @@ module Builder
     end
   
     def columns
-      schema['columns']
+      table_info['columns']
     end
    
     def yaml_key_value(key, value)
@@ -173,7 +175,7 @@ module Builder
     def is_foreign_key?(field_name)
       return false unless field_name =~ /\w*_id$/ 
       relation = field_name.gsub(/_id$/,'').pluralize
-      schema['belongs_to'].flatten.include? relation 
+      table_info['belongs_to'].flatten.include? relation 
     end
     
     # default implementations that do nothing

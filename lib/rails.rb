@@ -47,9 +47,6 @@ class RailsBuilder < Builder::Base
     return if skip_method(__method__)
 
     filename = singular_table_name + '.rb'
-
-    #puts "build Rails model for #{singular_table_name} with #{schema['has_many'].inspect}"
-    #puts "build Rails model with #{schema['belongs_to'].inspect}"
     
     template = File.read(template("rails/model.erb"))
     text = Erubis::Eruby.new(template).evaluate( self )
@@ -231,7 +228,7 @@ class RailsBuilder < Builder::Base
   
   # add the table to the menus
   def build_menu
-    comment = schema['comment']
+    comment = table_info['comment']
     #puts "build Rails menu for #{model_name} (#{comment}) in app/views/shared"
     @@menus << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
     
