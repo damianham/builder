@@ -9,7 +9,7 @@ require './builder_config'
 
 desc "Build the classes"
 
-task :build_classes, :database,:table,:namespace do |t, args|
+task :build_classes, :database,:namespace do |t, args|
 
   #puts "Args with defaults were: #{args}"
 
@@ -26,10 +26,6 @@ task :build_classes, :database,:table,:namespace do |t, args|
     schema['schema'].each_pair do |table_name, columns|
 
       next if IGNORE_TABLES.include?(table_name)
-      
-      unless ['all','nil',nil].include?(args['table'])
-        next if table_name != args['table']
-      end
       
       table_options = options.merge( { :name => table_name.tableize, :schema => columns})
       

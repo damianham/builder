@@ -25,37 +25,7 @@ descfield = columns['description'] || columns['info'] ||
   columns['summary'] || columns['comment'] || columns['snippet']
 %>
 
-<style type="text/css">
-    .css-form input.ng-invalid.ng-dirty {
-        background-color: #FA787E;
-    }
 
-    .css-form input.ng-valid.ng-dirty {
-        background-color: #78FA89;
-    }
-
-    .ng-valid 		{  }
-    .ng-invalid 	{  }
-    .ng-pristine 	{  }
-    .ng-dirty 		{  }
-
-    /* really specific css rules applied by angular */
-    .ng-invalid-required 		{  }
-    .ng-invalid-minlength 		{  }
-    .ng-valid-max-length 		{  }
-
-    table.<%= model_name %> th, table.<%= model_name %> td {
-        padding: 2px;
-        border: 1px solid #428bca;
-
-    }
-
-    button {
-        padding: 2px;
-        margin: 5px;
-    }
-
-</style>
 <div class="container-fluid">
     <!--
             enable if the class has a main image

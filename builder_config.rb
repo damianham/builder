@@ -1,11 +1,12 @@
 
 
 # define the builders with their output destinations
-# 
+# javascript modules are written to app/assets/javascripts/modules
+# html partials are written to public/partials and public/modules
 
 @builders = {
-  RailsBuilder => {:output => './mywebapp'  },
-  AngularRailsBuilder => {:output => './mywebapp/app/assets/javascripts'}
+  RailsBuilder => {:output => './mywebapp',:appname => 'myapp'  },
+  AngularRailsBuilder => {:output => './mywebapp',:appname => 'myapp'}
 }
 
 =begin
@@ -16,11 +17,11 @@ method name symbols.  If the :only option exists then only methods named in the
 methods named in the :except array will do nothing and return immediately.
 
 @builders = {
-  RailsBuilder => {:output => './mywebapp' ,
+  RailsBuilder => {:output => './mywebapp' ,:appname => 'myapp',
   # do not do anything for these methods
   :except => [:finalize_angular_root, :build_model, :build_controller] },
   
-  AngularRailsBuilder => {:output => './mywebapp/app/assets/javascripts',
+  AngularRailsBuilder => {:output => './mywebapp',:appname => 'myapp',
   # don't do anything except finalize the menu
   :only => [:finalize_menu]}
 }

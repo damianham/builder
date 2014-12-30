@@ -172,6 +172,16 @@ class AngularRailsBuilder < Builder::Base
     path = module_path("app",filename)
     write_asset(path,text) 
     
+    filename = 'services.js'
+    template = File.read(template("ng/services.js.erb"))
+    
+    text = Erubis::Eruby.new(template).evaluate( self )
+   
+    # generate the output
+    path = module_path("app",filename)
+    puts "finalize Ng services in #{path}"
+    write_asset(path,text)
+    
     # create the angular modules
     finalize_modules
     
@@ -191,7 +201,7 @@ class AngularRailsBuilder < Builder::Base
     
     @@ng_modules.each do |mod|
     
-      filename = "#{mod.singular_table_name}/#{mod.model_name}Module.js"
+      filename = "#{mod.model_name}Module.js"
       template = File.read(template("ng/module.js.erb"))
 
       module_text = Erubis::Eruby.new(template).evaluate( mod )
@@ -236,17 +246,6 @@ class AngularRailsBuilder < Builder::Base
     puts "finalize Ng menu in #{path}"
     write_partial(path,text)
     
-    filename = 'services.js'
-    # build the angular header
-    template = File.read(template("ng/services.js.erb"))
-    
-    text = Erubis::Eruby.new(template).evaluate( self )
-   
-    # generate the output
-    path = module_path("app",filename)
-    puts "finalize Ng services in #{path}"
-    write_asset(path,text)
-    
   end
   
 
@@ -269,7 +268,7 @@ class AngularRailsBuilder < Builder::Base
     end
     
     unless content.include? libs
-      content.sub!(/now include application modules\s*$/) {|matched| matched + "\n#{libs}\n"}
+      content.sub!(/include builder modules\s*$/) {|matched| matched + "\n#{libs}\n"}
     end
 
     write_asset("application.js",content) 

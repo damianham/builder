@@ -5,12 +5,13 @@ module Builder
     RESERVED_YAML_KEYWORDS = %w(y yes n no true false on off null)
     
     attr_accessor :namespace, :singular_table_name, :plural_table_name, :human_name, 
-      :schema, :model_name, :controller_name, :attributes, :destination
+      :schema, :model_name, :controller_name, :attributes, :destination, :appname
   
    
     def initialize(options)
       @options = options
       @namespace ||= options[:namespace]
+      @appname ||= options[:appname]
       @destination ||= options[:output]
       @schema = options[:schema]
       
@@ -77,6 +78,7 @@ module Builder
       result
     end
    
+    # write content to a file ensuring the enclosing folder exists
     def write_file(path,content = nil, block=nil)
       # ensure the target folder exists
       FileUtils.mkdir_p(File.dirname(path))
@@ -102,17 +104,12 @@ module Builder
     
     def write_partial(filename,content = nil, &block)
     
-      # this path depends on angular-rails-templates gem
-      path = "#{destination}/app/assets/javascripts/templates/#{filename}"
-      
-      # without the angular-rails-templates gem
-      # path = "#{destination}/public/#{filename}"
+      path = "#{destination}/public/#{filename}"
       
       write_file(path,content, block)
     
     end
     
-    # write content to a file ensuring the enclosing folder exists
     def write_artifact(filename,content = nil, &block)
     
       path = "#{destination}/#{filename}"

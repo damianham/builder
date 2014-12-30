@@ -1,11 +1,4 @@
-<style type="text/css">
 
-  table.<%= model_name %>List th, table.<%= model_name %>List td {
-    padding: 2px;
-    border: 1px solid #428bca;
-    empty-cells: hide;
-  }
-</style>
 
 <div class="container-fluid">
   <div class="row-fluid">
@@ -15,11 +8,6 @@
       Search: <input ng-model="query">
       Sort by:
       <select ng-model="orderProp">
-
-        <!-- rename the fields and enable accordingly
-<option value="name">Alphabetical</option>
-<option value="age">Newest</option>
-        -->
 
         <% 
         default_namefield = nil
@@ -47,7 +35,7 @@
       descfield = columns['description'] || columns['info'] || 
         columns['summary'] || columns['comment'] || columns['snippet']
 
-      rejected_columns = ['id','updated_at','updated_by','comments']
+      rejected_columns = ['id','updated_at','created_at','comments']
     %>
 
 

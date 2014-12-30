@@ -14,113 +14,102 @@ namefield = schema['columns']['name'] || schema['columns']['title'] || default_n
 class <%= controller_name %> < ApplicationController
   before_action :set_<%= singular_table_name %>, only: [:show, :edit, :update, :destroy, :related, :bridged]
  
-  def fields
-    # get the fields for a table - not required as the view templates are generated for each table
-    <%= schema['columns'].keys.collect.inspect %>
+  respond_to :html, :json
+  
+  ##### actions useful for an api   
+  FIELDS = <%= schema['columns'].keys.to_s %>
+  
+  # get the fields for a table
+  def fields    
+    respond_with(FIELDS)
   end
   
-  def range
-    # get a named range from a table 
-    values = <%= model_name %>.all
-    values.each.collect{|item| [item.id,item.<%= namefield['column_name'] %>]}
+  # get a named range from a table
+  def range     
+    @values = <%= model_name %>.find_each.collect{|item| [item.id,item.<%= namefield['column_name'] %>]}
+    respond_with(@values)
+  end
+ 
+  # get the records that are related to an object instance by the named relation
+  # works for belongs_to, has_one and has_many relationships 
+  # we use Rails magic in the model to specify the relation 
+  def related   
+    @values = @<%= singular_table_name %>.send(params['relation'].to_sym)
+    respond_with(@values)
   end
   
-  def related
-    # get the records that are related to an object instance by the named relation
-    # - a one-to-many relationship the relation parameter holds the name of the related objects
-    values = @<%= singular_table_name %>.send(params['relation'].to_sym)
+  # perform a search
+  def search
+    # convert JSON string to hash and verify column names
+    conditions = ActiveSupport::JSON.decode(params[:where]).keep_if{|k,v| FIELDS.include?(k)}
+    
+    @<%= plural_table_name %> = <%= model_name %>.where(conditions)
+   
+    @<%= plural_table_name %> = @<%= plural_table_name %>.order(params[:order]) unless params[:order].nil?
+   
+    @<%= plural_table_name %> = @<%= plural_table_name %>.limit(params[:limit]) unless params[:limit].nil?
+   
+    @<%= plural_table_name %> = @<%= plural_table_name %>.offset(params[:offset]) unless params[:offset].nil?
+    respond_with(@<%= plural_table_name %>)
   end
-  
-  def bridged
-    # get the records that are related to an object instance by the named relation
-    # via a bridging table i.e. user_groups - a many-to-many relationship
-    # this is the same as the related method - we use Rails magic in the model to specify a through relation 
-    # e.g User.rb  --> has_many :policies, through: :user_policies
-    # sending the method :policies to the object will get the related policies via the user_policies table
-    values = @<%= singular_table_name %>.send(params['relation'].to_sym)
-  end
-
-  
- def search
-   @<%= plural_table_name %> = <%= model_name %>.where(:where => params[:where])
-   
-   @<%= plural_table_name %> = results.order(params[:order]) unless params[:order].nil?
-   
-   @<%= plural_table_name %> = results.limit(params[:limit]) unless params[:limit].nil?
-   
-   @<%= plural_table_name %> = results.offset(params[:offset]) unless params[:offset].nil?
-   
- end
+ 
+ #############  standard Rails actions
  
   # GET /<%= plural_table_name %>
   # GET /<%= plural_table_name %>.json
   def index
     @<%= plural_table_name %> = <%= model_name %>.all
+    respond_with(@<%= plural_table_name %>)
   end
 
   # GET /<%= plural_table_name %>/1
   # GET /<%= plural_table_name %>/1.json
   def show
+    respond_with(@<%= singular_table_name %>)
   end
 
   # GET /<%= plural_table_name %>/new
   def new
     @<%= singular_table_name %> = <%= model_name %>.new
+    respond_with(@<%= singular_table_name %>)
   end
 
   # GET /<%= plural_table_name %>/1/edit
   def edit
+    respond_with(@<%= singular_table_name %>)
   end
 
   # POST /<%= plural_table_name %>
   # POST /<%= plural_table_name %>.json
   def create
     @<%= singular_table_name %> = <%= model_name %>.new(<%= singular_table_name %>_params)
-
-    respond_to do |format|
-      if @<%= singular_table_name %>.save
-        format.html { redirect_to @<%= singular_table_name %>, notice: '<%= model_name.titleize %> was successfully created.' }
-        format.json { render json: {message: '<%= model_name.titleize %> was successfully created.'}  }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: {errors: @<%= singular_table_name %>.errors, 
-            message: '<%= model_name.titleize %> could not be created' }, status: :unprocessable_entity }
-      end
-    end
+    @<%= singular_table_name %>.save
+    respond_with(@<%= singular_table_name %>)
   end
 
   # PATCH/PUT /<%= plural_table_name %>/1
   # PATCH/PUT /<%= plural_table_name %>/1.json
   def update
-    respond_to do |format|
-      if @<%= singular_table_name %>.update(<%= singular_table_name %>_params)
-        format.html { redirect_to @<%= singular_table_name %>, notice: '<%= model_name.titleize %> was successfully updated.' }
-        format.json { render json: {message: '<%= model_name.titleize %> was successfully updated.'}  }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: {errors: @<%= singular_table_name %>.errors, 
-            message: '<%= model_name.titleize %> could not be updated' }, status: :unprocessable_entity }
-      end
-    end
+    @<%= singular_table_name %>.update(<%= singular_table_name %>_params)
+    respond_with(@<%= singular_table_name %>)
   end
 
   # DELETE /<%= plural_table_name %>/1
   # DELETE /<%= plural_table_name %>/1.json
   def destroy
     @<%= singular_table_name %>.destroy
-    respond_to do |format|
-      format.html { redirect_to <%= plural_table_name %>_url }
-      format.json { render json: {message: '<%= model_name.titleize %> was successfully deleted.'} }
-    end
+    respond_with(@<%= singular_table_name %>)
   end
  
   private
     # Use callbacks to share common setup or constraints between actions.
+    
+    # load the identified instance
     def set_<%= singular_table_name %>
       @<%= singular_table_name %> = <%= model_name %>.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
+    #  only allow the white listed params through.
     def <%= singular_table_name %>_params
     <% 
       column_symbols = []
