@@ -25,6 +25,22 @@ methods named in the :except array will do nothing and return immediately.
   # don't do anything except finalize the menu
   :only => [:finalize_menu]}
 }
+
+We can also specify the fields to display for each type of display
+@fields = {
+  :except => [:id,:created_at,:updated_at],
+  :detail => {
+    :users => [:email,:gender,:birthday]
+  },
+  :form => {
+    :users => [:email,:name,:gender,:birthday]
+  },
+  :list => {
+    :users => [:email,:name,:gender,:birthday],
+    :places => [:lat,:long,:map_link]
+    }
+}
+
 =end
 # use RailsVanillaBuilder instead of RailsBuilder 
 # for standard rails artifacts using the rails scaffold generator

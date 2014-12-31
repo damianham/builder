@@ -6,7 +6,7 @@ module Builder
     
     attr_accessor :namespace, :singular_table_name, :plural_table_name, :human_name, 
       :schema, :model_name, :controller_name, :attributes, :destination, :appname,
-      :table_info
+      :table_info, :fields, :this_fields
   
    
     def initialize(options)
@@ -16,6 +16,7 @@ module Builder
       @destination ||= options[:output]
       @schema = options[:schema]
       @table_info = options[:table_info]
+      @fields = options[:fields] || {}
       
       name = options[:name]
       @singular_table_name = name.singularize
@@ -25,8 +26,15 @@ module Builder
       @controller_name = name.to_controller_name
       
       @attributes = table_info['columns'].map{|col| 
-        FieldDefinition.new(col[1])}.reject{|col| col.name == "id"}
-        
+        FieldDefinition.new(col[1])}.reject{|col| @fields.fetch(:except,[]).include?(col.name.to_sym) }
+      
+      @this_fields = # extract the partial fields for this class and remove null entries
+      {:except => @fields.fetch(:except,nil),
+        :detail => @fields.fetch(:detail,Hash.new).fetch(name.to_sym,nil),
+        :form => @fields.fetch(:form,Hash.new).fetch(name.to_sym,nil),
+        :list => @fields.fetch(:list,Hash.new).fetch(name.to_sym,nil),
+      }.reject{|k,v| v.nil?}
+      
       puts "initialize " + self.class.name + " with " +destination
     end
     

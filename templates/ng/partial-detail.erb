@@ -3,20 +3,29 @@ default_namefield = nil
 singlename = singular_table_name
 columns = table_info['columns']
 
-rejected_columns = ['id' ]
+rejected_columns = fields.fetch(:except,[])
 
-columns.each_pair do |name,column| 
-  # get the name of the first field that is not called 'id' as default  
-  if default_namefield.nil? && name != 'id'  && name !~ /_id/  
-    # use this column unless it is the id primary key or a foreign key
-    default_namefield = column
-  end 
-  end 
+default_namefield = attributes.reject{|col| col.name =~ /_id/}.first
 
 # determine the display field names
-namefield = columns['name'] || columns['title'] || default_namefield
-descfield = columns['description'] || columns['info'] || 
-  columns['summary'] || columns['comment'] || columns['snippet']
+namefield = attributes.select{|col| ['name','title'].include?(col.name)}.first || default_namefield
+descfield = attributes.select{|col|['description','info',
+    'summary','comment','snippet'].include?(col.name) }.first
+
+# convert the column array into a list of field names
+field_names = attributes.map{|col| col.name  }
+
+namefield_name = namefield.nil? ? nil : namefield.name
+descfield_name = descfield.nil? ? nil : descfield.name
+
+# override the defaults with a given field list
+unless this_fields[:detail].nil?
+  field_names = this_fields[:detail].map{|name| name.to_s  }
+  
+  namefield_name = field_names.select{|name| ['name','title'].include?(name)}.first 
+  descfield_name = field_names.select{|name|['description','info',
+    'summary','comment','snippet'].include?(name) }.first
+end
 %>
 
 
@@ -26,10 +35,12 @@ descfield = columns['description'] || columns['info'] ||
     <img ng-src="{{mainImageUrl}}" class="<%= singlename %>">
     -->
 
-    <h1>{{<%= singlename %>.<%= namefield['column_name'] %>}}</h1>
-
-    <% unless descfield.nil? %>
-      <p>{{<%= singlename %>.descfield['column_name']}}</p>
+    <% unless namefield_name.nil? %>
+      <h1>{{<%= singlename %>.<%= namefield_name %>}}</h1>
+    <% end %>
+      
+    <% unless descfield_name.nil? %>
+      <p>{{<%= singlename %>.<%= descfield_name %>}}</p>
     <% end %>
 
     <!--          
@@ -46,7 +57,7 @@ descfield = columns['description'] || columns['info'] ||
 
         <table class="<%= singlename %>-table detail-table">
             <tbody>
-                <% columns.keys.reject{|key| rejected_columns.include?(key)  }.each do |key| %>
+                <% field_names.each do |key| %>
                   <tr>
                       <th><%= key.titleize %> </th><td>{{<%= singlename %>.<%= key %>}}</td>
                   </tr>
@@ -86,6 +97,13 @@ descfield = columns['description'] || columns['info'] ||
       relation = key.singularize
       relname = key.singularize
       columns = schema[key]['columns']
+      field_names = columns.keys.reject{|key| rejected_columns.include?(key)  }
+      
+      myfields = fields.fetch(:list,Hash.new).fetch(key.to_sym,nil)
+      
+      unless myfields.nil?
+        field_names = myfields.map{|name| name.to_s  }
+      end
     %>
       <div class="container related-objects belongs-to-related-objects <%= key %>-related-objects">
           <h2><%= key.to_model_name.pluralize %></h2>
@@ -95,7 +113,7 @@ descfield = columns['description'] || columns['info'] ||
 
                       <th><!-- link column --></th>
 
-                      <% columns.keys.reject{|key| rejected_columns.include?(key)  }.each do |key| %>
+                      <% field_names.each do |key| %>
                         <th><%= key.titleize %> </th>
                       <% end %>
                   </tr>
@@ -110,7 +128,7 @@ descfield = columns['description'] || columns['info'] ||
                           </a>
                       </td>
 
-                      <% columns.keys.reject{|key| rejected_columns.include?(key) }.each do |key| %>
+                      <% field_names.each do |key| %>
                         <td>{{<%= relname %>.<%= key %>}}</td>
                       <% end %>
                   </tr>
@@ -125,6 +143,13 @@ descfield = columns['description'] || columns['info'] ||
       relation = key.pluralize
       relname = key.singularize
       columns = schema[key]['columns']
+      field_names = columns.keys.reject{|key| rejected_columns.include?(key)  }
+      
+      myfields = fields.fetch(:list,Hash.new).fetch(key.to_sym,nil)
+      
+      unless myfields.nil?
+        field_names = myfields.map{|name| name.to_s  }
+      end
     %>
       <div class="container related-objects has-many-related-objects <%= key %>-related-objects">
           <h2><%= key.to_model_name.pluralize %></h2>
@@ -134,7 +159,7 @@ descfield = columns['description'] || columns['info'] ||
 
                       <th><!-- link column --></th>
 
-                      <% columns.keys.reject{|key| rejected_columns.include?(key)  }.each do |key| %>
+                      <% field_names.each do |key| %>
                         <th><%= key.titleize %> </th>
                       <% end %>
                   </tr>
@@ -149,7 +174,7 @@ descfield = columns['description'] || columns['info'] ||
                           </a>
                       </td>
 
-                      <% columns.keys.reject{|key| rejected_columns.include?(key) }.each do |key| %>
+                      <% field_names.each do |key| %>
                         <td>{{<%= relname %>.<%= key %>}}</td>
                       <% end %>
                   </tr>

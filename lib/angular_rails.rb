@@ -40,6 +40,9 @@ class AngularRailsBuilder < Builder::Base
     
     filename = "#{singular_table_name}/list.html"
     
+    path = module_path("modules",filename)
+    puts "build Ng #{LIST_TYPE} list partial for #{model_name} in #{path}"
+    
     text = Erubis::Eruby.new(template).evaluate( self )
     
     # add a route for this partial
@@ -51,9 +54,7 @@ class AngularRailsBuilder < Builder::Base
     
  
     # generate the output
-    path = module_path("modules",filename)
-    puts "build Ng #{LIST_TYPE} list partial for #{model_name} in #{path}"
-
+    
     write_partial(path,text)
 
   end
@@ -66,6 +67,9 @@ class AngularRailsBuilder < Builder::Base
     
     filename = "#{singular_table_name}/detail.html"
     
+    path =  module_path("modules",filename)
+    puts "build Ng detail partial for #{model_name} in #{path}"
+    
     text = Erubis::Eruby.new(template).evaluate( self )
     
     # add a route for this partial
@@ -76,8 +80,7 @@ class AngularRailsBuilder < Builder::Base
       }
       
     # generate the output
-    path =  module_path("modules",filename)
-    puts "build Ng detail partial for #{model_name} in #{path}"
+    
     write_partial(path,text)
 
   end
@@ -89,6 +92,9 @@ class AngularRailsBuilder < Builder::Base
     template = File.read(template("ng/partial-form.erb"))
     
     filename = "#{singular_table_name}/form.html"
+    
+    path =  module_path("modules",filename)
+    puts "build Ng form partial for #{model_name} in #{path}"
     
     text = Erubis::Eruby.new(template).evaluate( self )
     
@@ -106,8 +112,7 @@ class AngularRailsBuilder < Builder::Base
   
       
     # generate the output
-    path =  module_path("modules",filename)
-    puts "build Ng form partial for #{model_name} in #{path}"
+    
     write_partial(path,text)
   end
 
@@ -163,6 +168,8 @@ class AngularRailsBuilder < Builder::Base
     return if skip_method(__method__)
     
     filename = "app.js"
+    path = module_path("app",filename)
+    puts "finalize Ng app in #{path}"
  
     template = File.read(template("ng/app.js.erb"))
     
@@ -173,13 +180,14 @@ class AngularRailsBuilder < Builder::Base
     write_asset(path,text) 
     
     filename = 'services.js'
+    path = module_path("app",filename)
+    puts "finalize Ng services in #{path}"
     template = File.read(template("ng/services.js.erb"))
     
     text = Erubis::Eruby.new(template).evaluate( self )
    
     # generate the output
-    path = module_path("app",filename)
-    puts "finalize Ng services in #{path}"
+    
     write_asset(path,text)
     
     # create the angular modules
@@ -202,13 +210,15 @@ class AngularRailsBuilder < Builder::Base
     @@ng_modules.each do |mod|
     
       filename = "#{mod.model_name}Module.js"
+      path = module_path("modules",filename)
+      puts "build Ng module for #{mod.model_name} in #{path}"
+      
       template = File.read(template("ng/module.js.erb"))
 
       module_text = Erubis::Eruby.new(template).evaluate( mod )
 
       # generate the output 
-      path = module_path("modules",filename)
-      puts "build Ng module for #{mod.model_name} in #{path}"
+     
       write_asset(path,module_text)
     end
     
@@ -219,14 +229,15 @@ class AngularRailsBuilder < Builder::Base
     
     return if skip_method(__method__)
     
-    ['header','footer','home'].each do |file|
-      template = File.read(template("ng/#{file}.html.erb"))
-      text = ERB.new(template, nil, '-').result(binding)
-    
+    ['header','footer','home'].each do |file|      
       filename = "#{file}.html"
       
       path = module_path("partials",filename)
       puts "build Angular root partial in #{path}"
+      
+      template = File.read(template("ng/#{file}.html.erb"))
+      text = ERB.new(template, nil, '-').result(binding)
+      
       write_partial(path,text)  
     end
 
@@ -237,13 +248,15 @@ class AngularRailsBuilder < Builder::Base
     return if skip_method(__method__)
       
     filename = "menu.html"
+    path =  module_path("partials",filename)
+    puts "finalize Ng menu in #{path}"
+    
     template = File.read(template("ng/menu.html.erb"))
     
     text = Erubis::Eruby.new(template).evaluate( self )
     
     # generate the output
-    path =  module_path("partials",filename)
-    puts "finalize Ng menu in #{path}"
+    
     write_partial(path,text)
     
   end
