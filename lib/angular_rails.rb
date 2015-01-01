@@ -10,7 +10,7 @@ class AngularRailsBuilder < Builder::Base
   @@menus = []
   @@ng_modules = []
 
-  # define to 'list' to use the list template, grid to use ngGrid template 
+  # define to 'list' to use the list template
   # or 'table' to use the table template
   LIST_TYPE = 'table'
  
