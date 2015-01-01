@@ -1,4 +1,22 @@
+<% 
+# shorten this
+singlename = singular_table_name
 
+field_names = field_list
+
+# override the defaults with a given field list
+unless this_fields[:form].nil?
+  field_names = this_fields[:form].map{|name| name.to_s  }
+
+  # get the name of the principle field
+  namefield_name = field_names.select{|name| ['name','title'].include?(name)}.first 
+
+  # and the description field
+  descfield_name = field_names.select{|name|['description','info',
+      'summary','comment','snippet'].include?(name) }.first
+end
+
+%>
 
 <div class="container-fluid">
   <div class="row-fluid">
@@ -9,34 +27,14 @@
       Sort by:
       <select ng-model="orderProp">
 
-        <% 
-        default_namefield = nil
-        singlename = singular_table_name
-        columns = table_info['columns']
-
-        columns.each_pair do |name,column|  %> 
-          <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
-          <%
-          # get the name of the first field that is not called 'id' as default  
-          if default_namefield.nil? && name != 'id' && name !~ /_id/  
-            # use this column unless it is the id primary key or a foreign key
-            default_namefield = column
-          end %>
-        <% end %>
+        <%  field_names.each do |name|  %> 
+     	  <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
+     	<% end %>
       </select>
 
 
     </div>
     <div class="span10">
-      <!--Body content-->
-
-      <%  # determine the display field names
-      namefield = columns['name'] || columns['title'] || default_namefield
-      descfield = columns['description'] || columns['info'] || 
-        columns['summary'] || columns['comment'] || columns['snippet']
-
-      rejected_columns = ['id','updated_at','created_at','comments']
-    %>
 
 
       <table class="<%= singlename %>-table list-table table-striped">
@@ -45,14 +43,14 @@
 
             <th><!-- link column --></th>
 
-            <% columns.keys.reject{|key| rejected_columns.include?(key)  }.each do |key| %>
+            <% field_names.each do |key| %>
               <th><%= key.titleize %> </th>
             <% end %>
           </tr>
         </thead>
 
         <tfoot>
-        <td colspan="<%= columns.keys.reject{|key| rejected_columns.include?(key)  }.size() + 1 %>">
+        <td colspan="<%= field_names.size() + 1 %>">
           <div class="pagination pull-right">
             <ul>
               <li ng-class="prevPageDisabled()">
@@ -79,7 +77,7 @@
               </a>
             </td>
 
-            <% columns.keys.reject{|key| rejected_columns.include?(key) }.each do |key| %>
+            <% field_names.each do |key| %>
               <td>{{<%= singlename %>.<%= key %>}}</td>
             <% end %>
           </tr>

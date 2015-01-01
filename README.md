@@ -153,7 +153,7 @@ Any column name listed in :except is removed from all tables.
 @fields = {
   :except => [:id,:created_at,:updated_at],
   :detail => {
-    :users => [:email,:gender,:birthday]  # a :name field is auto included
+    :users => [:email,:name,:gender,:birthday]  
   },
   :form => {
     :users => [:email,:name,:gender,:birthday]
@@ -217,7 +217,10 @@ for each database table.
 
 Html view files for the detail,form and list views for each database table 
 will be generated from builder/templates/ng/partial-detail.erb etc. in 
-mywebapp/public/modules/__table_name__/.
+mywebapp/public/modules/__table_name__/.  
+Either builder/templates/ng/partial-table.erb or
+builder/templates/ng/partial-list.erb will be used to generate the list.html file
+depending on the value of LIST_TYPE in builder/lib/angular_rails.rb
 
 ### Step 6  - integrate angular into your rails web application
 

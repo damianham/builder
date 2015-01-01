@@ -6,14 +6,19 @@ module Builder
     
     attr_accessor :namespace, :singular_table_name, :plural_table_name, :human_name, 
       :schema, :model_name, :controller_name, :attributes, :destination, :appname,
-      :table_info, :fields, :this_fields
+      :table_info, :fields, :this_fields, :namefield_name, :descfield_name,
+      :field_list
   
    
     def initialize(options)
+      
+      @destination ||= options[:output]
+      puts "initialize " + self.class.name + " with #{destination}" 
+      
       @options = options
       @namespace ||= options[:namespace]
       @appname ||= options[:appname]
-      @destination ||= options[:output]
+      
       @schema = options[:schema]
       @table_info = options[:table_info]
       @fields = options[:fields] || {}
@@ -34,8 +39,21 @@ module Builder
         :form => @fields.fetch(:form,Hash.new).fetch(name.to_sym,nil),
         :list => @fields.fetch(:list,Hash.new).fetch(name.to_sym,nil),
       }.reject{|k,v| v.nil?}
-      
-      puts "initialize " + self.class.name + " with " +destination
+            
+      # find the first non ID column
+      default_namefield = @attributes.reject{|col| col.name =~ /_id/}.first
+
+      # determine the display field names
+      namefield = @attributes.select{|col| ['name','title'].include?(col.name)}.first || default_namefield
+      descfield = @attributes.select{|col|['description','info',
+          'summary','comment','snippet'].include?(col.name) }.first
+
+      # convert the column array into a list of field names
+      @field_list = attributes.map{|col| col.name  }
+
+      @namefield_name = namefield.nil? ? nil : namefield.name
+      @descfield_name = descfield.nil? ? nil : descfield.name
+
     end
     
     # skip the named method based on the contents of the :only and :except options

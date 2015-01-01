@@ -1,54 +1,55 @@
+<% 
+# shorten this
+singlename = singular_table_name
+
+field_names = field_list
+
+# override the defaults with a given field list
+unless this_fields[:form].nil?
+  field_names = this_fields[:form].map{|name| name.to_s  }
+
+  # get the name of the principle field
+  namefield_name = field_names.select{|name| ['name','title'].include?(name)}.first 
+
+  # and the description field
+  descfield_name = field_names.select{|name|['description','info',
+      'summary','comment','snippet'].include?(name) }.first
+end
+
+%>
+
+
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span2">
       <!--Sidebar content-->
 
-      Search: <input ng-model="query">
+      Search: <input ng-model="search_filter">
       Sort by:
       <select ng-model="orderProp">
- 
- 		<!-- rename the fields and enable accordingly
-        <option value="name">Alphabetical</option>
-        <option value="age">Newest</option>
-        -->
         
-     	<% 
-     	  default_namefield = nil
-     	  singlename = singular_table_name
-     	  columns = schema['columns']
-     	
-     	  columns.each_pair do |name,column|  %> 
+     	<%  field_names.each do |name|  %> 
      	  <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
-     	  <%
-     	  # get the name of the first field that is not called 'id' as default  
-     	  if default_namefield.nil? && name != 'id' && name !~ /_id/  
-    		# use this column unless it is the id primary key or a foreign key
-     	    default_namefield = column
-     	  end %>
      	<% end %>
       </select>
 
 
     </div>
     <div class="span10">
-      <!--Body content-->
       
-      <%  # determine the display field names
-      namefield = columns['name'] || columns['title'] || default_namefield
-      descfield = columns['description'] || columns['info'] || 
-      		columns['summary'] || columns['comment'] || columns['snippet']
-      %>
-
+      
       <ul class="<%= singlename %>-list">
-        <li ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:query | orderBy:orderProp" >
+        <li ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:search_filter | orderBy:orderProp" >
            
             <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename%>.id}}" >
             <i class="glyphicon glyphicon-search"></i>
             </a>
           
-          <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}">{{<%= singlename %>.<%= namefield['column_name'] %>}}</a>
-          <% unless descfield.nil?  %>
-            <p>{{<%= singlename %>.descfield['column_name']}}</p>
+            <% unless namefield_name.nil?  %>
+              <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}">{{<%= singlename %>.<%= namefield_name %>}}</a>
+            <% end %>
+          <% unless descfield_name.nil?  %>
+            <p>{{<%= singlename %>.<%= descfield_name %> }}</p>
           <% end %>
         </li>
       </ul>
