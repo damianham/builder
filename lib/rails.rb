@@ -112,7 +112,7 @@ class RailsBuilder < Builder::Base
       
       path = namespaced_path("app/views","#{plural_table_name}/"+filename)
       puts "build Rails #{file} view for #{model_name} in #{path}"
-      write_module_artifact(path,text)
+      write_artifact(path,text)
          
     end
     

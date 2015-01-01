@@ -50,6 +50,6 @@ end
             </div>
             <%% end %>
         </div>
-        <%%= link_to 'Back', <%= index_helper %>_path %>
+        <%%= link_to 'Back', <%= namespace.nil? ? '' : namespace + '_' %><%= index_helper %>_path %>
     </div>
 </div>
