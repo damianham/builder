@@ -1,10 +1,29 @@
+<% 
+# shorten this
+singlename = singular_table_name
+
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+
+field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
+
+# override the defaults with a given field list
+unless this_fields[:detail].nil?
+  field_names = this_fields[:detail].map{|name| name.to_s  }
+end
+%>
+
+
 <div class="container-fluid">
+    
+        
     <h1>Listing <%= plural_table_name %></h1>
 
-    <table>
+    <div class="object-table-container <%= singlename %>-table-container">
+     <table class="<%= singlename %>-table list-table table-striped">
         <thead>
             <tr>
                 <% attributes.reject(&:password_digest?).each do |attribute| -%>
+                  <%  next unless field_names.include?(attribute.name) %>
                   <th><%= attribute.human_name %></th>
                 <% end -%>
                 <th></th>
@@ -14,20 +33,21 @@
         </thead>
 
         <tbody>
-            <%% @<%= plural_table_name %>.each do |<%= singular_table_name %>| %>
+            <%% @<%= plural_table_name %>.each do |<%= singlename %>| %>
             <tr>
-                <% attributes.reject(&:password_digest?).each do |attribute| -%>
-                  <td><%%= <%= singular_table_name %>.<%= attribute.name %> %></td>
-                <% end -%>
-                <td><%%= link_to 'Show', <%= singular_table_name %> %></td>
-                <td><%%= link_to 'Edit', edit_<%= singular_table_name %>_path(<%= singular_table_name %>) %></td>
-                <td><%%= link_to 'Destroy', <%= singular_table_name %>, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+                <% attributes.reject(&:password_digest?).select{|attr| field_names.include?(attr.name)}.each do |attribute| %>          
+                  <td><%%= <%= singlename %>.<%= attribute.name %> %></td>
+                <% end %>
+                <td><%%= link_to 'Show', @<%= singlename %> %></td>
+                <td><%%= link_to 'Edit', edit_<%= singlename %>_path(<%= singlename %>) %></td>
+                <td><%%= link_to 'Destroy', <%= singlename %>, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             </tr>
             <%% end %>
         </tbody>
     </table>
 
-    <br>
+    </div>
 
-    <%%= link_to 'New <%= human_name %>', new_<%= singular_table_name %>_path %>
+    <%%= link_to 'New <%= human_name %>', new_<%= singlename %>_path %>
+ 
 </div>

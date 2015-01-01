@@ -151,7 +151,7 @@ class AngularRailsBuilder < Builder::Base
   
   def build_menu
     #puts "build Ng menu for #{model_name}"
-    @@menus << { :model_name => model_name, :comment => columns['comment'], 
+    @@menus << { :model_name => model_name, :comment => table_info['comment'], 
       :url => '/' + namespaced_url(plural_table_name) }
   end
   

@@ -1,13 +1,32 @@
+<% 
+# shorten this
+singlename = singular_table_name
+
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+
+field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
+
+# override the defaults with a given field list
+unless this_fields[:detail].nil?
+  field_names = this_fields[:detail].map{|name| name.to_s  }
+end
+%>
+
 <div class="container-fluid">
-    <p id="notice"><%%= notice %></p>
+    <div class="object-detail-container <%= singlename %>-detail-container">
+        <p id="notice"><%%= notice %></p>
 
-    <% attributes.reject(&:password_digest?).each do |attribute| -%>
-      <p>
-          <strong><%= attribute.human_name %>:</strong>
-          <%%= @<%= singular_table_name %>.<%= attribute.name %> %>
-      </p>
+        <div class="object-detail-table <%= singlename %>-detail-table">
+            <% attributes.reject(&:password_digest?).select{|attr| field_names.include?(attr.name)}.each do |attribute| %>  
+              <p>
+                  <strong><%= attribute.human_name %>:</strong>
+                  <%%= @<%= singlename %>.<%= attribute.name %> %>
+              </p>
 
-    <% end -%>
-    <%%= link_to 'Edit', edit_<%= singular_table_name %>_path(@<%= singular_table_name %>) %> |
-    <%%= link_to 'Back', <%= index_helper %>_path %>
+            <% end %>
+              
+        </div>
+        <%%= link_to 'Edit', edit_<%= singlename %>_path(@<%= singlename %>) %> |
+        <%%= link_to 'Back', <%= index_helper %>_path %>
+    </div>
 </div>

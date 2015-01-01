@@ -273,9 +273,6 @@ class RailsBuilder < Builder::Base
     # create the navigation menu
     finalize_menu
     
-    # create the angular rails artifacts as the web root
-    finalize_angular_root
-    
   end
   
   def menus
@@ -312,63 +309,6 @@ class RailsBuilder < Builder::Base
     # generate the output
     write_artifact(filename,text)
     
-  end
-  
-  # build the artifacts to hook AngularJS into the rails app
-  def finalize_angular_root
-    
-    return if skip_method(__method__)
-    
-    finalize_angular_root_controller
-    finalize_angular_root_view
-    finalize_angular_root_route
-    
-  end
-  
-  # buils the angular root controller
-  def finalize_angular_root_controller
-    
-    return if skip_method(__method__)
-    
-    filename = 'angular_controller.rb'
-    puts "build Rails root controller in app/controllers"
-
-    template = File.read(template("rails/angular/angular_controller.erb"))
-
-    text = Erubis::Eruby.new(template).evaluate( self )
-    
-    path = namespaced_path("app/controllers",filename)
-    write_artifact(path,text) 
-  end
-  
-  # build the angular root view
-  def finalize_angular_root_view
-    
-    return if skip_method(__method__)
-    
-    filename = 'angular.html.erb'
-    puts "build Rails root view in app/views"
-
-    template = File.read(template("rails/angular/angular_root_view.erb"))
-
-    text = Erubis::Eruby.new(template).evaluate( self )
-    
-    path = namespaced_path("app/views/angular",filename)
-    write_artifact(path,text) 
-  end
-  
-  # add the root routes to config/routes.rb
-  def finalize_angular_root_route
-    
-    return if skip_method(__method__)
-    
-    puts "add root route"
-    
-    routes = ["get 'angular/fetch_current_user' => 'angular#fetch_current_user'",
-      "get 'angular/angular' => 'angular#angular'", 
-      "root :to => 'angular#angular'"]
-    
-    add_routes(routes)
   end
   
 

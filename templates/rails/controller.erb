@@ -12,7 +12,7 @@ namefield = table_info['columns']['name'] || table_info['columns']['title'] || d
 %>
 
 class <%= controller_name %> < ApplicationController
-  before_action :set_<%= singular_table_name %>, only: [:show, :edit, :update, :destroy, :related, :bridged]
+  before_action :set_<%= singular_table_name %>, only: [:show, :edit, :update, :destroy, :related]
  
   respond_to :html, :json
   

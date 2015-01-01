@@ -1,35 +1,55 @@
+<% 
+# shorten this
+singlename = singular_table_name
+
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+
+field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
+
+# override the defaults with a given field list
+unless this_fields[:form].nil?
+  field_names = this_fields[:form].map{|name| name.to_s  }
+end
+%>
+
 <div class="container-fluid">
+    <div class="object-form-container <%= singlename %>-form-container">
 
-<%%= form_for(@<%= singular_table_name %>) do |f| %>
-  <%% if @<%= singular_table_name %>.errors.any? %>
-    <div id="error_explanation">
-      <h2><%%= pluralize(@<%= singular_table_name %>.errors.count, "error") %> prohibited this <%= singular_table_name %> from being saved:</h2>
+        <div class="object-form <%= singlename %>-form">
+            <%%= form_for(@<%= singlename %>) do |f| %>
+            <%% if @<%= singlename %>.errors.any? %>
+            <div id="error_explanation">
+                <h2><%%= pluralize(@<%= singlename %>.errors.count, "error") %> prohibited this <%= singlename %> from being saved:</h2>
 
-      <ul>
-      <%% @<%= singular_table_name %>.errors.full_messages.each do |msg| %>
-        <li><%%= msg %></li>
-      <%% end %>
-      </ul>
+                <ul>
+                    <%% @<%= singlename %>.errors.full_messages.each do |msg| %>
+                    <li><%%= msg %></li>
+                    <%% end %>
+                </ul>
+            </div>
+            <%% end %>
+
+            <% attributes.select{|attr| field_names.include?(attr.name)}.each do |attribute| %>  
+              <div class="field">
+                  <% if attribute.password_digest? -%>
+                    <%%= f.label :password %><br>
+                    <%%= f.password_field :password %>
+                </div>
+                <div>
+                    <%%= f.label :password_confirmation %><br>
+                    <%%= f.password_field :password_confirmation %>
+                  <% else -%>
+                    <%%= f.label :<%= attribute.name %> %><br>
+                    <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>
+                  <% end -%>
+              </div>
+            <% end %>
+            
+            <div class="actions">
+                <%%= f.submit %>
+            </div>
+            <%% end %>
+        </div>
+        <%%= link_to 'Back', <%= index_helper %>_path %>
     </div>
-  <%% end %>
-
-<% attributes.each do |attribute| -%>
-  <div class="field">
-<% if attribute.password_digest? -%>
-    <%%= f.label :password %><br>
-    <%%= f.password_field :password %>
-  </div>
-  <div>
-    <%%= f.label :password_confirmation %><br>
-    <%%= f.password_field :password_confirmation %>
-<% else -%>
-    <%%= f.label :<%= attribute.name %> %><br>
-    <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>
-<% end -%>
-  </div>
-<% end -%>
-  <div class="actions">
-    <%%= f.submit %>
-  </div>
-<%% end %>
 </div>

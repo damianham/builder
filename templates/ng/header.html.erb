@@ -1,3 +1,5 @@
+<!-- an example header with menu loaded in from a partial -->
+
 <header id="header" ng-controller="HeaderController">
   
    <!-- Header -->
@@ -28,12 +30,7 @@
     
     <div class="row">
         <div class="span10">
-            <ul class="breadcrumb nav nav-tabs pull-left">
-
-              <div ng-include src='assets/partials/navbar.html'>
- 
-
-            </ul>
+            <div ng-include src='/partials/menu.html'>
         </div>
     </div>
 </header>

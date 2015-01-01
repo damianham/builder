@@ -3,9 +3,9 @@
 # shorten this
 singlename = singular_table_name
 
-rejected_columns = fields.fetch(:except,[])
-
-field_names = field_list
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+ 
+field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
 
 # override the defaults with a given field list
 unless this_fields[:detail].nil?
@@ -17,17 +17,17 @@ unless this_fields[:detail].nil?
   # and the description field
   descfield_name = field_names.select{|name|['description','info',
       'summary','comment','snippet'].include?(name) }.first
-  end
+end
 
 unless namefield_name.nil?
   #remove from the list, no need to display twice
   field_names.reject!{|name| name == namefield_name}
-  end
+end
 
 unless descfield_name.nil?
   #remove from the list, no need to display twice
   field_names.reject!{|name| name == descfield_name}
-  end
+end
 
 %>
 
@@ -93,9 +93,6 @@ unless descfield_name.nil?
     <h1>Related Objects</h1>
 
     <% 
-    # remove some columns from related objects tables
-    rejected_columns = ['id','updated_at','created_at','comments']
-
     #  get related objects  
     table_info['belongs_to'].flatten.uniq.each do |key| 
       relation = key.singularize
