@@ -2,7 +2,7 @@
 
 # define the builders with their output destinations
 # javascript modules are written to app/assets/javascripts/modules
-# html partials are written to public/partials and public/modules
+# angular html partials are written to public/partials and public/modules
 
 @builders = {
   RailsBuilder => {:output => './mywebapp',:appname => 'myapp'  },
@@ -26,7 +26,7 @@ methods named in the :except array will do nothing and return immediately.
   :only => [:finalize_menu]}
 }
 
-We can also specify the fields to display for each type of display
+We can also specify the fields to display for each type of display, e.g
 @fields = {
   :except => [:id,:created_at,:updated_at],
   :detail => {
