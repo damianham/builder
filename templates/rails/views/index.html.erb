@@ -38,7 +38,7 @@ end
                 <% attributes.reject(&:password_digest?).select{|attr| field_names.include?(attr.name)}.each do |attribute| %>          
                   <td><%%= <%= singlename %>.<%= attribute.name %> %></td>
                 <% end %>
-                <td><%%= link_to 'Show', @<%= singlename %> %></td>
+                <td><%%= link_to 'Show', <%= singlename %> %></td>
                 <td><%%= link_to 'Edit', edit_<%= singlename %>_path(<%= singlename %>) %></td>
                 <td><%%= link_to 'Destroy', <%= singlename %>, method: :delete, data: { confirm: 'Are you sure?' } %></td>
             </tr>
