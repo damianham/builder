@@ -73,7 +73,15 @@ end
             </td>
 
             <% field_names.each do |key| %>
-              <td>{{<%= singlename %>.<%= key %>}}</td>
+              <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
+                <td>
+                    <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= key.sub(/_id$/,'').tableize %>/{{<%= singlename %>.<%= key %>}}" >
+                    {{<%= singlename %>.<%= key %>}}
+                    </a>
+                </td>
+              <% else %>
+                <td>{{<%= singlename %>.<%= key %>}}</td>
+              <% end %>
             <% end %>
           </tr>
         </tbody>

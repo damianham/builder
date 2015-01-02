@@ -95,13 +95,13 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       table_info['belongs_to'].flatten.uniq.each do |key| 
         relation = key.singularize
       %>
-        $scope.<%= singlename %>.<%= relation %> = <%= model_name %>.related({<%= singlename %>Id: $routeParams.<%= singlename %>Id,relation:'<%= relation %>'});
+        $scope.<%= singlename %>_<%= relation %> = <%= model_name %>.related({<%= singlename %>Id: $routeParams.<%= singlename %>Id,relation:'<%= relation %>'});
       <%  end
  
       table_info['has_many'].flatten.uniq.each do |key| 
         relation = key.pluralize
       %>
-        $scope.<%= singlename %>.<%= relation %> = <%= model_name %>.related({<%= singlename %>Id: $routeParams.<%= singlename %>Id,relation:'<%= relation %>'});        
+        $scope.<%= singlename %>_<%= relation %> = <%= model_name %>.related({<%= singlename %>Id: $routeParams.<%= singlename %>Id,relation:'<%= relation %>'});        
       <%  end %>
       
     }]);

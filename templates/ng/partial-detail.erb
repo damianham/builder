@@ -121,7 +121,7 @@ end
               </thead>
 
               <tbody> 
-                  <tr ng-repeat="<%= relname %> in <%= singlename %>.<%= relation %>  |  limitTo: 50" ng-class="rowClass(<%= relname %>)">
+                  <tr ng-repeat="<%= relname %> in <%= singlename %>_<%= relation %>  |  limitTo: 50" ng-class="rowClass(<%= relname %>)">
 
                       <td>
                           <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= key %>/{{<%= relname %>.id}}" >
@@ -167,7 +167,7 @@ end
               </thead>
 
               <tbody> 
-                  <tr ng-repeat="<%= relname %> in <%= singlename %>.<%= relation %>  |  limitTo: 50" ng-class="rowClass(<%= relname %>)">
+                  <tr ng-repeat="<%= relname %> in <%= singlename %>_<%= relation %>  |  limitTo: 50" ng-class="rowClass(<%= relname %>)">
 
                       <td>
                           <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= key %>/{{<%= relname %>.id}}" >

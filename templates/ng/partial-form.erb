@@ -59,6 +59,7 @@ end
 
                 <% field_names.each do |column_name| 
                   column = columns[column_name]
+                  puts "no such column #{column_name}" if column.nil?
                 %>
 
                   <div id="<%= column['column_name'] %>-group" class="form-group"

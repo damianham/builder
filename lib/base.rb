@@ -41,7 +41,7 @@ module Builder
       }.reject{|k,v| v.nil?}
             
       # find the first non ID column
-      default_namefield = @attributes.reject{|col| col.name =~ /_id/}.first
+      default_namefield = @attributes.reject{|col| col.name =~ /_id$/}.first
 
       # determine the display field names
       namefield = @attributes.select{|col| ['name','title'].include?(col.name)}.first || default_namefield
