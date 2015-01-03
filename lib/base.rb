@@ -130,9 +130,9 @@ module Builder
     
     end
     
-    def write_partial(filename,content = nil, &block)
+    def write_view(filename,content = nil, &block)
     
-      path = "#{destination}/public/#{filename}"
+      path = "#{destination}/public/generated/#{filename}"
       
       write_file(path,content, block)
     

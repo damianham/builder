@@ -40,7 +40,7 @@ class AngularRailsBuilder < Builder::Base
     
     filename = "#{singular_table_name}/list.html"
     
-    path = module_path("modules",filename)
+    path = module_path("views",filename)
     puts "build Ng #{LIST_TYPE} list partial for #{model_name} in #{path}"
     
     text = Erubis::Eruby.new(template).evaluate( self )
@@ -55,7 +55,7 @@ class AngularRailsBuilder < Builder::Base
  
     # generate the output
     
-    write_partial(path,text)
+    write_view(path,text)
 
   end
 
@@ -67,21 +67,21 @@ class AngularRailsBuilder < Builder::Base
     
     filename = "#{singular_table_name}/detail.html"
     
-    path =  module_path("modules",filename)
+    path =  module_path("views",filename)
     puts "build Ng detail partial for #{model_name} in #{path}"
     
     text = Erubis::Eruby.new(template).evaluate( self )
     
     # add a route for this partial
     @@ng_routes << {
-      :template => '/' + module_path('modules', filename),
+      :template => '/' + module_path('views', filename),
       :controller => model_name + 'DetailCtrl',
       :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id'
       }
       
     # generate the output
     
-    write_partial(path,text)
+    write_view(path,text)
 
   end
   
@@ -93,19 +93,19 @@ class AngularRailsBuilder < Builder::Base
     
     filename = "#{singular_table_name}/form.html"
     
-    path =  module_path("modules",filename)
+    path =  module_path("views",filename)
     puts "build Ng form partial for #{model_name} in #{path}"
     
     text = Erubis::Eruby.new(template).evaluate( self )
     
     # add a route for this partial
     @@ng_routes << {
-      :template => '/' + module_path('modules', filename),
+      :template => '/' + module_path('views', filename),
       :controller => model_name + 'FormCtrl',
       :url => '/' + namespaced_url(plural_table_name) + '/new'
       }
     @@ng_routes << {
-      :template => '/' + module_path('modules', filename),
+      :template => '/' + module_path('views', filename),
       :controller => model_name + 'FormCtrl',
       :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id/edit'
       }
@@ -113,7 +113,7 @@ class AngularRailsBuilder < Builder::Base
       
     # generate the output
     
-    write_partial(path,text)
+    write_view(path,text)
   end
 
   def build_view 
@@ -238,7 +238,7 @@ class AngularRailsBuilder < Builder::Base
       template = File.read(template("ng/#{file}.html.erb"))
       text = ERB.new(template, nil, '-').result(binding)
       
-      write_partial(path,text)  
+      write_view(path,text)  
     end
 
   end
@@ -257,7 +257,7 @@ class AngularRailsBuilder < Builder::Base
     
     # generate the output
     
-    write_partial(path,text)
+    write_view(path,text)
     
   end
   
