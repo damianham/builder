@@ -51,24 +51,41 @@ class <%= controller_name %> < ApplicationController
   # GET /<%= plural_table_name %>
   # GET /<%= plural_table_name %>.json
   def index
+  <% if this_fields[:list].nil? %>
     @<%= plural_table_name %> = <%= model_name %>.all
+  <% else %>
+    # select just the fields that will be displayed in the list/table + the id
+    @<%= plural_table_name %> = <%= model_name %>.select(:id, <%=  this_fields[:list].map{|x| ':'+x.to_s}.join(',') %> ).all
+  <% end %>
     respond_with(@<%= plural_table_name %>)
   end
 
   # GET /<%= plural_table_name %>/1
   # GET /<%= plural_table_name %>/1.json
   def show
+  <% unless this_fields[:detail].nil? %>
+    # keep just the fields that will be displayed in the view
+    @<%= singular_table_name %>.attributes.keep_if{|k,v| [<%=  this_fields[:detail].map{|x| ':'+x.to_s}.join(',') %>].include?(k.to_sym) }
+  <% end %>
     respond_with(@<%= singular_table_name %>)
   end
 
   # GET /<%= plural_table_name %>/new
   def new
     @<%= singular_table_name %> = <%= model_name %>.new
+    <% unless this_fields[:form].nil? %>
+    # keep just the fields that will be displayed in the form
+    @<%= singular_table_name %>.attributes.keep_if{|k,v| [<%=  this_fields[:form].map{|x| ':'+x.to_s}.join(',') %>].include?(k.to_sym) } 
+    <% end %>
     respond_with(@<%= singular_table_name %>)
   end
 
   # GET /<%= plural_table_name %>/1/edit
   def edit
+  <% unless this_fields[:form].nil? %>
+    # keep just the fields that will be displayed in the form
+    @<%= singular_table_name %>.attributes.keep_if{|k,v| [:id, <%=  this_fields[:form].map{|x| ':'+x.to_s}.join(',') %>].include?(k.to_sym) } 
+  <% end %>
     respond_with(@<%= singular_table_name %>)
   end
 
