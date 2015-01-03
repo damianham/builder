@@ -1,16 +1,4 @@
-<% 
-default_namefield = nil
-
-table_info['columns'].each_pair do |name,column| 
-  # get the name of the first field that is not called 'id' as default  
-  if default_namefield.nil? && name != 'id' && name !~ /_id/  
-    # use this column unless it is the id primary key or a foreign key
-    default_namefield = column
-  end 
-end 
-namefield = table_info['columns']['name'] || table_info['columns']['title'] || default_namefield
-%>
-
+<%  rejected_columns = fields.fetch(:except,['id','updated_at','created_at']) %>
 class <%= controller_name %> < ApplicationController
   before_action :set_<%= singular_table_name %>, only: [:show, :edit, :update, :destroy, :related]
  
@@ -25,8 +13,13 @@ class <%= controller_name %> < ApplicationController
   end
   
   # get a named range from a table
-  def range     
-    @values = <%= model_name %>.find_each.collect{|item| [item.id,item.<%= namefield['column_name'] %>]}
+  def range
+  <% if namefield_name.nil? %>
+    # could not automatically determine a suitable name field
+    @values = []
+  <% else %>
+    @values = <%= model_name %>.find_each.collect{|item| [item.id,item.<%= namefield_name %>]}
+  <% end %>
     respond_with(@values)
   end
  
@@ -113,12 +106,12 @@ class <%= controller_name %> < ApplicationController
     def <%= singular_table_name %>_params
     <% 
       column_symbols = []
-      table_info['columns'].keys.reject{|key| ['created_at','updated_at','id'].include? key}.each do |key | 
+      table_info['columns'].keys.reject{|key| rejected_columns.include? key}.each do |key | 
         column_symbols << ":#{key}"
       end
     %>
       # ensure id and timestamps are removed from the input
-      params.require(:<%= singular_table_name %>).extract!(:id,:created_at,:updated_at)
+      params.require(:<%= singular_table_name %>).extract!(<%= rejected_columns.map{|x| ':'+x.to_s}.join(',') %>)
       params.require(:<%= singular_table_name %>).permit( <%= column_symbols.join(', ') %>)
     end
 end
