@@ -65,7 +65,7 @@ class <%= controller_name %> < ApplicationController
   def show
   <% unless this_fields[:detail].nil? %>
     # keep just the fields that will be displayed in the view
-    @<%= singular_table_name %>.attributes.keep_if{|k,v| [<%=  this_fields[:detail].map{|x| ':'+x.to_s}.join(',') %>].include?(k.to_sym) }
+    @<%= singular_table_name %>.attributes.keep_if{|k,v| [:id,<%=  this_fields[:detail].map{|x| ':'+x.to_s}.join(',') %>].include?(k.to_sym) }
   <% end %>
     respond_with(@<%= singular_table_name %>)
   end
