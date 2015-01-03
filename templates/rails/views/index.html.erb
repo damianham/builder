@@ -7,8 +7,8 @@ rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
 field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
 
 # override the defaults with a given field list
-unless this_fields[:detail].nil?
-  field_names = this_fields[:detail].map{|name| name.to_s  }
+unless this_fields[:list].nil?
+  field_names = this_fields[:list].map{|name| name.to_s  }
 end
 %>
 
