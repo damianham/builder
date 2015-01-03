@@ -9,6 +9,13 @@
   AngularRailsBuilder => {:output => './mywebapp',:appname => 'myapp'}
 }
 
+@fields = {
+  :except => [:id,:created_at,:updated_at],
+  :detail => {   },
+  :form => {  },
+  :list => {  }
+}
+
 =begin
 
 We can also add :only and :except elements to the hash which are both arrays of 

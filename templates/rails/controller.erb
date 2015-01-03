@@ -117,6 +117,8 @@ class <%= controller_name %> < ApplicationController
         column_symbols << ":#{key}"
       end
     %>
+      # ensure id and timestamps are removed from the input
+      params.require(:<%= singular_table_name %>).extract!(:id,:created_at,:updated_at)
       params.require(:<%= singular_table_name %>).permit( <%= column_symbols.join(', ') %>)
     end
 end
