@@ -151,6 +151,26 @@ module Builder
       File.expand_path("../../templates", __FILE__) + "/#{filename}"
     end
     
+    # try to find a template file for a table column, model name is lowercase singlename
+    def template_by_name_and_type prefix,model_name, column_name, column_type
+      # 1. model_name, column_name
+      path = File.join(File.expand_path("../../templates", __FILE__),prefix, "field_partials",'models', model_name,'_'+column_name + '.erb')
+      return path if File.exist?(path )
+      # 2. model_name, column_type
+      path = File.join(File.expand_path("../../templates", __FILE__),prefix, "field_partials",'models', model_name,'_'+column_type + '.erb')
+      return path if File.exist?(path )
+      # 3. column_name
+      path = File.join(File.expand_path("../../templates", __FILE__),prefix, "field_partials","by_name",'_'+column_name + '.erb')
+      return path if File.exist?(path )
+      # 4. column_type
+      path = File.join(File.expand_path("../../templates", __FILE__),prefix, "field_partials","by_type",'_'+column_type + '.erb')
+      return path if File.exist?(path )
+      
+      # return the default _any_field.erb partial
+      File.join(File.expand_path("../../templates", __FILE__),prefix, "field_partials","_any_field.erb" )
+ 
+    end
+    
     # getter/setter of hash values
     def method_missing(method,*args, &block)
 

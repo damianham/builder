@@ -1,8 +1,8 @@
 'use strict';
 
 /* App Module */
-
-var app = angular.module('<%= appname || namespace || "mainapp" %>' , ['ngResource','ngRoute','ngAnimate' ]);
+/* download 'ui.bootstrap' from http://angular-ui.github.io/bootstrap/ */
+var app = angular.module('<%= appname || namespace || "mainapp" %>' , ['ngResource','ngRoute','ngAnimate','ui.bootstrap'  ]);
 
 // Gets authentication token injected in the DOM
 app.config(["$httpProvider", function(provider) {
@@ -31,7 +31,7 @@ app.config(['$routeProvider',   function (provider) {
         provider
         // the home controller could be namespaced i.e '/assets/<%= namespace || "" %>/partials/home.html'
 .when('/', {templateUrl:  '/partials/home.html' ,controller: 'HomeCtrl'})
-<% models.each do |model|   %>     
+<% [].each do |model|  #models.each do |model|   %>     
 .when('<%= model[:url] %>', {templateUrl:  '<%= model[:template] %>' ,controller: '<%= model[:controller] %>'})
 <% end %>
 .otherwise({redirectTo: '/'});

@@ -47,7 +47,7 @@ class AngularRailsBuilder < Builder::Base
     
     # add a route for this partial
     @@ng_routes << {
-      :template => '/' + module_path('modules', filename),
+      :template => '/' + module_path('views', filename),
       :controller => model_name + 'ListCtrl',
       :url => '/' + namespaced_url(plural_table_name) 
       }
