@@ -3,14 +3,34 @@
 
 Rake driven application builder from a database schema. 
 
-A set of rake tasks and ruby classes to generate various types of application artifacts using a database schema as the 
-source of data.  This is useful if you want to create a Ruby On Rails (with AngularJS) application and you already have a legacy database or you prefer to create the database DDL manually to take advantage of the powerful features of your database engine.
+A set of rake tasks and ruby classes to generate various types of application 
+artifacts using a database schema as the 
+source of data.  This is useful if you want to create a Ruby On Rails 
+(with AngularJS) application and you already have a legacy database or you 
+prefer to create the database DDL manually to take advantage of the powerful 
+features of your database engine.
+
+Writing a web application often means writing lots of boilerplate code.  The Rails
+scaffold generator can be used to generate much of the boilerplate code which is very useful, 
+especially for the views which would otherwise involve lots of tedious keystrokes.  The only
+problem with the rails scaffold generator is that you need to know your database 
+schema up front and then type lots of column_name:column_type arguments to the
+generator to create the database migrations and the views with elements for all the
+fields.
+
+This project does much the same thing only the emphasis is on generating application
+artifacts using a database schema as the source of information about columns and their types
+and it also generates artifacts for an AngularJS Single Page Application.
+
+Once you have generated the artifacts for your application you can then build your app 
+using the generated artifacts as a base.  A lot of the donkey work has been done for you. 
 
 ## Dependencies
 
 - Mysql2 or JDBC-Mysql connector
 - Rake
 - Erubis
+- AngularUI (for datepicker)
 
 ## Installation
 
@@ -23,8 +43,12 @@ git clone https://github.com/damianham/builder.git
  rake -f builder/tasks/mysql2.rake build_schema[testdb,testuser,testpass]    
 ```
 
-Generates a testdb_column_info.yml file from the testdb database schema using a username of testuser and password of testpass 
-using the mysql2 gem.  Use jdbc_mysql.rake if using JRuby.  To get the best results the tables in the database should define foreign key constraints and use table and column comments throughout.  For example for MySQL we can create a set of related tables with
+Generates a testdb_column_info.yml file from the testdb database schema 
+using a username of testuser and password of testpass 
+using the mysql2 gem.  Use jdbc_mysql.rake if using JRuby.  To get the 
+best results the tables in the database should define foreign key constraints 
+and use table and column comments throughout.  For example for MySQL we can 
+create a set of related tables with
 
 ```
 create table `users` (
@@ -72,7 +96,8 @@ rails new mywebapp
 
 ### Step 3 - Configure the builder
 
-#### Copy builder_config.rb to the current working directory and edit the copied file to define the generators and their output folders. 
+#### Copy builder_config.rb to the current working directory and edit the copied 
+file to define the generators and their output folders. 
 
 The builders are defined in a hash with the name of the builder as the key and the 
 builder options, including the output folder, as the value.  The default
@@ -186,11 +211,43 @@ define the type of list template to use - either 'list', or 'table'
 Uses the builder/templates/ng/partial-table.erb template to produce the 
 list.html for each class.
 
-### Step 4  - customize the templates in the templates folder to your liking
+### Step 4  - customize the view templates in the templates folder to your liking
 
-Edit builder/templates/ng/*.erb.
+Edit builder/templates/**/*.erb.
 
+Some form fields need special rendering. For example a date field should be 
+rendered with a date picker rather than as a text field.
+The AngularUI team provide a set of Bootstrap components written in pure 
+AngularJS that includes a date picker.  
 
+You can download the ui.bootstrap library from http://angular-ui.github.io/bootstrap/
+
+For a given model,name,column type you can create field partials that will be used to render
+the field with the following order of priority
+
+*  model_name.column_name
+*  model_name.column_type
+*  column_name
+*  column_type
+
+so for a column name of birthday with a field type of date in the user model
+e.g.
+```
+create table users (
+  birthday date
+);
+```
+The Angular partial-form view will look for a partial to render for the field in the following order
+
+templates/ng/field_partials/models/user/_birthday.erb
+templates/ng/field_partials/models/user/_date.erb
+templates/ng/field_partials/by_name/_birthday.erb
+templates/ng/field_partials/by_type/_date.erb
+
+If none of these files exist then the file
+templates/ng/field_partials/_any_field.erb is used to render the field.
+
+At the moment this only works for Angular Form views.
 
 ### Step 5  - generate the application artifacts
 
@@ -272,7 +329,7 @@ app/assets/javascrips/application.js
 
 ##  Complete run through
 
-The following steps will create a running web application from scratch based on
+The following steps will create application artifacts from scratch based on
 a mysql database existing called testdb and a database user with the logon 
 username:password credentials of testuser:testpass
 
