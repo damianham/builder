@@ -73,7 +73,7 @@ end
                 <% end %>
 
                 <button type="submit" class="btn btn-success btn-block" 
-                        ng-disabled="<%= @singlename %>Form.$invalid || isUnchanged(<%= @singlename %>) || submitted" >
+                        ng-disabled="<%= @singlename %>Form.$invalid || isUnchanged(<%= @singlename %>) || <%= @singlename %>_submitted" >
                     <span class="glyphicon glyphicon-flash"></span> Submit!
                 </button>
                 <button ng-click="reset()" ng-disabled="isUnchanged(<%= @singlename %>)">RESET</button>
