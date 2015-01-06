@@ -94,21 +94,30 @@ class <%= controller_name %> < ApplicationController
   def create
     @<%= singular_table_name %> = <%= model_name %>.new(<%= singular_table_name %>_params)
     @<%= singular_table_name %>.save
-    respond_with(@<%= singular_table_name %>)
+    respond_to do |format|
+      format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>) }
+      format.json  { respond_with(@<%= singular_table_name %>)}
+    end
   end
 
   # PATCH/PUT /<%= plural_table_name %>/1
   # PATCH/PUT /<%= plural_table_name %>/1.json
   def update
     @<%= singular_table_name %>.update(<%= singular_table_name %>_params)
-    respond_with(@<%= singular_table_name %>)
+    respond_to do |format|
+      format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>) }
+      format.json  { respond_with(@<%= singular_table_name %>)}
+    end
   end
 
   # DELETE /<%= plural_table_name %>/1
   # DELETE /<%= plural_table_name %>/1.json
   def destroy
     @<%= singular_table_name %>.destroy
-    respond_with(@<%= singular_table_name %>)
+    respond_to do |format|
+      format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= plural_table_name %>_path() }
+      format.json  { respond_with(@<%= singular_table_name %>)}
+    end
   end
  
   private

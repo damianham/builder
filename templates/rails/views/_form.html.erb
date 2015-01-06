@@ -16,7 +16,11 @@ end
     <div class="object-form-container <%= singlename %>-form-container">
 
         <div class="object-form <%= singlename %>-form">
+            <% if namespace.nil? %>
             <%%= form_for(@<%= singlename %>) do |f| %>
+            <% else %>
+              <%%= form_for([<%= ':'+ namespace %> ,@<%= singlename %>]) do |f| %>
+            <% end %>
             <%% if @<%= singlename %>.errors.any? %>
             <div id="error_explanation">
                 <h2><%%= pluralize(@<%= singlename %>.errors.count, "error") %> prohibited this <%= singlename %> from being saved:</h2>
@@ -30,17 +34,17 @@ end
             <%% end %>
 
             <% attributes.select{|attr| field_names.include?(attr.name)}.each do |attribute| %>  
-              <div class="field">
+              <div id="<%= attribute.name %>-group" class="form-group" >
                   <% if attribute.password_digest? -%>
                     <%%= f.label :password %><br>
-                    <%%= f.password_field :password %>
-                </div>
-                <div>
+                    <%%= f.password_field :password, class: 'form-control', placeholder: '' %>
+                    </div>
+                    <div class="form-group">
                     <%%= f.label :password_confirmation %><br>
-                    <%%= f.password_field :password_confirmation %>
+                    <%%= f.password_field :password_confirmation, class: 'form-control', placeholder: '' %>
                   <% else -%>
                     <%%= f.label :<%= attribute.name %> %><br>
-                    <%%= f.<%= attribute.field_type %> :<%= attribute.name %> %>
+                    <%%= f.<%= attribute.field_type %> :<%= attribute.name %>, class: 'form-control', placeholder: '' %>
                   <% end -%>
               </div>
             <% end %>

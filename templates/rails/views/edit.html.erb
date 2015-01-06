@@ -4,6 +4,6 @@
 
     <%%= render 'form' %>
 
-    <%%= link_to 'Show', <%= namespace.nil? ? '' : namespace + '_' %><%= singlename %>_path(<%= singlename %>) %> |
+    <%%= link_to 'Show', <%= namespace.nil? ? '' : namespace + '_' %><%= singlename %>_path(@<%= singlename %>) %> |
     <%%= link_to 'Back', <%= namespace.nil? ? '' : namespace + '_' %><%= index_helper %>_path %>
 </div>
