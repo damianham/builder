@@ -207,13 +207,19 @@ module Builder
       if column['data_type'] == 'int'
         attributes << "min='0' max='4294967295'"   # max unsigned int
         attributes << 'integer'
-      elsif column['data_type'] == 'char' || column['data_type'] == 'varchar'
+      elsif ['char','varchar','text'].include?(column['data_type']) 
         attributes << "ng-maxlength='#{column['character_maximum_length']}'"
       end
        
       attributes << 'required' if column['is_nullable'] == 'NO'
       
       attributes
+    end
+    
+    def rows_and_columns column
+      cols = 70  # this should be defined in the config file
+      rows = Math.min((column['character_maximum_length'] / cols),10)
+      ["rows='#{rows}'" ,"cols='#{cols}'"]
     end
     
     # if this field_name is suffixed with '_id' and there is a matching key in the
