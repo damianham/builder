@@ -213,7 +213,7 @@ list.html for each class.
 
 ### Step 4  - customize the view templates in the templates folder to your liking
 
-Edit builder/templates/**/*.erb.
+Edit builder/templates/(ng|rails)/*.erb.
 
 Some form fields need special rendering. For example a date field should be 
 rendered with a date picker rather than as a text field.
@@ -239,13 +239,16 @@ create table users (
 ```
 The Angular partial-form view will look for a partial to render for the field in the following order
 
-templates/ng/field_partials/models/user/_birthday.erb
-templates/ng/field_partials/models/user/_date.erb
-templates/ng/field_partials/by_name/_birthday.erb
-templates/ng/field_partials/by_type/_date.erb
+* templates/ng/field_partials/models/user/_birthday.erb
+* templates/ng/field_partials/models/user/_date.erb
+* templates/ng/field_partials/by_name/_birthday.erb
+* templates/ng/field_partials/by_type/_date.erb
 
 If none of these files exist then the file
-templates/ng/field_partials/_any_field.erb is used to render the field.
+
+templates/ng/field_partials/_any_field.erb 
+
+is used to render the field.
 
 At the moment this only works for Angular Form views.
 
@@ -256,13 +259,13 @@ rake -f builder/tasks/builder.rake build_classes[testdb[,namespace]]
 ```
 
 generates the application artifacts in the output folder using the 
-generated testdb_column_info.yml file as input.  
-The namespace argument will place the artifacts in a subfolder with that 
-namespace.  If no appname is supplied in the builder options then the Angular 
-module name will adopt the namespace argument.
+generated testdb_column_info.yml file as input.  The namespace argument will 
+place the artifacts in a subfolder with that namespace.  If no appname is 
+supplied in the builder options then the Angular module name will adopt 
+the namespace argument.
 
 The footer,header,home,menu partials from builder/templates/ng/footer.html.erb 
-etc. will be generated in mywebapp/public/partials.
+etc. will be generated in mywebapp/public/generated/partials.
 
 The main angular module app.js will be generated in 
 mywebapp/app/assets/javascripts/app along with the services.js module.
@@ -270,12 +273,15 @@ mywebapp/app/assets/javascripts/app along with the services.js module.
 An Angular module with a service factory and controllers for the detail,form 
 and list views will be generated from 
 builder/templates/ng/module.js.erb in mywebapp/app/assets/javascripts/modules
-for each database table.
+for each database table.  Routes to the 3 views will be added to the module.
+
+The usual Angular way is to generate a controllers in controller.js, services 
+in services.js etc.  This approach collects related elements together so the 
+User service factory is in the place as the UserList controller etc.
 
 Html view files for the detail,form and list views for each database table 
 will be generated from builder/templates/ng/partial-detail.erb etc. in 
-mywebapp/public/modules/__table_name__/.  
-Either builder/templates/ng/partial-table.erb or
+mywebapp/public/generated/views/__table_name__/.  Either builder/templates/ng/partial-table.erb or
 builder/templates/ng/partial-list.erb will be used to generate the list.html file
 depending on the value of LIST_TYPE in builder/lib/angular_rails.rb
 
