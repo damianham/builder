@@ -1,0 +1,33 @@
+require 'rails_helper'
+
+RSpec.describe <%= model_name %>, :type => :model do
+  
+  # This should return the minimal set of attributes required to create a valid
+  # <%= model_name %>. As you add validations to <%= model_name %>, be sure to
+  # adjust the attributes here as well.
+  <% 
+    rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+    attribs = []
+    attributes.reject{|attr| rejected_columns.include? attr.column_name}.each do |attr| 
+      if attr.password_digest? 
+        attribs << "password_digest: '#{BCrypt::Password.create('secret')}'"
+      else 
+        attribs << "#{attr.column_name}: '#{attr.default}'"
+      end 
+      if attr.polymorphic? 
+        attribs << "#{attr.column_name}_type: '#{attr.default}'" 
+      end 
+    end 
+  
+  %>
+  let(:valid_attributes) {
+    { <%= attribs.join(',') %> }
+  }
+
+  ### TODO adjust one of these attributes so the record becomes invalid
+  let(:invalid_attributes) {
+    {<%= attribs.join(',') %> }
+  }
+
+  pending "add some examples to (or delete) #{__FILE__}"
+end

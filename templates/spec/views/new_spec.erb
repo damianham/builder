@@ -1,0 +1,35 @@
+require 'rails_helper'
+<% 
+  rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+  attribs = []
+  attributes.reject{|attr| rejected_columns.include? attr.column_name}.each do |attr| 
+    if attr.password_digest? 
+      attribs << "password_digest: '#{BCrypt::Password.create('secret')}'"
+    else 
+      attribs << "#{attr.column_name}: '#{attr.default}'"
+    end 
+    if attr.polymorphic? 
+      attribs << "#{attr.column_name}_type: '#{attr.default}'" 
+    end 
+  end 
+
+%>
+
+RSpec.describe "<%= plural_table_name %>/new", :type => :view do
+  before(:each) do
+    assign(:<%= singular_table_name %>, <%= model_name %>.new(
+      <%= attribs.join(',') %> 
+    ))
+  end
+
+  it "renders new <%= singular_table_name %> form" do
+    render
+
+    assert_select "form[action=?][method=?]", <%= plural_table_name %>_path, "post" do
+
+    <% attributes.reject{|attr| rejected_columns.include? attr.column_name}.each do |attr|  %>
+      assert_select "input#<%= singular_table_name %>_<%= attr.column_name %>[name=?]", "<%= singular_table_name %>[<%= attr.column_name %>]"
+    <% end %>
+    end
+  end
+end
