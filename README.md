@@ -368,7 +368,7 @@ edit mywebapp/app/assets/javascripts/application.js
 ##  TODO
 
 - So many things
-- Create Rspec, Cucumber and CoffeeScript generators
+- Create RestAngular, Cucumber and CoffeeScript generators
 - Create schema extractors for other database engines
 
 please fork and contribute
