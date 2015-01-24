@@ -3,7 +3,7 @@
      ng-class="{ 'has-error' : <%= @singlename %>Form.<%= @column['column_name'] %>.$invalid && !<%= @singlename %>Form.<%= @column['column_name'] %>.$pristine && <%= @singlename %>_submitted }"
      >
   <label><%= @column['column_name'].titleize %></label>
-  <textarea <%= form_attributes(@column).join(' ') %>  <%=  rows_and_column(@column).join(' ') %> >
+  <textarea <%= form_attributes(@column).join(' ') %>  <%=  rows_and_columns(@column).join(' ') %> >
   </textarea>
   <span class="help-block" 
         ng-show="<%= @singlename %>Form.<%= @column['column_name'] %>.$invalid && !<%= @singlename %>Form.<%= @column['column_name'] %>.$pristine">
