@@ -125,7 +125,7 @@ module Builder
     
     def write_asset(filename,content = nil, &block)
     
-      path = "#{destination}/app/assets/javascripts/#{filename}"
+      path = "#{destination}/app/assets/javascripts/generated/#{filename}"
       write_file(path,content, block)      
     
     end
@@ -140,7 +140,7 @@ module Builder
     
     def write_artifact(filename,content = nil, &block)
     
-      path = "#{destination}/#{filename}"
+      path = "#{destination}/generated/#{filename}"
        
       write_file(path,content, block)
     
