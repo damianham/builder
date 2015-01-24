@@ -20,9 +20,16 @@ require 'rails_helper'
 # is no simpler way to get a handle on the object needed for the example.
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
+<% if namespace %>
+module <%= namespace.capitalize %>
+<% end %>
+RSpec.describe <%= controller_name %>, :type => :controller do
 
-RSpec.describe <%= model_name %>sController, :type => :controller do
-
+<% if namespace %>
+  # there is a namespace and it is <%= namespace %>
+<% else %>
+   # no namespace
+<% end %>
   # This should return the minimal set of attributes required to create a valid
   # <%= model_name %>. As you add validations to <%= model_name %>, be sure to
   # adjust the attributes here as well.
@@ -182,3 +189,6 @@ RSpec.describe <%= model_name %>sController, :type => :controller do
   end
 
 end
+<% if namespace %>
+end
+<% end %>

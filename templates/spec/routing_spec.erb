@@ -1,34 +1,37 @@
 require "rails_helper"
-
+<%
+base_route = namespace.nil? ? plural_table_name : namespace + '/' + plural_table_name
+controller = namespace.nil? ? plural_table_name : namespace + '_' + plural_table_name
+%>
 RSpec.describe <%= model_name %>Controller, :type => :routing do
   describe "routing" do
 
     it "routes to #index" do
-      expect(:get => "/<%= plural_table_name %>").to route_to("<%= plural_table_name %>#index")
+      expect(:get => "/<%= base_route %>").to route_to("<%= controller %>#index")
     end
 
     it "routes to #new" do
-      expect(:get => "/<%= plural_table_name %>/new").to route_to("<%= plural_table_name %>#new")
+      expect(:get => "/<%= base_route %>/new").to route_to("<%= controller %>#new")
     end
 
     it "routes to #show" do
-      expect(:get => "/<%= plural_table_name %>/1").to route_to("<%= plural_table_name %>#show", :id => "1")
+      expect(:get => "/<%= base_route %>/1").to route_to("<%= controller %>#show", :id => "1")
     end
 
     it "routes to #edit" do
-      expect(:get => "/<%= plural_table_name %>/1/edit").to route_to("<%= plural_table_name %>#edit", :id => "1")
+      expect(:get => "/<%= base_route %>/1/edit").to route_to("<%= controller %>#edit", :id => "1")
     end
 
     it "routes to #create" do
-      expect(:post => "/<%= plural_table_name %>").to route_to("<%= plural_table_name %>#create")
+      expect(:post => "/<%= base_route %>").to route_to("<%= controller %>#create")
     end
 
     it "routes to #update" do
-      expect(:put => "/<%= plural_table_name %>/1").to route_to("<%= plural_table_name %>#update", :id => "1")
+      expect(:put => "/<%= base_route %>/1").to route_to("<%= controller %>#update", :id => "1")
     end
 
     it "routes to #destroy" do
-      expect(:delete => "/<%= plural_table_name %>/1").to route_to("<%= plural_table_name %>#destroy", :id => "1")
+      expect(:delete => "/<%= base_route %>/1").to route_to("<%= controller %>#destroy", :id => "1")
     end
 
   end

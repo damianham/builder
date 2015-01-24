@@ -13,21 +13,24 @@ require 'rails_helper'
       end 
     end 
   
-  %>
+
+base_route = namespace.nil? ? plural_table_name : namespace + '/' + plural_table_name
+controller = namespace.nil? ? plural_table_name : namespace + '_' + plural_table_name
+%>
 RSpec.describe "<%= model_name %>s", :type => :request do
-  describe "GET /<%= plural_table_name %>" do
+  describe "GET /<%= base_route %>" do
     it "works! (now write some real specs)" do
-      get <%= plural_table_name %>_path
+      get <%= controller %>_path
       expect(response).to have_http_status(200)
     end
   end
   
   describe "create <%= singular_table_name %>" do
     it "creates a <%= singular_table_name %> and redirects to the <%= singular_table_name %>'s page" do
-    get "/<%= plural_table_name %>/new"
+    get "/<%= base_route %>/new"
     expect(response).to render_template(:new)
 
-    post "/<%= plural_table_name %>", :<%= singular_table_name %> => {<%= attribs.join(',') %>}
+    post "/<%= base_route %>", :<%= singular_table_name %> => {<%= attribs.join(',') %>}
 
     expect(response).to redirect_to(assigns(:<%= singular_table_name %>))
     follow_redirect!
