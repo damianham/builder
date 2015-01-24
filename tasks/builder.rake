@@ -4,8 +4,10 @@ require 'rubygems'
 require 'yaml'
 
 require File.expand_path( '../builder.rb', File.dirname(__FILE__)  )
- 
-require './builder_config'
+
+config_file = ENV['conf'] || './builder_config'
+
+require config_file
 
 desc "Build the classes"
 
@@ -13,7 +15,7 @@ task :build_classes, :database,:namespace do |t, args|
 
   #puts "Args with defaults were: #{args}"
 
-  filename = args['database'] + '_column_info.yml'
+  filename = ENV['columns'] || args['database'] + '_column_info.yml'
 
   schema = YAML.load_file(filename)
   

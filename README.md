@@ -285,6 +285,17 @@ mywebapp/public/generated/views/__table_name__/.  Either builder/templates/ng/pa
 builder/templates/ng/partial-list.erb will be used to generate the list.html file
 depending on the value of LIST_TYPE in builder/lib/angular_rails.rb
 
+
+You can also pass the location of the config file and column info file as 
+environment variables to the rake task
+
+```
+rake -f builder/tasks/builder.rake conf='path_to_config_file' columns='path_to_column_info_file'  build_classes
+```
+
+in which case there is no need to pass the database name as an argument.
+
+
 ### Step 6  - integrate angular into your rails web application
 
 Integrate the Angular app into your web application by adding the ng-app
