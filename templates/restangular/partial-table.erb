@@ -1,0 +1,93 @@
+<% 
+# shorten this
+singlename = singular_table_name
+
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+ 
+field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
+
+# override the defaults with a given field list
+unless this_fields[:list].nil?
+  field_names = this_fields[:list].map{|name| name.to_s  }
+end
+
+%>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span2" style="margin:15px;">
+
+
+      Search: <input ng-model="query">
+      Sort by:
+      <select ng-model="orderProp">
+
+        <%  field_names.each do |name|  %> 
+     	  <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
+     	<% end %>
+      </select>
+
+
+    </div>
+    <div class="span10">
+
+
+      <table class="<%= singlename %>-table list-table table-striped">
+        <thead>
+          <tr>
+
+            <th><!-- link column --></th>
+
+            <% field_names.each do |key| %>
+              <th><%= key.titleize %> </th>
+            <% end %>
+          </tr>
+        </thead>
+
+        <tfoot>
+        <td colspan="<%= field_names.size() + 1 %>">
+          <div class="pagination pull-right">
+            <ul>
+              <li ng-class="prevPageDisabled()">
+              <a href ng-click="prevPage()">« Prev</a>
+            </li>
+            <li ng-repeat="n in range()"
+              ng-class="{active: n == currentPage}" ng-click="setPage(n)">
+              <a href="#">{{n+1}}</a>
+            </li>
+            <li ng-class="nextPageDisabled()">
+              <a href ng-click="nextPage()">Next »</a>
+            </li>
+            </ul>
+          </div>
+        </td>
+        </tfoot>
+
+        <tbody> 
+          <tr ng-repeat="<%= singlename %> in <%= plural_table_name %> | offset: currentPage*itemsPerPage | filter:query | orderBy:orderProp:reverse | limitTo: itemsPerPage" ng-class="rowClass(<%= singlename %>)">
+
+            <td>
+              <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename %>.id}}" >
+                <i class="glyphicon glyphicon-search"></i>
+              </a>
+            </td>
+
+            <% field_names.each do |key| %>
+              <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
+                <td>
+                    <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= key.sub(/_id$/,'').tableize %>/{{<%= singlename %>.<%= key %>}}" >
+                    {{<%= singlename %>.<%= key %>}}
+                    </a>
+                </td>
+              <% else %>
+                <td>{{<%= singlename %>.<%= key %>}}</td>
+              <% end %>
+            <% end %>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </div>
+  </div>
+</div>

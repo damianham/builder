@@ -1,0 +1,211 @@
+'use strict';
+
+<% 
+
+# shorten the accessor name
+singlename = singular_table_name
+ 
+# add the belongs_to and has many related classes  
+ classes = []
+ table_info['belongs_to'].flatten.uniq.each do |key|
+   classes << key.to_model_name
+ end
+ 
+ table_info['has_many'].flatten.uniq.each do |key|
+   classes << key.to_model_name
+ end
+%>
+
+/* module */
+
+// model/service
+/*
+ * return a Restangular service
+ */ 
+angular.module('<%= appname || namespace || "mainapp" %>')
+  .factory('<%= model_name %>', 
+    ['Restangular', function(Restangular){
+          return Restangular.service('<%= plural_table_name %>');
+      }
+  ]);
+
+// list controller
+angular.module('<%= appname || namespace || "mainapp" %>')
+ // enclose dependencies as strings within brackets to avoid minification and create the
+ // controller as an anonymous function
+ .controller('<%= model_name %>ListCtrl', [ '$scope', '$filter', '<%= model_name %>', 
+    function ($scope, $filter, <%= model_name %>) {
+    
+      $scope.reverse = false;
+      $scope.itemsPerPage = 25;
+      $scope.currentPage = 0;
+      
+      <%= model_name %>.getList().then(function(<%= plural_table_name %>) {
+        $scope.<%= plural_table_name %> = <%= plural_table_name %>;
+      });
+      
+      $scope.orderProp = 'id';
+      
+      $scope.prevPage = function() {
+        if ($scope.currentPage > 0) {
+          $scope.currentPage--;
+        }
+      };
+
+      $scope.prevPageDisabled = function() {
+        return $scope.currentPage === 0 ? "disabled" : "";
+      };
+
+      $scope.pageCount = function() {
+        return Math.ceil($scope.<%= plural_table_name %>.length/$scope.itemsPerPage)-1;
+      };
+
+      $scope.nextPage = function() {
+        if ($scope.currentPage < $scope.pageCount()) {
+          $scope.currentPage++;
+        }
+      };
+
+      $scope.nextPageDisabled = function() {
+        return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
+      };
+  
+      
+      /// end controller 
+    }]);
+
+
+  // detail controller
+angular.module('<%= appname || namespace || "mainapp" %>')
+ // enclose dependencies as strings within brackets to avoid minification and create the
+ // controller as an anonymous function
+ .controller('<%= model_name %>DetailCtrl', [ '$scope',  '$routeParams',  '<%= model_name %>'   
+    , function($scope, $routeParams, <%= model_name %>) {
+      
+      <%= model_name %>.get({single: true}).then(function(<%= singlename %>){
+        $scope.<%= singlename %> = <%= singlename %>;
+        
+        // get related objects
+        <%   
+          (table_info['belongs_to'].flatten + table_info['has_many'].flatten).uniq.each do |key| 
+            relation = key.singularize
+        %>
+        // requires adding nested resource routes e.g. <%= plural_table_name %>/1/<%= relation.pluralize %>
+        <%= singlename %>.getList('<%= relation.pluralize %>').then(function(<%= relation.pluralize %>) {
+          $scope.<%= singlename %>_<%= relation.pluralize %> = <%= relation.pluralize %>;
+        });
+        <%  end %>
+      
+      });
+      
+    }]);
+  
+ // form controller
+angular.module('<%= appname || namespace || "mainapp" %>')
+ // enclose dependencies as strings within brackets to avoid minification and create the
+ // controller as an anonymous function
+ .controller('<%= model_name %>FormCtrl', [ '$scope',  '$routeParams',  '<%= model_name %>'
+    <%= classes.size == 0 ? '' : ",'" + classes.join("','") + "'" %>
+    , function($scope, $routeParams, <%= model_name %> <%= classes.size == 0 ? '' : "," + classes.join(",")  %>) {
+      
+      // get the ranges for foreign keys    - delete where not necessary
+      <%- if classes.size > 0 %>
+        <%- classes.each do |class_name| %> 
+      $scope.<%= class_name.tableize %> = <%= class_name %>.customGet('range');
+        <% end %>
+      <% end %>
+          
+      //  stuff for datepicker form field
+      $scope.today = function() {
+        $scope.current_date = new Date();
+      };
+      $scope.today();
+
+      $scope.clear = function () {
+        $scope.current_date = null;
+      };
+
+      // Disable weekend selection
+      $scope.date_disabled = function(date, mode) {
+        return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+      };
+
+      $scope.date_open = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.datepicker_opened = true;
+      };
+
+      $scope.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1
+      };
+
+      $scope.date_formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+      $scope.date_format = $scope.date_formats[0];
+      
+      // process the form
+      $scope.processForm = function(formData,isvalid) {
+      
+        $scope.<%= singlename %>_submitted = true;
+        
+        if ($scope.<%= singlename %>.id == null) {
+             <%= model_name %>.post(formData).then(
+            function(data) {
+              console.log("saved new <%= model_name %>");
+              // bind success message to message
+              $scope.message = data.message;
+              $scope.<%= singlename %>_submitted = false;
+            },
+            function(data) {
+              console.log("Error saving new <%= model_name %>");
+              console.log(data);
+            
+              $scope.<%= singlename %>_errors = data.errors;
+              // bind error message to message
+              $scope.message = data.message;
+              $scope.<%= singlename %>_submitted = false;
+            
+            }) ;
+        } else {
+           $scope.<%= singlename %>.save().then(
+           function(data) {
+              console.log("saved <%= model_name %>");
+              // bind success message to message
+              $scope.message = data.message;
+              $scope.<%= singlename %>_submitted = false;
+            },
+            function(data) {
+              console.log("Error saving <%= model_name %>");
+              console.log(data);
+            
+              $scope.<%= singlename %>_errors = data.errors;
+              // bind error message to message
+              $scope.message = data.message;
+              $scope.<%= singlename %>_submitted = false;
+            
+            });
+        
+        }
+      };
+      
+      // create a blank object to hold our form information or load the record
+      // $scope will allow this to pass between controller and view
+      if ($routeParams.<%= singlename %>Id == null) {
+        $scope.<%= singlename %> = new <%= model_name %>();
+      } else {
+        $scope.<%= singlename %> = <%= model_name %>.one($routeParams.<%= singlename %>Id).get();
+      }
+      
+    }]);
+  
+ angular.module('<%= appname || namespace || "mainapp" %>').config(['$routeProvider',   function (provider) {
+        provider
+<% 
+path = '/' + namespaced_url(plural_table_name)
+models.select{|m| m[:url].match(path) }.each do |model|   %>     
+.when('<%= model[:url] %>', {templateUrl:  '<%= model[:template] %>' ,controller: '<%= model[:controller] %>'})
+<% end %>
+ ;
+}]);

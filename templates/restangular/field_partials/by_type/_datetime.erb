@@ -1,0 +1,45 @@
+
+<div id="<%= @column['column_name'] %>-group" class="form-group"
+     ng-class="{ 'has-error' : <%= @singlename %>Form.<%= @column['column_name'] %>.$invalid && !<%= @singlename %>Form.<%= @column['column_name'] %>.$pristine && <%= @singlename %>_submitted }"
+     >
+    <label><%= @column['column_name'].titleize %></label>
+    <div>
+      <table class="datepicker-table">
+        <tr>
+          <td>
+            <input type="text"  <%= form_attributes(@column).join(' ') %>
+                   datepicker-popup="{{date_format}}" 
+                   is-open="datepicker_opened" 
+                   datepicker-options="dateOptions" date-disabled="date_disabled(date, mode)" 
+                   ng-required="true" close-text="Close" />
+          </td>
+          <td>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="date_open($event)">
+                    <i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </td>
+          <td>Format: </td>
+          <td>
+              <select class="form-control" 
+                ng-model="date_format" ng-options="f for f in date_formats"><option></option></select>
+          </td>
+          <td>
+            <timepicker ng-model="<%= @singlename %>.<%= @column['column_name'] %>_time" 
+                hour-step="1" minute-step="15" show-meridian="true"></timepicker>
+
+          </td>
+        </tr>
+      </table>
+    </div>
+    
+    <span class="help-block" 
+          ng-show="<%= @singlename %>Form.<%= @column['column_name'] %>.$invalid && !<%= @singlename %>Form.<%= @column['column_name'] %>.$pristine">
+        This value in this field is invalid
+    </span>
+    <span class="help-block" 
+          ng-show="<%= @singlename %>_errors.<%= @column['column_name'] %>">
+        {{ <%= @singlename %>_errors.<%= @column['column_name'] %> }}>
+    </span>  
+</div>
+

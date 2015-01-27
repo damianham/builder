@@ -1,0 +1,30 @@
+<!--  an example menu -->
+
+<ul class="breadcrumb nav nav-tabs pull-left">
+    
+<li ng-class="{active: routeIs('/')}">
+  <a href="#/"><i class="icon-home"></i> Home</a>
+</li>
+
+<!-- see http://glyphicons.com/ for the names of the available glyphicons -->
+<li class="nav-header"> <a href="/#/" data-toggle="collapse" data-target="#mainMenu">
+    <h5>Home <i class="glyphicon glyphicon-chevron-down"></i></h5>
+  </a>
+  <ul class="list-unstyled collapse in" id="mainMenu">
+
+    <%  menus.each do |data| %>
+
+      <li ng-class="{active: routeIs('<%= data[:url] %>')}">
+
+        <a href="/#<%= data[:url] %>" title="<%= data[:comment] %>">
+          <i class="glyphicon glyphicon-cog"></i>
+          <%= data[:model_name].titleize.pluralize %>
+        </a>
+
+      </li>
+    <% end %>
+
+  </ul>
+</li>
+
+</ul>
