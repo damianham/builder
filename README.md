@@ -31,6 +31,7 @@ using the generated artifacts as a base.  A lot of the donkey work has been done
 - Rake
 - Erubis
 - AngularUI (for datepicker)
+- Restangular (and underscore or lodash) if using RestAngularBuilder
 
 ## Installation
 
@@ -315,18 +316,29 @@ or the default 'mainapp'.
 ```
 <html lang="en" ng-app='mywebapp'>
 <head>
-<% 
-        # load angular from google CDN for production and locally for development/test
-        ['angular.min.js','angular-animate.min.js','angular-cookies.min.js',
+        
+        <% 
+        # add angular-touch.min.js for mobiles
+        # load jquery from googleapis CDN - also remove it from application.js
+        { "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/" => [ "jquery.min.js"],
+          "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.7/" => 
+            ['angular.min.js','angular-animate.min.js','angular-cookies.min.js',
           'angular-resource.min.js','angular-cookies.min.js','angular-loader.min.js',
           'angular-messages.min.js',
-          'angular-sanitize.min.js','angular-route.min.js'].each do |lib| %>
-          <% if Rails.env.production?  %>
-            <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.7/<%= lib %>"></script>
-          <% else %>
-            <script src="/javascript/<%= lib %>"></script> 
-          <% end %>
-        <% end %>
+          'angular-sanitize.min.js','angular-route.min.js'],
+          "http://cdnjs.cloudflare.com/ajax/libs/restangular/1.3.1/" => ['restangular.min.js'],
+          "http://cdn.jsdelivr.net/underscorejs/1.7.0/" => ["underscore-min.js"],
+          "http://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/" => ["bootstrap.min.js"]
+          }.each_pair do |cdn,list|
+            list.each do |lib| %>
+              <% if Rails.env.production?  %>
+                <script src="<%= cdn + lib %>"></script>
+              <% else %>
+                <script src="/javascript/<%= lib %>"></script> 
+              <% end %>
+            <% end 
+          end
+        %>
 
         <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
         <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
