@@ -167,29 +167,6 @@ class RestAngularBuilder < Builder::Base
     
     return if skip_method(__method__)
     
-    filename = "app.js"
-    path = module_path("app",filename)
-    puts "finalize Ng app in #{path}"
- 
-    template = File.read(template(File.join("restangular","app.js.erb")))
-    
-    text = Erubis::Eruby.new(template).evaluate( self )
-
-    # write the routes output
-    path = module_path("app",filename)
-    write_asset(path,text) 
-    
-    filename = 'services.js'
-    path = module_path("app",filename)
-    puts "finalize Ng services in #{path}"
-    template = File.read(template(File.join("restangular","services.js.erb")))
-    
-    text = Erubis::Eruby.new(template).evaluate( self )
-   
-    # generate the output
-    
-    write_asset(path,text)
-    
     # create the angular modules
     finalize_modules
     
@@ -265,6 +242,30 @@ class RestAngularBuilder < Builder::Base
   # add the generated javascripts to application.js
   def finalize_application
     
+    return if skip_method(__method__)
+    
+    filename = "app.js"
+    path = module_path("app",filename)
+    puts "finalize Ng app in #{path}"
+ 
+    template = File.read(template(File.join("restangular","app.js.erb")))
+    
+    text = Erubis::Eruby.new(template).evaluate( self )
+
+    # write the routes output
+    path = module_path("app",filename)
+    write_asset(path,text) 
+    
+    filename = 'services.js'
+    path = module_path("app",filename)
+    puts "finalize Ng services in #{path}"
+    template = File.read(template(File.join("restangular","services.js.erb")))
+    
+    text = Erubis::Eruby.new(template).evaluate( self )
+   
+    # generate the output    
+    write_asset(path,text)
+    
     # integrate the angular libs into the application.js in the right order
     filename = "#{destination}/app/assets/javascripts/application.js"
     
@@ -273,10 +274,12 @@ class RestAngularBuilder < Builder::Base
     if namespace
       libs = "//= require #{namespace}/app/app
 //= require #{namespace}/app/services
+//= require_tree ./#{namespace}/generated
 //= require_tree ./#{namespace}/modules"
     else
       libs = "//= require app/app
 //= require app/services
+//= require_tree ./generated
 //= require_tree ./modules"
     end
     
