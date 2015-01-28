@@ -2,7 +2,7 @@
 
 /* App Module */
 /* download 'ui.bootstrap' from http://angular-ui.github.io/bootstrap/ */
-var app = angular.module('<%= appname || namespace || "mainapp" %>' , ['restangular','ngRoute','ngAnimate','ui.bootstrap'  ]);
+var app = angular.module('<%= appname || namespace || "mainapp" %>' , ['restangular','ngResource','ngRoute','ngAnimate','ui.bootstrap'  ]);
 
 // Gets authentication token injected in the DOM
 app.config(["$httpProvider", function(provider) {

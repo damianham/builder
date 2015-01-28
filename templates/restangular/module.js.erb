@@ -40,8 +40,28 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       $scope.itemsPerPage = 25;
       $scope.currentPage = 0;
       
+      // data is setup by the promise on completion so set this to an empty array
+      // to avoid an undefined error in the filter definition in the main app module
+      $scope.<%= plural_table_name %> = [];  
+      
       <%= model_name %>.getList().then(function(<%= plural_table_name %>) {
         $scope.<%= plural_table_name %> = <%= plural_table_name %>;
+        
+        // set these up once the data arrives
+        $scope.pageCount = function() {
+          return Math.ceil($scope.<%= plural_table_name %>.length/$scope.itemsPerPage)-1;
+        };
+
+        $scope.nextPage = function() {
+          if ($scope.currentPage < $scope.pageCount()) {
+            $scope.currentPage++;
+          }
+        };
+
+        $scope.nextPageDisabled = function() {
+          return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
+        };
+
       });
       
       $scope.orderProp = 'id';
@@ -56,21 +76,6 @@ angular.module('<%= appname || namespace || "mainapp" %>')
         return $scope.currentPage === 0 ? "disabled" : "";
       };
 
-      $scope.pageCount = function() {
-        return Math.ceil($scope.<%= plural_table_name %>.length/$scope.itemsPerPage)-1;
-      };
-
-      $scope.nextPage = function() {
-        if ($scope.currentPage < $scope.pageCount()) {
-          $scope.currentPage++;
-        }
-      };
-
-      $scope.nextPageDisabled = function() {
-        return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
-      };
-  
-      
       /// end controller 
     }]);
 
