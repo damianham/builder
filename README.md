@@ -178,7 +178,8 @@ ng-app name in the html start tag.  The default Angular module name is 'mainapp'
 #### define the fields to use for each kind of template for each table
 
 When generating the detail.html, form.html and list.html files for each
-table/module limit the fields that are generated to the given list.
+table/module limit the fields that are generated to the given list.  
+RSpecBuilder also uses these lists to generate attributes for testing views.  
 Any column name listed in :except is removed from all tables.
 
 ```
