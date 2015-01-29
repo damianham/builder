@@ -200,7 +200,9 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       if ($routeParams.<%= singlename %>Id == null) {
         $scope.<%= singlename %> = new <%= model_name %>();
       } else {
-        $scope.<%= singlename %> = <%= model_name %>.one($routeParams.<%= singlename %>Id).get();
+        <%= model_name %>.one($routeParams.<%= singlename %>Id).get().then(function(data){
+          $scope.<%= singlename %> = data;
+        });        
       }
       
     }]);
