@@ -93,10 +93,15 @@ class <%= controller_name %> < ApplicationController
   # POST /<%= plural_table_name %>.json
   def create
     @<%= singular_table_name %> = <%= model_name %>.new(<%= singular_table_name %>_params)
-    @<%= singular_table_name %>.save
+    
     respond_to do |format|
-      format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>) }
-      format.json  { respond_with(@<%= singular_table_name %>)}
+      if @<%= singular_table_name %>.save
+        format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>), notice: '<%= model_name %> was successfully created.' }
+        format.json  { respond_with(@<%= singular_table_name %>)}
+      else
+        format.html { render action: 'new' }
+        format.json { render json: @<%= singular_table_name %>.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -105,8 +110,13 @@ class <%= controller_name %> < ApplicationController
   def update
     @<%= singular_table_name %>.update(<%= singular_table_name %>_params)
     respond_to do |format|
-      format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>) }
-      format.json  { respond_with(@<%= singular_table_name %>)}
+      if @<%= singular_table_name %>.save
+        format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>), notice: '<%= model_name %> was successfully updated.' }
+        format.json  { respond_with(@<%= singular_table_name %>)}
+      else
+        format.html { render action: 'edit' }
+        format.json { render json: @<%= singular_table_name %>.errors, status: :unprocessable_entity }
+      end
     end
   end
 
