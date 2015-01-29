@@ -15,10 +15,12 @@ class <%= controller_name %> < ApplicationController
   # get a named range from a table
   def range
   <% if namefield_name.nil? %>
-    # could not automatically determine a suitable name field
+    # could not automatically determine a suitable value field
+    # replace  XXX with a field name
+    # @values = <%= model_name %>.find_each.collect{|item| {value: item.id, key: item.XXX } }
     @values = []
   <% else %>
-    @values = <%= model_name %>.find_each.collect{|item| [item.id,item.<%= namefield_name %>]}
+    @values = <%= model_name %>.find_each.collect{|item| {value: item.id, key: item.<%= namefield_name %>} }
   <% end %>
     respond_with(@values)
   end
