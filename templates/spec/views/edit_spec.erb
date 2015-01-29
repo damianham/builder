@@ -1,21 +1,31 @@
 require 'rails_helper'
 <% 
-  rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
-  attribs = []
-  attributes.reject{|attr| rejected_columns.include? attr.column_name}.each do |attr| 
-    if attr.password_digest? 
-      attribs << "password_digest: '#{BCrypt::Password.create('secret')}'"
+
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+
+field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
+
+# override the defaults with a given field list
+unless this_fields[:form].nil?
+  field_names = this_fields[:form].map{|name| name.to_s  }
+  end
+
+attribs = []
+attributes.select{|attr| field_names.include?(attr.name)}.each do |attr| 
+  if attr.password_digest? 
+    attribs << "password_digest: '#{BCrypt::Password.create('secret')}'"
     else 
-      attribs << "#{attr.column_name}: '#{attr.default}'"
+    attribs << "#{attr.column_name}: '#{attr.default}'"
     end 
-    if attr.polymorphic? 
-      attribs << "#{attr.column_name}_type: '#{attr.default}'" 
-    end 
+  if attr.polymorphic? 
+    attribs << "#{attr.column_name}_type: '#{attr.default}'" 
   end 
+end 
 
 %>
 
-RSpec.describe "<%= plural_table_name %>/edit", :type => :view do
+
+RSpec.describe "<%= namespace.nil? ? '' : namespace + '/' %><%= plural_table_name %>/edit", :type => :view do
   before(:each) do
     @<%= singular_table_name %> = assign(:<%= singular_table_name %>, <%= model_name %>.create!(
       <%= attribs.join(',') %> 
@@ -25,9 +35,9 @@ RSpec.describe "<%= plural_table_name %>/edit", :type => :view do
   it "renders the edit <%= singular_table_name %> form" do
     render
 
-    assert_select "form[action=?][method=?]", <%= singular_table_name %>_path(@<%= singular_table_name %>), "post" do
+    assert_select "form[action=?][method=?]", <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>), "post" do
 
-    <% attributes.reject{|attr| rejected_columns.include? attr.column_name}.each do |attr|  %>
+    <% attributes.select{|attr| field_names.include?(attr.name)}.each do |attr|  %>
       assert_select "input#<%= singular_table_name %>_<%= attr.column_name %>[name=?]", "<%= singular_table_name %>[<%= attr.column_name %>]"
     <% end %>
       

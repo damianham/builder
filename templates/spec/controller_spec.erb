@@ -20,16 +20,9 @@ require 'rails_helper'
 # is no simpler way to get a handle on the object needed for the example.
 # Message expectations are only used when there is no simpler way to specify
 # that an instance is receiving a specific message.
-<% if namespace %>
-module <%= namespace.capitalize %>
-<% end %>
-RSpec.describe <%= controller_name %>, :type => :controller do
 
-<% if namespace %>
-  # there is a namespace and it is <%= namespace %>
-<% else %>
-   # no namespace
-<% end %>
+RSpec.describe <%= namespace.nil? ? '' : namespace.capitalize + '::' %><%= controller_name %>, :type => :controller do
+
   # This should return the minimal set of attributes required to create a valid
   # <%= model_name %>. As you add validations to <%= model_name %>, be sure to
   # adjust the attributes here as well.
@@ -109,7 +102,7 @@ RSpec.describe <%= controller_name %>, :type => :controller do
 
       it "redirects to the created <%= singular_table_name %>" do
         post :create, {:<%= singular_table_name %> => valid_attributes}, valid_session
-        expect(response).to redirect_to(<%= model_name %>.last)
+        expect(response).to redirect_to(<%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_url(<%= model_name %>.last))
       end
     end
 
@@ -154,7 +147,7 @@ RSpec.describe <%= controller_name %>, :type => :controller do
       it "redirects to the <%= singular_table_name %>" do
         <%= singular_table_name %> = <%= model_name %>.create! valid_attributes
         put :update, {:id => <%= singular_table_name %>.to_param, :<%= singular_table_name %> => valid_attributes}, valid_session
-        expect(response).to redirect_to(<%= singular_table_name %>)
+        expect(response).to redirect_to(<%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(<%= singular_table_name %>))
       end
     end
 
@@ -184,11 +177,8 @@ RSpec.describe <%= controller_name %>, :type => :controller do
     it "redirects to the <%= plural_table_name %> list" do
       <%= singular_table_name %> = <%= model_name %>.create! valid_attributes
       delete :destroy, {:id => <%= singular_table_name %>.to_param}, valid_session
-      expect(response).to redirect_to(<%= plural_table_name %>_url)
+      expect(response).to redirect_to(<%= namespace.nil? ? '' : namespace + '_' %><%= plural_table_name %>_url)
     end
   end
 
 end
-<% if namespace %>
-end
-<% end %>
