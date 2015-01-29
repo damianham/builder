@@ -75,23 +75,13 @@ module Builder
     end
     
     # namespace is prefix
-    def module_path(filepath,filename)
-      
-      path = "#{filepath}/#{filename}"
-      if ! namespace.nil?
-        path = "#{namespace}/#{filepath}/#{filename}"
-      end
-      path
+    def module_path(filepath,filename)      
+      namespace.nil? ? File.join(filepath,filename) : File.join(namespace,filepath,filename)
     end
     
     # namespace is infix
-    def namespaced_path(filepath,filename)
-      
-      path = "#{filepath}/#{filename}"
-      if ! namespace.nil?
-        path = "#{filepath}/#{namespace}/#{filename}"
-      end
-      path
+    def namespaced_path(filepath,filename)      
+      namespace.nil? ? File.join(filepath,filename) : File.join(filepath,namespace,filename)     
     end
     
     def angular_url(url_path)
@@ -125,14 +115,14 @@ module Builder
     
     def write_asset(filename,content = nil, &block)
     
-      path = "#{destination}/app/assets/javascripts/generated/#{filename}"
+      path = File.join(destination,'app','assets','javascripts','generated',filename)
       write_file(path,content, block)      
     
     end
     
     def write_view(filename,content = nil, &block)
     
-      path = "#{destination}/public/generated/#{filename}"
+      path = File.join(destination,'public','generated',filename)
       
       write_file(path,content, block)
     
@@ -140,7 +130,7 @@ module Builder
     
     def write_artifact(filename,content = nil, &block)
     
-      path = "#{destination}/generated/#{filename}"
+      path = File.join(destination,'generated',filename)
        
       write_file(path,content, block)
     
