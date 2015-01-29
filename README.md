@@ -97,7 +97,7 @@ rails new mywebapp
 
 ### Step 3 - Configure the builder
 
-#### Copy builder_config.rb to the current working directory and edit the copied 
+Copy builder_config.rb to the current working directory and edit the copied 
 file to define the generators and their output folders. 
 
 The builders are defined in a hash with the name of the builder as the key and the 
@@ -106,6 +106,12 @@ builders are
 
 * RailsBuilder
 * AngularRailsBuilder
+
+Other generators available are 
+
+* RSpecBuilder 
+* RailsVanillaBuilder (use instead of RailsBuilder to use rails scaffold generator)
+* RestAngularBuilder  (use instead of AngularRailsBuilder)
 
 The RailsBuilder generates controllers,models and views and the AngularRailsBuilder
 generates Angular service factories, controllers and view partials.  
