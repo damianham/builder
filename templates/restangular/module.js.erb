@@ -92,12 +92,21 @@ angular.module('<%= appname || namespace || "mainapp" %>')
         
         // get related objects
         <%   
-          (table_info['belongs_to'].flatten + table_info['has_many'].flatten).uniq.each do |key| 
+          table_info['belongs_to'].flatten.uniq.each do |key| 
             relation = key.singularize
         %>
-        // requires adding nested resource routes e.g. <%= plural_table_name %>/1/<%= relation.pluralize %>
-        $scope.<%= singlename %>.getList('<%= relation.pluralize %>').then(function(<%= relation.pluralize %>) {
-          $scope.<%= singlename %>_<%= relation.pluralize %> = <%= relation.pluralize %>;
+        // 
+        $scope.<%= singlename %>.customGET("related", {relation: "<%= relation %>"}).then(function(<%= relation %>) {
+          $scope.<%= singlename %>_<%= relation %> = <%= relation %>;
+        });
+        <%  end %>
+        <%   
+          table_info['has_many'].flatten.uniq.each do |key| 
+            relation = key
+        %>
+        // requires adding nested resource routes e.g. <%= plural_table_name %>/1/<%= relation %>
+        $scope.<%= singlename %>.getList('<%= relation %>').then(function(<%= relation %>) {
+          $scope.<%= singlename %>_<%= relation %> = <%= relation %>;
         });
         <%  end %>
       

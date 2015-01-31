@@ -91,13 +91,13 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       $scope.<%= singlename %> = <%= model_name %>.get({<%= singlename %>Id: $routeParams.<%= singlename %>Id});
           
       // get related objects
-      <%   
+      <%  
       table_info['belongs_to'].flatten.uniq.each do |key| 
-        relation = key.singularize
+        relation = key.pluralize
       %>
-        $scope.<%= singlename %>_<%= relation %> = <%= model_name %>.related({<%= singlename %>Id: $routeParams.<%= singlename %>Id,relation:'<%= relation %>'});
-      <%  end
- 
+        $scope.<%= singlename %>_<%= relation %> = <%= model_name %>.related({<%= singlename %>Id: $routeParams.<%= singlename %>Id,relation:'<%= relation %>'});        
+      <%  end %>
+      <%  
       table_info['has_many'].flatten.uniq.each do |key| 
         relation = key.pluralize
       %>

@@ -1,11 +1,7 @@
-<%
-nested = (table_info['has_many'].flatten + table_info['belongs_to'].flatten).uniq
-%>
 
   resources :<%= plural_table_name %> do
-    concerns :common_routes
-    get 'related/:relation' => '<%= plural_table_name %>#related'    
-    <% nested.each do |rel| %>
+    concerns :common_routes 
+    <% table_info['has_many'].flatten.each do |rel| %>
     resources :<%= rel %>
     <% end %>
   end

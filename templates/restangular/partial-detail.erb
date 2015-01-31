@@ -96,7 +96,6 @@ end
     #  get related objects  
     table_info['belongs_to'].flatten.uniq.each do |key| 
       relation = key.singularize
-      relname = key.singularize
       columns = schema[key]['columns']
       field_names = columns.keys.reject{|key| rejected_columns.include?(key)  }
 
@@ -106,37 +105,28 @@ end
         field_names = myfields.map{|name| name.to_s  }
         end
     %>
-      <div class="container related-objects belongs-to-related-objects <%= key %>-related-objects">
-          <h2><%= key.to_model_name.pluralize %></h2>
-          <table class="<%= relname %>-table list-table table-striped">
-              <thead>
-                  <tr>
+    <div class="container related-objects belongs-to-related-objects <%= key %>-related-objects">
+      <h2><%= key.to_model_name %></h2>
+      <table class="<%= relation %>-table list-table table-striped">
 
-                      <th><!-- link column --></th>
+        <tr>
+          <td>
+            <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= key %>/{{<%= singlename %>_<%= relation %>.id}}" >
+              <i class="glyphicon glyphicon-search"></i>  view
+            </a>
+          </td>
+          <td></td>
+        </tr>
 
-                      <% field_names.each do |key| %>
-                        <th><%= key.titleize %> </th>
-                      <% end %>
-                  </tr>
-              </thead>
+        <% field_names.each do |key| %>
+          <tr>
+            <th><%= key.titleize %> </th>
+            <td>{{<%= singlename %>_<%= relation %>.<%= key %>}}</td>
+          </tr>
+        <% end %>
 
-              <tbody> 
-                  <tr ng-repeat="<%= relname %> in <%= singlename %>_<%= relation %>  |  limitTo: 50" ng-class="rowClass(<%= relname %>)">
-
-                      <td>
-                          <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= key %>/{{<%= relname %>.id}}" >
-                              <i class="glyphicon glyphicon-search"></i>
-                          </a>
-                      </td>
-
-                      <% field_names.each do |key| %>
-                        <td>{{<%= relname %>.<%= key %>}}</td>
-                      <% end %>
-                  </tr>
-              </tbody>
-
-          </table>
-      </div>
+      </table>
+    </div>
     <%  end %>
 
     <%

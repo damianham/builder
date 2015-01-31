@@ -251,8 +251,9 @@ class RailsBuilder < Builder::Base
       file.puts("Rails.application.routes.draw do")
       file.puts("
   concern :common_routes do
-    get 'range', on: :collection
-    post 'search', on: :collection
+    get :range, on: :collection
+    get :related
+    post :search
   end")
       
       if namespace
