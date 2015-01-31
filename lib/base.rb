@@ -61,6 +61,10 @@ module Builder
       (@options[:only] && ! @options[:only].include?(methodname) ) || 
         (@options[:except] && @options[:except].include?(methodname))
     end
+   
+    def has_date_field?
+      attributes.any?{|attr| [:time ,:datetime,  :date].include?(attr.type)}
+    end
   
     def columns
       table_info['columns']

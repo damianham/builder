@@ -1,7 +1,7 @@
 require 'yaml'
 require 'fileutils'
 
-# build AngularJS (Ng) artifacts
+# build AngularJS (Ng) artifacts using Restangular
 
 
 class RestAngularBuilder < Builder::Base
@@ -279,7 +279,9 @@ class RestAngularBuilder < Builder::Base
     else
       libs = "//= require app/app
 //= require app/services
+// include the generated modules
 //= require_tree ./generated
+// override with static modules
 //= require_tree ./modules"
     end
     

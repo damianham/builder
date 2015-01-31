@@ -279,7 +279,9 @@ class AngularRailsBuilder < Builder::Base
     else
       libs = "//= require app/app
 //= require app/services
+// include the generated modules
 //= require_tree ./generated
+// override with static modules
 //= require_tree ./modules"
     end
     
