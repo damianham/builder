@@ -99,7 +99,7 @@ class <%= controller_name %> < ApplicationController
     respond_to do |format|
       if @<%= singular_table_name %>.save
         format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>), notice: '<%= model_name %> was successfully created.' }
-        format.json  { respond_with(@<%= singular_table_name %>)}
+        format.json  { respond_with(<%= namespace.nil? ? '' : ':' +namespace + ',' %> @<%= singular_table_name %>)}
       else
         format.html { render action: 'new' }
         format.json { render json: @<%= singular_table_name %>.errors, status: :unprocessable_entity }
