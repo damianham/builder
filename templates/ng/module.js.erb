@@ -115,12 +115,13 @@ angular.module('<%= appname || namespace || "mainapp" %>')
     , function($scope, $routeParams, <%= model_name %> <%= classes.size == 0 ? '' : "," + classes.join(",")  %>) {
       
     // get the ranges for foreign keys    - delete where not necessary
-      <%- if classes.size > 0 %>
-        <%- classes.each do |class_name| %> 
-          $scope.<%= class_name.tableize %> = <%= class_name %>.range();
-        <% end %>
-      <% end %>
+  <%- if classes.size > 0 %>
+    <%- classes.each do |class_name| %> 
+      $scope.<%= class_name.tableize %> = <%= class_name %>.range();
+    <% end %>
+  <% end %>
           
+    <% if has_date_field? %>
       //  stuff for datepicker form field
       $scope.today = function() {
         $scope.current_date = new Date();
@@ -150,6 +151,8 @@ angular.module('<%= appname || namespace || "mainapp" %>')
 
       $scope.date_formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
       $scope.date_format = $scope.date_formats[0];
+      
+    <% end %>
       
       // process the form
       $scope.processForm = function(formData,isvalid) {

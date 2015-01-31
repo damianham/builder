@@ -114,15 +114,16 @@ angular.module('<%= appname || namespace || "mainapp" %>')
     , function($scope, $routeParams, <%= model_name %>, Restangular <%= classes.size == 0 ? '' : "," + classes.join(",")  %>) {
       
       // get the ranges for foreign keys    - delete where not necessary
-      <%- if classes.size > 0 %>
-        <%- classes.each do |class_name| %> 
+  <%- if classes.size > 0 %>
+    <%- classes.each do |class_name| %> 
       Restangular.all('<%= class_name.tableize %>').customGETLIST('range').then(function(<%= class_name.tableize %>) {
         $scope.<%= class_name.tableize %> = <%= class_name.tableize %>;
       });
      
-        <% end %>
-      <% end %>
-          
+    <% end %>
+  <% end %>
+    
+    <% if has_date_field? %>
       //  stuff for datepicker form field
       $scope.today = function() {
         $scope.current_date = new Date();
@@ -152,6 +153,7 @@ angular.module('<%= appname || namespace || "mainapp" %>')
 
       $scope.date_formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
       $scope.date_format = $scope.date_formats[0];
+    <% end %>  
       
       // process the form
       $scope.processForm = function(formData,isvalid) {
