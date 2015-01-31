@@ -249,6 +249,11 @@ class RailsBuilder < Builder::Base
     
     write_artifact("config/routes.rb") do |file|
       file.puts("Rails.application.routes.draw do")
+      file.puts("
+  concern :common_routes do
+    get 'range', on: :collection
+    post 'search', on: :collection
+  end")
       
       if namespace
         file.puts("  namespace :#{namespace} do")

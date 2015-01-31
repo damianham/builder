@@ -1,9 +1,11 @@
 <%
-nested = table_info['has_many'].flatten.map{|t| '  resources :' + t} + table_info['belongs_to'].flatten.map{|t| '  resources :' + t}
-if nested.size == 0 %>
-  resources :<%= plural_table_name %> 
-<%  else %>
+nested = (table_info['has_many'].flatten + table_info['belongs_to'].flatten).uniq
+%>
+
   resources :<%= plural_table_name %> do
-    <%= nested.join("\n") %>
+    concerns :common_routes
+    get 'related/:relation' => '<%= plural_table_name %>#related'    
+    <% nested.each do |rel| %>
+    resources :<%= rel %>
+    <% end %>
   end
-<%  end %>
