@@ -203,7 +203,7 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       // create a blank object to hold our form information or load the record
       // $scope will allow this to pass between controller and view
       if ($routeParams.<%= singlename %>Id == null) {
-        $scope.<%= singlename %> = new <%= model_name %>();
+        $scope.<%= singlename %> = {};
       } else {
         <%= model_name %>.one($routeParams.<%= singlename %>Id).get().then(function(data){
           $scope.<%= singlename %> = data;

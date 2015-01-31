@@ -66,7 +66,7 @@ end
                   # get a path to a partial to render the field based on the name and type
                   # default to _any_field
                   template_path = template_by_name_and_type 'ng', @singlename, column_name, @column['data_type']
-                  puts "rendering form field  #{@singlename}:#{column_name}:#{@column['data_type']} with #{template_path}"
+                  #puts "rendering form field  #{@singlename}:#{column_name}:#{@column['data_type']} with #{template_path}"
                 %>
                 <%= Erubis::Eruby.new(File.read(template_path)).evaluate( self ) %>
                   
