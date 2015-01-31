@@ -135,9 +135,10 @@ class <%= controller_name %> < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     
-    # load the identified instance
+    # load the identified instance the id parameter could be :<%= singular_table_name %>_id
+    # e.g. api/users/1/related/photos.json would give user_id => 1
     def set_<%= singular_table_name %>
-      @<%= singular_table_name %> = <%= model_name %>.find(params[:id])
+      @<%= singular_table_name %> = <%= model_name %>.find(params[:id] || params[:<%= singular_table_name %>_id])
     end
 
     #  only allow the white listed params through.
