@@ -17,7 +17,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","generated", "controllers"),filename)
+    path = namespaced_path(File.join("spec", "controllers"),filename)
     write_artifact(path,text) 
   end
     
@@ -31,7 +31,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","generated","models"),filename)
+    path = namespaced_path(File.join("spec","models"),filename)
     write_artifact(path,text)
     
   end
@@ -55,7 +55,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","generated","views"),filename)
+    path = namespaced_path(File.join("spec","views"),filename)
     write_artifact(path,text)
   end
   
@@ -69,7 +69,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","generated","views"),filename)
+    path = namespaced_path(File.join("spec","views"),filename)
     write_artifact(path,text)
   end
   
@@ -83,7 +83,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","generated","views"),filename)
+    path = namespaced_path(File.join("spec","views"),filename)
     write_artifact(path,text)
   end
   
@@ -97,7 +97,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","generated","views"),filename)
+    path = namespaced_path(File.join("spec","views"),filename)
     write_artifact(path,text)
   end
     
@@ -122,7 +122,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","generated","fixtures"),filename)
+    path = namespaced_path(File.join("spec","fixtures"),filename)
     write_artifact(path,text)  
   end
   
@@ -137,7 +137,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","generated","helpers"),filename)
+    path = namespaced_path(File.join("spec","helpers"),filename)
     write_artifact(path,text)  
   end
   
@@ -151,7 +151,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","generated","requests"),filename)
+    path = namespaced_path(File.join("spec","requests"),filename)
     write_artifact(path,text)
   end
   
@@ -165,7 +165,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","generated","routing"),filename)
+    path = namespaced_path(File.join("spec","routing"),filename)
     write_artifact(path,text)
   end
     
