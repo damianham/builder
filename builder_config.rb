@@ -26,7 +26,7 @@ methods named in the :except array will do nothing and return immediately.
 @builders = {
   RailsBuilder => {:output => './mywebapp' ,:appname => 'myapp',
   # do not do anything for these methods
-  :except => [:finalize_angular_root, :build_model, :build_controller] },
+  :except => [:finalize_menu, :build_model, :build_controller] },
   
   AngularRailsBuilder => {:output => './mywebapp',:appname => 'myapp',
   # don't do anything except finalize the menu

@@ -160,6 +160,7 @@ You can also add the appname option e.g. :appname => 'myapp' for the
 Angular module name.  This is the name of the Angular application and is given as the
 ng-app name in the html start tag.  The default Angular module name is 'mainapp'.
 
+Our example config file now looks like this.
 
 ```
 #### define the output destinations relative to where you run the rake command
@@ -167,11 +168,11 @@ ng-app name in the html start tag.  The default Angular module name is 'mainapp'
 @builders = {
   RailsBuilder => {:output => './myapp',:appname => 'myapp' ,
   # do not do anything for these methods
-  :except => [:finalize_angular_root, :build_model, :build_controller] },
+  :except => [:finalize_menu, :build_model, :build_controller] },
 
   AngularRailsBuilder => {:output => './myapp',:appname => 'myapp',
   # don't do anything except finalize the menu
-  :only => [:finalize_menu]}
+  :only => [:build_model, :build_controller]}
 }
 ```
 
@@ -226,7 +227,7 @@ the artifacts.  Note that if you are using the AngularRails builder then the tem
 that are used are in the folder **templates/ng**.   If you use the RestAngular builder
 instead then the templates used are in the folder **templates/restangular**.
 
-Some form fields need special rendering. For example a date field should be 
+Some form fields need special rendering. For example a date field could be 
 rendered with a date picker rather than as a text field.
 The AngularUI team provide a set of Bootstrap components written in pure 
 AngularJS that includes a date picker.  
@@ -273,7 +274,22 @@ generates the application artifacts in the output folder using the
 generated testdb_column_info.yml file as input.  The namespace argument will 
 place the artifacts in a subfolder with that namespace.  If no appname is 
 supplied in the builder options then the Angular module name will adopt 
-the namespace argument.
+the namespace argument.  You can also define a different 
+namespace for each different builder by adding the namespace to the builder options. 
+E.g. 
+
+```
+@builders = {
+  RailsBuilder => {:output => './myapp',:appname => 'myapp' ,
+  :namespace => 'api',  # place the rails artifacts in the 'api' namespace
+  # do not do anything for these methods
+  :except => [:finalize_menu, :build_model, :build_controller] },
+
+  AngularRailsBuilder => {:output => './myapp',:appname => 'myapp',
+  # don't do anything except finalize the menu
+  :only => [:build_model, :build_controller]}
+}
+```
 
 The footer,header,home,menu partials from builder/templates/ng/footer.html.erb 
 etc. will be generated in mywebapp/public/generated/partials.
