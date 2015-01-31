@@ -1,0 +1,9 @@
+<%
+nested = table_info['has_many'].flatten.map{|t| '  resources :' + t} + table_info['belongs_to'].flatten.map{|t| '  resources :' + t}
+if nested.size == 0 %>
+  resources :<%= plural_table_name %> 
+<%  else %>
+  resources :<%= plural_table_name %> do
+    <%= nested.join("\n") %>
+  end
+<%  end %>

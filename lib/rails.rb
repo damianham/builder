@@ -16,7 +16,7 @@ class RailsBuilder < Builder::Base
   def write_module_artifact(filename,content = nil)
     if namespace
       content = indent(content).chomp
-    content = "module #{namespace.capitalize}\n#{content}\nend\n"
+      content = "module #{namespace.capitalize}\n#{content}\nend\n"
     end
      
     write_artifact(filename,content)
@@ -38,8 +38,6 @@ class RailsBuilder < Builder::Base
     write_module_artifact(path,text)
 
   end
-  
-  #content = wrap_with_namespace(content) if namespace
 
   # build a model for a table 
   def build_model
@@ -70,9 +68,9 @@ class RailsBuilder < Builder::Base
     model_name
   end
   
-   def capture(*args)
-     yield(*args)
-   end
+  def capture(*args)
+    yield(*args)
+  end
    
   # Wrap block with namespace of current application
   # if namespace exists 
@@ -97,7 +95,7 @@ class RailsBuilder < Builder::Base
     
     return if skip_method(__method__)
     
-  # build edit _form index new show
+    # build edit _form index new show
   
     ['_form','edit','new','index','show'].each do |file|
       
@@ -140,7 +138,7 @@ class RailsBuilder < Builder::Base
     
     filename = "#{singular_table_name}_test.rb"
     puts "build Rails unit test for #{model_name} in test/models"
-  # build model test
+    # build model test
       
     template = File.read(template("rails/test/unit_test.rb"))
     #text = ERB.new(template, nil, '-').result(binding)
@@ -237,9 +235,11 @@ class RailsBuilder < Builder::Base
   # add the table to the routes
   def build_route 
     #puts "build Rails route for #{@model_name} in config/routes.rb"
+    
+    template = File.read(template("rails/route.erb"))
+    text = Erubis::Eruby.new(template).evaluate( self )
 
-    # add resources :model_name
-    @@rails_routes << "resources :"+ plural_table_name
+    @@rails_routes << text
   end
   
   # add the given routes to the Rails config/routes.rb file
@@ -247,18 +247,21 @@ class RailsBuilder < Builder::Base
     
     return if skip_method(__method__)
     
-    filename = "#{destination}/config/routes.rb"
-    puts "add routes to #{filename}"
-    
-    content = File.read(filename)
-
-    routes.each do |route|
-      unless content.include? route
-        content.sub!(/\.routes\.draw do\s*$/) {|matched| matched + "\n  #{route}"}
+    write_artifact("config/routes.rb") do |file|
+      file.puts("Rails.application.routes.draw do")
+      
+      if namespace
+        file.puts("  namespace :#{namespace} do")
       end
+      routes.each do |route|
+        namespace.nil? ? file.puts(route) : file.puts(indent(route))
+      end
+      if namespace
+        file.puts("  end")
+      end
+      file.puts("end")
     end
-    
-    write_artifact("config/routes.rb",content)
+
   end
   
   # finalize the routes and menus
