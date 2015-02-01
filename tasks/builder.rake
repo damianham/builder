@@ -33,9 +33,17 @@ task :build_classes, :database,:namespace do |t, args|
           :schema => schema['schema'],
           :table_info => table_info, :fields => @fields })
       
-      # build the artifacts for this table
-      builder = klass.new(table_options)
-
+      if builder.nil?
+        # build the artifacts for this table
+        builder = klass.new(table_options)
+        # do any initial setup for the first time use of this builder
+        builder.setup      
+      else
+        # build the artifacts for this table
+        builder = klass.new(table_options)       
+      end
+      
+      
       if builder.respond_to? :scaffold
         builder.scaffold
       else

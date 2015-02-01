@@ -56,6 +56,10 @@ module Builder
 
     end
     
+    def setup
+      # do setup specific to the builder class
+    end
+    
     # skip the named method based on the contents of the :only and :except options
     def skip_method(methodname)
       (@options[:only] && ! @options[:only].include?(methodname) ) || 

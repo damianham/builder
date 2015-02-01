@@ -5,7 +5,7 @@ require 'fileutils'
 
 
 class RestAngularBuilder < AngularRailsBuilder
-
+  
   def finalize_modules
     
     return if skip_method(__method__)

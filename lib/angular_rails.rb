@@ -5,15 +5,17 @@ require 'fileutils'
 
 
 class AngularRailsBuilder < Builder::Base
-
-  @@ng_routes = []
-  @@menus = []
-  @@ng_modules = []
-
+  
+  def setup
+    @@ng_routes = []
+    @@menus = []
+    @@ng_modules = []
+  end
+  
   # define to 'list' to use the list template
   # or 'table' to use the table template
   LIST_TYPE = 'table'
- 
+  
   def build_controller 
     # add this instance as a module
 
