@@ -4,6 +4,8 @@
     <% table_info['has_many'].flatten.each do |rel| %>
     resources :<%= rel %>
     <% end %>
+    # handle requests where relation is an element of the path (AngularRailsBuilder)
+    # e.g. /api/users/1/related/photos.json
     get 'related/:relation' => '<%= plural_table_name %>#related'
   end
 

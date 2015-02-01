@@ -252,7 +252,9 @@ class RailsBuilder < Builder::Base
       file.puts("
   concern :common_routes do
     get :range, on: :collection
-    get :related
+    # handles requests where relation is a query param (RestAngularBuilder)
+    # e.g.  users/1/related.json?relation=department
+    get :related   
     post :search
   end")
       
