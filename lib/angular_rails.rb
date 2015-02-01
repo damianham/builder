@@ -50,7 +50,7 @@ class AngularRailsBuilder < Builder::Base
       :template => '/' + module_path('views', filename),
       :controller => model_name + 'ListCtrl',
       :url => '/' + namespaced_url(plural_table_name) 
-      }
+    }
     
  
     # generate the output
@@ -77,7 +77,7 @@ class AngularRailsBuilder < Builder::Base
       :template => '/' + module_path('views', filename),
       :controller => model_name + 'DetailCtrl',
       :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id'
-      }
+    }
       
     # generate the output
     
@@ -103,12 +103,12 @@ class AngularRailsBuilder < Builder::Base
       :template => '/' + module_path('views', filename),
       :controller => model_name + 'FormCtrl',
       :url => '/' + namespaced_url(plural_table_name) + '/new'
-      }
+    }
     @@ng_routes << {
       :template => '/' + module_path('views', filename),
       :controller => model_name + 'FormCtrl',
       :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id/edit'
-      }
+    }
   
       
     # generate the output
@@ -173,6 +173,12 @@ class AngularRailsBuilder < Builder::Base
     # create the navigation menu
     finalize_menu
     
+    # create the services module
+    finalize_services
+    
+    # create the main app 
+    finalize_angular_app
+    
     # add the generated javascripts to application.js
     finalize_application
     
@@ -194,8 +200,7 @@ class AngularRailsBuilder < Builder::Base
 
       module_text = Erubis::Eruby.new(template).evaluate( mod )
 
-      # generate the output 
-     
+      # generate the output      
       write_asset(path,module_text)
     end
     
@@ -232,19 +237,30 @@ class AngularRailsBuilder < Builder::Base
     
     text = Erubis::Eruby.new(template).evaluate( self )
     
-    # generate the output
-    
+    # generate the output    
     write_view(path,text)
     
   end
   
-
-  # add the generated javascripts to application.js
-  def finalize_application
-    
+  def finalize_services
     return if skip_method(__method__)
+    
+    filename = 'services.js'    
+    path = module_path("app",filename)
+    puts "finalize Ng services in #{path}"
+    template = File.read(template("ng/services.js.erb"))
+    
+    text = Erubis::Eruby.new(template).evaluate( self )
+   
+    # generate the output     
+    write_asset(path,text)
+    
+  end
 
-    filename = "app.js"
+  def finalize_angular_app
+    return if skip_method(__method__)
+    
+    filename = (appname || namespace || "app") + ".js"
     path = module_path("app",filename)
     puts "finalize Ng app in #{path}"
  
@@ -253,43 +269,25 @@ class AngularRailsBuilder < Builder::Base
     text = Erubis::Eruby.new(template).evaluate( self )
 
     # write the routes output
-    path = module_path("app",filename)
     write_asset(path,text) 
     
-    filename = 'services.js'
-    path = module_path("app",filename)
-    puts "finalize Ng services in #{path}"
-    template = File.read(template("ng/services.js.erb"))
+  end
+  
+  # add the generated javascripts to application.js
+  def finalize_application
+    
+    return if skip_method(__method__)
+
+    # integrate the angular libs into the application.js in the right order
+    filename = "application.js"
+    
+    puts "finalize rails application.js"
+ 
+    template = File.read(template("ng/application.js.erb"))
     
     text = Erubis::Eruby.new(template).evaluate( self )
-   
-    # generate the output    
-    write_asset(path,text)
-    
-    # integrate the angular libs into the application.js in the right order
-    filename = "#{destination}/app/assets/javascripts/application.js"
-    
-    content = File.read(filename)
-    
-    if namespace
-      libs = "//= require #{namespace}/app/app
-//= require #{namespace}/app/services
-//= require_tree ./#{namespace}/generated
-//= require_tree ./#{namespace}/modules"
-    else
-      libs = "//= require app/app
-//= require app/services
-// include the generated modules
-//= require_tree ./generated
-// override with static modules
-//= require_tree ./modules"
-    end
-    
-    unless content.include? libs
-      content.sub!(/include builder modules\s*$/) {|matched| matched + "\n#{libs}\n"}
-    end
-
-    write_asset("application.js",content) 
+  
+    write_asset(filename,text) 
   end
   
 end
