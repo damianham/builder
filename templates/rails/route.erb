@@ -4,4 +4,6 @@
     <% table_info['has_many'].flatten.each do |rel| %>
     resources :<%= rel %>
     <% end %>
+    get 'related/:relation' => '<%= plural_table_name %>#related'
   end
+
