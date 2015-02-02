@@ -1,0 +1,90 @@
+<% 
+# shorten this
+@singlename = singular_table_name
+
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+ 
+field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
+
+# override the defaults with a given field list
+unless this_fields[:form].nil?
+  field_names = this_fields[:form].map{|name| name.to_s  }
+
+  # get the name of the principle field
+  namefield_name = field_names.select{|name| ['name','title'].include?(name)}.first 
+
+  # and the description field
+  descfield_name = field_names.select{|name|['description','info',
+      'summary','comment','snippet'].include?(name) }.first
+end
+
+%>
+
+
+<div class="container-fluid">
+    <div class="object-form-container <%= @singlename %>-form-container">
+        <!--
+                enable and rename accordingly if the class has a main image
+        <img ng-src="{{<%= @singlename %>.image}}" class="object-image object-form-image <%= @singlename %>-image <%= @singlename %>-form-image">
+        -->
+
+        <% unless namefield_name.nil? %>
+          <h1>{{<%= @singlename %>.<%= namefield_name %>}}</h1>
+        <% end %>
+
+        <% unless descfield_name.nil? %>
+          <p>{{<%= @singlename %>.<%=  descfield_name %>}}</p>
+        <% end %>
+
+        <!--          
+                enable and rename accordingly if the class has an array of images
+        <ul class="<%= @singlename %>-thumbs">
+          <li ng-repeat="img in <%= @singlename %>.images">
+            <img ng-src="{{img}}" ng-click="setImage(img) class="object-image-set object-form-image-set <%= @singlename %>-image-set <%= @singlename %>-form-image-set">
+          </li>
+        </ul>
+        -->
+
+        <!-- new or edit -->
+        <span><%= model_name.titleize %> </span>
+
+        <!-- SHOW ERROR/SUCCESS MESSAGES -->
+        <div id="messages">{{ message}}</div>
+
+        <div class="object-form <%= @singlename %>-form">
+            <!-- pass in the form and if our form is valid or invalid -->
+            <form name="<%= @singlename %>Form" 
+                  ng-submit="processForm(<%= @singlename %>,<%= @singlename %>Form.$valid)" 
+                  novalidate> <!-- novalidate prevents HTML5 validation since angular will validate -->
+
+                <% field_names.each do |column_name| 
+                  @column = columns[column_name]
+                  if @column.nil?
+                    puts "no such column #{column_name}" 
+                    next
+                  end
+                  # get a path to a partial to render the field based on the name and type
+                  # default to _any_field
+                  template_path = template_by_name_and_type 'ng', @singlename, column_name, @column['data_type']
+                  #puts "rendering form field  #{@singlename}:#{column_name}:#{@column['data_type']} with #{template_path}"
+                %>
+                <%= Erubis::Eruby.new(File.read(template_path)).evaluate( self ) %>
+                  
+                <% end %>
+
+                <button type="submit" class="btn btn-success btn-block" 
+                        ng-disabled="<%= @singlename %>Form.$invalid || isUnchanged(<%= @singlename %>) || <%= @singlename %>_submitted" >
+                    <span class="glyphicon glyphicon-flash"></span> Submit!
+                </button>
+                <button ng-click="reset()" ng-disabled="isUnchanged(<%= @singlename %>)">RESET</button>
+                <button ng-click="update(user)" ng-disabled="<%= @singlename %>Form.$invalid || isUnchanged(<%= @singlename %>) || submitted">SAVE</button>
+            </form>
+        </div>
+        <div>
+
+            <a class="btn btn-inverse" onclick="javascript:history.go( - 1)">Back</a> 
+
+        </div>
+
+    </div>
+</div>
