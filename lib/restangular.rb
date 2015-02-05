@@ -6,6 +6,22 @@ require 'fileutils'
 
 class RestAngularBuilder < AngularRailsBuilder
   
+  def build_model
+    # build an angular resource
+    filename = "#{model_name}Resource.js"
+      path = module_path("resources",filename)
+      puts "build Ng resource for #{model_name} in #{path}"
+      
+      template = File.read(template(File.join("restangular","resource.js.erb")))
+
+      module_text = Erubis::Eruby.new(template).evaluate( self )
+
+      # generate the output 
+     
+      write_asset(path,module_text)
+
+  end
+  
   def finalize_modules
     
     return if skip_method(__method__)
