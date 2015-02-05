@@ -9,9 +9,9 @@ class RestAngularModalBuilder < RestAngularBuilder
   def build_view 
     return if skip_method(__method__)
      
-    build_form_partial
+    #build_form_partial
     
-    #build_modal_form_partial
+    build_modal_form_partial
     
     build_detail_partial     
     
@@ -24,7 +24,7 @@ class RestAngularModalBuilder < RestAngularBuilder
 
     template = File.read(template("ng/modal-form.erb"))
     
-    filename = "#{singular_table_name}/form.html"
+    filename = "#{singular_table_name}/modal_form.html"
     
     path =  module_path("views",filename)
     puts "build Ng form partial for #{model_name} in #{path}"
@@ -34,12 +34,12 @@ class RestAngularModalBuilder < RestAngularBuilder
     # add a route for this partial
     @@ng_routes << {
       :template => '/' + module_path('views', filename),
-      :controller => model_name + 'FormCtrl',
+      :controller => model_name + 'ModalCtrl',
       :url => '/' + namespaced_url(plural_table_name) + '/new'
     }
     @@ng_routes << {
       :template => '/' + module_path('views', filename),
-      :controller => model_name + 'FormCtrl',
+      :controller => model_name + 'ModalCtrl',
       :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id/edit'
     }
   

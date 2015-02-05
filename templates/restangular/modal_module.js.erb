@@ -117,135 +117,131 @@ angular.module('<%= appname || namespace || "mainapp" %>')
 angular.module('<%= appname || namespace || "mainapp" %>')
  // enclose dependencies as strings within brackets to avoid minification and create the
  // controller as an anonymous function
- .controller('<%= model_name %>FormCtrl', [ '$scope',  '$routeParams', '$modal', '<%= model_name %>', 'Restangular'
-    <%= classes.size == 0 ? '' : ",'" + classes.join("','") + "'" %>
-    , function($scope, $routeParams, $modal, <%= model_name %>, Restangular <%= classes.size == 0 ? '' : "," + classes.join(",")  %>) {
+ .controller('<%= model_name %>ModalCtrl', [ '$scope',  '$routeParams', '$modal', '<%= model_name %>', 
+ 'Restangular', 'CurrentUser','UserResource' <%= classes.size == 0 ? '' : ",'" + classes.join("','") + "'" %>
+    , function($scope, $routeParams, $modal, <%= model_name %>, Restangular, CurrentUser, UserResource <%= classes.size == 0 ? '' : "," + classes.join(",")  %>) {
+      
+    // get the current user - useful if the object belongs to a user
+    // delete where not necessary
+    CurrentUser.getUser(function (data) {
+      $scope.current_user = data;
+
+      // get data related to the user, e.g.
+      //$scope.photos = UserResource.related({userId: $scope.current_user.id, relation: 'photos'});
+
+    });
       
       // get the ranges for foreign keys    - delete where not necessary
   <%- if classes.size > 0 %>
     <%- classes.each do |class_name| %> 
-      Restangular.all('<%= class_name.tableize %>').customGETLIST('range').then(function(<%= class_name.tableize %>) {
-        $scope.<%= class_name.tableize %> = <%= class_name.tableize %>;
-      });
-     
+    Restangular.all('<%= class_name.tableize %>').customGETLIST('range').then(function(<%= class_name.tableize %>) {
+      $scope.<%= class_name.tableize %> = <%= class_name.tableize %>;
+    });
+
     <% end %>
   <% end %>
   
     <% if has_date_field? %>
-      //  stuff for datepicker form field
-      $scope.today = function() {
-        $scope.current_date = new Date();
-      };
-      $scope.today();
+    //  stuff for datepicker form field
+    $scope.today = function() {
+      $scope.current_date = new Date();
+    };
+    $scope.today();
 
-      $scope.clear = function () {
-        $scope.current_date = null;
-      };
+    $scope.clear = function () {
+      $scope.current_date = null;
+    };
 
-      // Disable weekend selection
-      $scope.date_disabled = function(date, mode) {
-        return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-      };
+    // Disable weekend selection
+    $scope.date_disabled = function(date, mode) {
+      return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+    };
 
-      $scope.date_open = function($event) {
-        $event.preventDefault();
-        $event.stopPropagation();
+    $scope.date_open = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
 
-        $scope.datepicker_opened = true;
-      };
+      $scope.datepicker_opened = true;
+    };
 
-      $scope.dateOptions = {
-        formatYear: 'yy',
-        startingDay: 1
-      };
+    $scope.dateOptions = {
+      formatYear: 'yy',
+      startingDay: 1
+    };
 
-      $scope.date_formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-      $scope.date_format = $scope.date_formats[0];
-    <% end %>
+    $scope.date_formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+    $scope.date_format = $scope.date_formats[0];
+  <% end %>
       
-      $scope.open_modal = function (size,template,item) {
-      
-        $scope.item = item;
-        
+    $scope.new_<%= singlename %>= function () {
+      $scope.<%= singlename %> = {};
+      $scope.<%= singlename %>_form('lg', '/views/<%= singlename %>/modal_form.html', $scope.<%= singlename %>,[]);
+
+    }; 
+    
+    // open the modal
+    $scope.<%= singlename %>_form = function (size, template, <%= singlename %>,alerts) {
+
+        $scope.<%= singlename %> = <%= singlename %>;
+        $scope.alerts = alerts;
+
         var modalInstance = $modal.open({
           templateUrl: template,
-          controller: 'Modal<%= model_name %>Ctrl',
+          controller: function ($scope, $modalInstance, <%= singlename %>,alerts) {
+            $scope.<%= singlename %> = <%= singlename %>;
+            $scope.alerts = alerts;
+            $scope.selected = {
+              <%= singlename %>: $scope.<%= singlename %>
+            };
+
+            $scope.ok = function () {
+              console.log("modal OK pressed");
+              $modalInstance.close($scope.<%= singlename %>);
+            };
+
+            $scope.cancel = function () {
+              $modalInstance.dismiss('cancel');
+            };
+          },
           size: size,
           resolve: {
-            item: function () {
-              return $scope.item;
-            },
             <%= singlename %>: function () {
-              return $scope.item;
-            }
+              return $scope.<%= singlename %>;
+            }, 
+            alerts: function() {return $scope.alerts}
           }
         });
-        
-        modalInstance.result.then(function (selectedItem) {
-          $scope.selected = selectedItem;
+
+        modalInstance.result.then(function (<%= singlename %>) {
+          console.log("saving <%= singlename %>");
+          
+          <%= model_name %>.post(<%= singlename %>).then(function (data) {
+            console.log("saved <%= singlename %> ok"); 
+              $scope.<%= plural_table_name %>.push(data); 
+              $scope.alerts = [{ type: 'success', msg: 'your new <%= model_name %> has been created'}] ;
+              
+            },
+            function (data) {
+              console.log("error saving <%= singlename %>");
+              console.log(data);
+
+              $scope.<%= singlename %>_errors = data.errors;
+              $scope.alerts = [{ type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.' }] ;
+
+            });
         }, function () {
-          console.log('<%= model_name %> Modal dismissed at: ' + new Date());
+          console.log('Modal dismissed at: ' + new Date());
         });
       };
-        
-      // process the form
-      $scope.processForm = function(formData,isvalid) {
       
-        $scope.<%= singlename %>_submitted = true;
-        
-        if ($scope.<%= singlename %>.id == null) {
-             <%= model_name %>.post(formData).then(
-            function(data) {
-              console.log("saved new <%= model_name %>");
-              // bind success message to message
-              $scope.message = data.message;
-              $scope.<%= singlename %>_submitted = false;
-            },
-            function(data) {
-              console.log("Error saving new <%= model_name %>");
-              console.log(data);
-            
-              $scope.<%= singlename %>_errors = data.errors;
-              // bind error message to message
-              $scope.message = data.message;
-              $scope.<%= singlename %>_submitted = false;
-            
-            }) ;
-        } else {
-           $scope.<%= singlename %>.save().then(
-           function(data) {
-              console.log("saved <%= model_name %>");
-              // bind success message to message
-              $scope.message = data.message;
-              $scope.<%= singlename %>_submitted = false;
-            },
-            function(data) {
-              console.log("Error saving <%= model_name %>");
-              console.log(data);
-            
-              $scope.<%= singlename %>_errors = data.errors;
-              // bind error message to message
-              $scope.message = data.message;
-              $scope.<%= singlename %>_submitted = false;
-            
-            });
-        
-        }
-      };
+      // edit
+      // <%= model_name %>.one($routeParams.<%= singlename %>Id).get().then(function(data){
+      //  $scope.<%= singlename %> = data;
+      // });  
       
-      // create a blank object to hold our form information or load the record
-      // $scope will allow this to pass between controller and view
-      if ($routeParams.<%= singlename %>Id == null) {
-        $scope.<%= singlename %> = {};
-      } else {
-        <%= model_name %>.one($routeParams.<%= singlename %>Id).get().then(function(data){
-          $scope.<%= singlename %> = data;
-        });        
-      }
-      
-    }]);
+  }]);
   
- angular.module('<%= appname || namespace || "mainapp" %>').config(['$routeProvider',   function (provider) {
+angular.module('<%= appname || namespace || "mainapp" %>').config(['$routeProvider',   function (provider) {
         provider
 <% 
 path = '/' + namespaced_url(plural_table_name)
