@@ -112,6 +112,7 @@ Other generators available are
 * RSpecBuilder 
 * RailsVanillaBuilder (use instead of RailsBuilder to use rails scaffold generator)
 * RestAngularBuilder  (use instead of AngularRailsBuilder)
+* RestAngularModalBuilder  (use instead of RestAngularBuilder)
 
 The RailsBuilder generates controllers,models and views and the AngularRailsBuilder
 generates Angular service factories, controllers and view partials.  
@@ -168,11 +169,36 @@ Our example config file now looks like this.
 @builders = {
   RailsBuilder => {:output => './myapp',:appname => 'myapp' ,
   # do not do anything for these methods
-  :except => [:finalize_menu, :build_model, :build_controller] },
+  :except => [:finalize_menu ] },
 
   AngularRailsBuilder => {:output => './myapp',:appname => 'myapp',
-  # don't do anything except finalize the menu
-  :only => [:build_model, :build_controller]}
+  # don't generate the 'app/assets/javascripts/generated/app/app.js' artifact
+  :except => [:finalize_application]}
+}
+```
+
+It is quite probable that you want to generate an Angular front end 
+that uses a backend api service for data that is namespaced e.g. 
+
+    /api_v1/users/
+
+
+You can give an *api_prefix* option to the Angular builders rather than a
+namespace in order to access the api at the given path.
+
+Our example config file now looks like this.
+
+```
+#### define the output destinations relative to where you run the rake command
+
+@builders = {
+  RailsBuilder => {:output => './myapp',:appname => 'myapp' ,
+  :namespace => 'api_v1', 
+  :except => [:finalize_menu] },
+
+  AngularRailsBuilder => {:output => './myapp',:appname => 'myapp',
+  :api_prefix => 'api_v1',
+  :except => [:finalize_application]}
 }
 ```
 
