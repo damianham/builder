@@ -1,0 +1,91 @@
+<% 
+
+# shorten this
+singlename = singular_table_name
+
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+
+field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
+
+# override the defaults with a given field list
+unless this_fields[:detail].nil?
+  field_names = this_fields[:detail].map{|name| name.to_s  }
+
+  # get the name of the principle field
+  namefield_name = field_names.select{|name| ['name','title'].include?(name)}.first 
+
+  # and the description field
+  descfield_name = field_names.select{|name|['description','info',
+      'summary','comment','snippet'].include?(name) }.first
+  end
+
+unless namefield_name.nil?
+  #remove from the list, no need to display twice
+  field_names.reject!{|name| name == namefield_name}
+  end
+
+unless descfield_name.nil?
+  #remove from the list, no need to display twice
+  field_names.reject!{|name| name == descfield_name}
+  end
+
+%>
+
+<div class="container-fluid">
+  <div class="object-detail-container <%= singlename %>-detail-container">
+    
+    <div class="modal-header">
+        <% if namefield_name.nil? %>
+        <h3 class="modal-title"><%= model_name %> Details</h3>
+      <% else %>
+        <h1>{{<%= @singlename %>.<%= namefield_name %>}}</h1>
+      <% end %>
+    </div>
+    
+    
+    <div class="modal-body">
+
+    <!--
+            enable and rename accordingly if the class has a main image
+    <img ng-src="{{<%= singlename %>.image}}" class="object-image object-detail-image <%= singlename %>-image <%= singlename %>-detail-image">
+    -->
+
+
+    <% unless descfield_name.nil? %>
+      <p>{{<%= singlename %>.<%= descfield_name %>}}</p>
+    <% end %>
+
+    <!--          
+            enable and rename accordingly if the class has an array of images
+    <ul class="<%= singlename %>-thumbs">
+      <li ng-repeat="img in <%= singlename %>.images">
+        <img ng-src="{{img}}" ng-click="setImage(img) class="object-image-set object-detail-image-set <%= singlename %>-image-set <%= singlename %>-detail-image-set">
+      </li>
+    </ul>
+    -->
+
+    <div class="object-detail-table <%= singlename %>-detail-table">
+      <span class="object-detail"><%= model_name.titleize %> Detail</span>
+
+      <table class="<%= singlename %>-table detail-table">
+        <tbody>
+          <% field_names.each do |key| %>
+            <tr>
+              <th><%= key.titleize %> </th><td>{{<%= singlename %>.<%= key %>}}</td>
+            </tr>
+          <% end %>
+
+        </tbody>
+
+      </table>
+
+  
+
+      </div>
+    </div>
+    
+    <div class="modal-footer"> 
+      <button class="btn btn-primary" ng-click="cancel()">Close</button>
+    </div>
+  </div>
+</div>

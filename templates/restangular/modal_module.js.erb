@@ -35,6 +35,7 @@ angular.module('<%= appname || namespace || "mainapp" %>')
  .controller('<%= model_name %>ListCtrl', [ '$scope', '$filter', '<%= model_name %>', 
     function ($scope, $filter, <%= model_name %>) {
     
+      // list <%= plural_table_name %>
       $scope.reverse = false;
       $scope.itemsPerPage = 25;
       $scope.currentPage = 0;
@@ -75,7 +76,7 @@ angular.module('<%= appname || namespace || "mainapp" %>')
         return $scope.currentPage === 0 ? "disabled" : "";
       };
 
-      /// end controller 
+      /// end list <%= plural_table_name %>
     }]);
 
 
@@ -121,6 +122,51 @@ angular.module('<%= appname || namespace || "mainapp" %>')
  'Restangular', 'CurrentUser','UserResource' <%= classes.size == 0 ? '' : ",'" + classes.join("','") + "'" %>
     , function($scope, $routeParams, $modal, <%= model_name %>, Restangular, CurrentUser, UserResource <%= classes.size == 0 ? '' : "," + classes.join(",")  %>) {
       
+  // list <%= plural_table_name %>
+    $scope.reverse = false;
+    $scope.itemsPerPage = 25;
+    $scope.currentPage = 0;
+
+    // data is setup by the promise on completion so set this to an empty array
+    // to avoid an undefined error in the filter definition in the main app module
+    $scope.<%= plural_table_name %> = [];  
+
+    <%= model_name %>.getList().then(function(<%= plural_table_name %>) {
+      $scope.<%= plural_table_name %> = <%= plural_table_name %>;
+
+      // set these up once the data arrives
+      $scope.pageCount = function() {
+        return Math.ceil($scope.<%= plural_table_name %>.length/$scope.itemsPerPage)-1;
+      };
+
+      $scope.nextPage = function() {
+        if ($scope.currentPage < $scope.pageCount()) {
+          $scope.currentPage++;
+        }
+      };
+
+      $scope.nextPageDisabled = function() {
+        return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
+      };
+
+    });
+
+    $scope.orderProp = 'id';
+
+    $scope.prevPage = function() {
+      if ($scope.currentPage > 0) {
+        $scope.currentPage--;
+      }
+    };
+
+    $scope.prevPageDisabled = function() {
+      return $scope.currentPage === 0 ? "disabled" : "";
+    };
+
+    // end list <%= plural_table_name %>
+
+    
+    // edit/view <%= plural_table_name %>
     // get the current user - useful if the object belongs to a user
     // delete where not necessary
     CurrentUser.getUser(function (data) {
@@ -131,14 +177,17 @@ angular.module('<%= appname || namespace || "mainapp" %>')
 
     });
       
-      // get the ranges for foreign keys    - delete where not necessary
+    
   <%- if classes.size > 0 %>
+    // get the ranges for foreign keys    - enable/delete as appropriate
+    /*
     <%- classes.each do |class_name| %> 
     Restangular.all('<%= class_name.tableize %>').customGETLIST('range').then(function(<%= class_name.tableize %>) {
       $scope.<%= class_name.tableize %> = <%= class_name.tableize %>;
     });
 
     <% end %>
+    */
   <% end %>
   
     <% if has_date_field? %>
@@ -173,14 +222,25 @@ angular.module('<%= appname || namespace || "mainapp" %>')
     $scope.date_format = $scope.date_formats[0];
   <% end %>
       
-    $scope.new_<%= singlename %>= function () {
+    // we can use the same modal function for each view because the view template
+    // buttons define what the actions are
+    $scope.new_<%= singlename %> = function () {
       $scope.<%= singlename %> = {};
-      $scope.<%= singlename %>_form('lg', '/views/<%= singlename %>/modal_form.html', $scope.<%= singlename %>,[]);
-
+      $scope.<%= singlename %>_modal('lg', '/views/<%= singlename %>/modal_form.html', $scope.<%= singlename %>,[]);
     }; 
     
+    $scope.edit_<%= singlename %> = function (<%= singlename %>) {
+      $scope.<%= singlename %> = <%= singlename %>;
+      $scope.<%= singlename %>_modal('lg', '/views/<%= singlename %>/modal_form.html', $scope.<%= singlename %>, []);
+    };    
+    
+    $scope.view_<%= singlename %> = function (<%= singlename %>) {
+      $scope.<%= singlename %> = <%= singlename %>;
+      $scope.<%= singlename %>_modal('lg', '/views/<%= singlename %>/modal_detail.html', $scope.<%= singlename %>, []);
+    };
+    
     // open the modal
-    $scope.<%= singlename %>_form = function (size, template, <%= singlename %>,alerts) {
+    $scope.<%= singlename %>_modal = function (size, template, <%= singlename %>,alerts) {
 
         $scope.<%= singlename %> = <%= singlename %>;
         $scope.alerts = alerts;
@@ -215,30 +275,42 @@ angular.module('<%= appname || namespace || "mainapp" %>')
         modalInstance.result.then(function (<%= singlename %>) {
           console.log("saving <%= singlename %>");
           
-          <%= model_name %>.post(<%= singlename %>).then(function (data) {
-            console.log("saved <%= singlename %> ok"); 
-              $scope.<%= plural_table_name %>.push(data); 
-              $scope.alerts = [{ type: 'success', msg: 'your new <%= model_name %> has been created'}] ;
-              
-            },
-            function (data) {
-              console.log("error saving <%= singlename %>");
-              console.log(data);
+          if (<%= singlename %>.id == undefined) {
+            <%= model_name %>.post(<%= singlename %>).then(function (data) {
+              console.log("saved <%= singlename %> ok"); 
+                $scope.<%= plural_table_name %>.push(data); 
+                $scope.alerts = [{ type: 'success', msg: 'your new <%= model_name %> has been created'}] ;
 
-              $scope.<%= singlename %>_errors = data.errors;
-              $scope.alerts = [{ type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.' }] ;
+              },
+              function (data) {
+                console.log("error saving <%= singlename %>");
+                console.log(data);
 
-            });
+                $scope.<%= singlename %>_errors = data.errors;
+                $scope.alerts = [{ type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.' }] ;
+
+              });
+            } else {
+              <%= singlename %>.put().then(function (data) {
+                console.log("saved <%= singlename %> ok");
+
+                $scope.alerts = [{type: 'success', msg: 'your <%= model_name %> was updated'}];
+              },
+                function (data) {
+                  console.log("error saving <%= singlename %>");
+                  console.log(data);
+
+                  $scope.<%= singlename %>_errors = data.errors;
+                  $scope.alerts = [{type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.'}];
+
+              });
+            }
         }, function () {
           console.log('Modal dismissed at: ' + new Date());
         });
       };
       
-      // edit
-      // <%= model_name %>.one($routeParams.<%= singlename %>Id).get().then(function(data){
-      //  $scope.<%= singlename %> = data;
-      // });  
-      
+    
   }]);
   
 angular.module('<%= appname || namespace || "mainapp" %>').config(['$routeProvider',   function (provider) {
