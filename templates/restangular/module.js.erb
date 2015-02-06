@@ -123,14 +123,17 @@ angular.module('<%= appname || namespace || "mainapp" %>')
     <%= classes.size == 0 ? '' : ",'" + classes.join("','") + "'" %>
     , function($scope, $routeParams, <%= model_name %>, Restangular <%= classes.size == 0 ? '' : "," + classes.join(",")  %>) {
       
-      // get the ranges for foreign keys    - delete where not necessary
+      
   <%- if classes.size > 0 %>
+      // get the ranges for foreign keys    - enable/delete as appropriate
+      /*
     <%- classes.each do |class_name| %> 
       Restangular.all('<%= class_name.tableize %>').customGETLIST('range').then(function(<%= class_name.tableize %>) {
         $scope.<%= class_name.tableize %> = <%= class_name.tableize %>;
       });
      
     <% end %>
+      */
   <% end %>
     
     <% if has_date_field? %>
