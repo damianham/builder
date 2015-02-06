@@ -7,7 +7,7 @@ module Builder
     attr_accessor :namespace, :singular_table_name, :plural_table_name, :human_name, 
       :schema, :model_name, :controller_name, :attributes, :destination, :appname,
       :table_info, :fields, :this_fields, :namefield_name, :descfield_name,
-      :field_list
+      :field_list, :api_prefix
   
    
     def initialize(options)
@@ -18,6 +18,7 @@ module Builder
       @options = options
       @namespace ||= options[:namespace]
       @appname ||= options[:appname]
+      @api_prefix ||= options[:api_prefix]
       
       @schema = options[:schema]
       @table_info = options[:table_info]

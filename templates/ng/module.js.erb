@@ -30,11 +30,11 @@ singlename = singular_table_name
  */ 
 angular.module('<%= appname || namespace || "mainapp" %>').factory('<%= model_name %>', ['$resource',
   function($resource){
-    return $resource('<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/:<%= singlename %>Id.json', {}, {
+    return $resource('<%= api_prefix  %><%= plural_table_name %>/:<%= singlename %>Id.json', {}, {
       list: {method:'GET',  isArray:true, cache:true},
       update:   {method:'PUT'},
       range: {method:'GET',  isArray:true, cache:true},
-      related: {method:'GET', url: '<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/:<%= singlename %>Id/related/:relation.json' , isArray:true, cache:true}
+      related: {method:'GET', url: '<%= api_prefix  %><%= plural_table_name %>/:<%= singlename %>Id/related/:relation.json' , isArray:true, cache:true}
     });
   }]);
 
@@ -114,11 +114,13 @@ angular.module('<%= appname || namespace || "mainapp" %>')
     <%= classes.size == 0 ? '' : ",'" + classes.join("','") + "'" %>
     , function($scope, $routeParams, <%= model_name %> <%= classes.size == 0 ? '' : "," + classes.join(",")  %>) {
       
-    // get the ranges for foreign keys    - delete where not necessary
   <%- if classes.size > 0 %>
+    // get the ranges for foreign keys    - enable/delete as appropriate
+    /*
     <%- classes.each do |class_name| %> 
       $scope.<%= class_name.tableize %> = <%= class_name %>.range();
     <% end %>
+    */
   <% end %>
           
     <% if has_date_field? %>

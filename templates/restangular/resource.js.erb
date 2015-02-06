@@ -14,6 +14,7 @@ singlename = singular_table_name
  table_info['has_many'].flatten.uniq.each do |key|
    classes << key.to_model_name
  end
+ 
 %>
 /*
  * return an ngResource object with the default actions
@@ -26,10 +27,10 @@ singlename = singular_table_name
  */ 
 angular.module('<%= appname || namespace || "mainapp" %>').factory('<%= model_name %>Resource', ['$resource',
   function($resource){
-    return $resource('<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/:<%= singlename %>Id.json', {}, {
+    return $resource('<%= api_prefix  %><%= plural_table_name %>/:<%= singlename %>Id.json', {}, {
       list: {method:'GET',  isArray:true, cache:true},
       update:   {method:'PUT'},
       range: {method:'GET',  isArray:true, cache:true},
-      related: {method:'GET', url: '<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/:<%= singlename %>Id/related/:relation.json' , isArray:true, cache:true}
+      related: {method:'GET', url: '<%= api_prefix %><%= plural_table_name %>/:<%= singlename %>Id/related/:relation.json' , isArray:true, cache:true}
     });
   }]);
