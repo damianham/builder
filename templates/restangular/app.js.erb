@@ -10,12 +10,12 @@ app.config(["$httpProvider", function(provider) {
 }]);
 
 // Global configuration
-app.config(function(RestangularProvider) {
-  <% if namespace %>
-    RestangularProvider.setBaseUrl('<%= namespace %>');
-  <% end %>
-  RestangularProvider.setRequestSuffix('.json');
-});
+app.config(["RestangularProvider",  function(provider) {
+ <% if namespace %>
+  provider.setBaseUrl('<%= namespace %>');
+<% end %>
+  provider.setRequestSuffix('.json');
+}]);
 
 angular.module('<%= appname || namespace || "mainapp" %>')
  // enclose dependencies as strings within brackets to avoid minification and create the
