@@ -162,7 +162,6 @@ angular.module('<%= appname || namespace || "mainapp" %>')
         var range = _.range(2,$scope.pageCount-1);
 
         range = _.sample(range,8);
-        console.log(range);
         $scope.pages = _.flatten([1,
           _.chain(_.range(2,$scope.pageCount-1))
         .sample(8)
