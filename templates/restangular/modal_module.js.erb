@@ -51,6 +51,21 @@ angular.module('<%= appname || namespace || "mainapp" %>')
         $scope.pageCount = function() {
           return Math.ceil($scope.<%= plural_table_name %>.length/$scope.itemsPerPage)-1;
         };
+        
+        // get an array of random page numbers plus the first and last page
+        // for the table pager
+        if ($scope.pageCount < 10) {
+          $scope.pages = _.range(1,$scope.pageCount);
+        } else {
+          var range = _.range(2,$scope.pageCount-1);
+
+          range = _.sample(range,8);
+          $scope.pages = _.flatten([1,
+            _.chain(_.range(2,$scope.pageCount-1))
+          .sample(8)
+          .sortBy( function(num){return num;})
+          .value(),$scope.pageCount]);
+        }
 
         $scope.nextPage = function() {
           if ($scope.currentPage < $scope.pageCount()) {
@@ -138,6 +153,22 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       $scope.pageCount = function() {
         return Math.ceil($scope.<%= plural_table_name %>.length/$scope.itemsPerPage)-1;
       };
+      
+      // get an array of random page numbers plus the first and last page
+      // for the table pager
+      if ($scope.pageCount < 10) {
+        $scope.pages = _.range(1,$scope.pageCount);
+      } else {
+        var range = _.range(2,$scope.pageCount-1);
+
+        range = _.sample(range,8);
+        console.log(range);
+        $scope.pages = _.flatten([1,
+          _.chain(_.range(2,$scope.pageCount-1))
+        .sample(8)
+        .sortBy( function(num){return num;})
+        .value(),$scope.pageCount]);
+      }
 
       $scope.nextPage = function() {
         if ($scope.currentPage < $scope.pageCount()) {

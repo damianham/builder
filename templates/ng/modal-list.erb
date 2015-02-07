@@ -41,13 +41,12 @@ unless this_fields[:form].nil?
       <ul class="<%= singlename %>-list">
         <li ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:search_filter | orderBy:orderProp" >
 
-          <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename%>.id}}" >
+          <a ng-click="view_<%= singlename%>(<%= singlename%>)" >
             <i class="glyphicon glyphicon-search"></i>
           </a>
-          <a ng-click="edit_<%= singlename%>({{<%= singlename%>}})" >
+          <a ng-click="edit_<%= singlename%>(<%= singlename%>)" >
             <i class="glyphicon glyphicon-edit"></i>
           </a>
-
 
           <% unless namefield_name.nil?  %>
             <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}">{{<%= singlename %>.<%= namefield_name %>}}</a>

@@ -65,6 +65,31 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       $scope.pageCount = function() {
         return Math.ceil($scope.<%= plural_table_name %>.length/$scope.itemsPerPage)-1;
       };
+      
+      // get an array of random page numbers plus the first and last page
+      // for the table pager
+      $scope.pages = [];
+      if ($scope.pageCount < 10) {
+        for (x=1; x << $scope.pageCount; x++) {
+          $scope.pages.push(x);
+        }
+      } else {
+        var step = $scope.pageCount / 10;
+
+        if (step << 2) {
+          for (x=1; x << 8; x++) {
+            $scope.pages.push(x);
+          }
+          for (x=8; x << $scope.pageCount; x+= 3) {
+            $scope.pages.push(x);
+          }
+        } else {
+          for (x=1; x << $scope.pageCount; x+= step) {
+            $scope.pages.push(x);
+          }
+        }
+      }
+      $scope.pages.push($scope.pageCount);
 
       $scope.nextPage = function() {
         if ($scope.currentPage < $scope.pageCount()) {

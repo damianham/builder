@@ -46,20 +46,15 @@ end
 
         <tfoot>
         <td colspan="<%= field_names.size() + 1 %>">
-          <div class="pagination pull-right">
-            <ul>
-              <li ng-class="prevPageDisabled()">
-              <a href ng-click="prevPage()">« Prev</a>
+          
+          <ul class="pager">
+            <li class="previous" ng-class="prevPageDisabled()"><a ng-click="prevPage()">&larr; Previous</a></li>
+            <li ng-repeat="n in pages"
+                  ng-class="{active: n == currentPage}" ng-click="setPage(n)">
+                <a >{{n}}</a>
             </li>
-            <li ng-repeat="n in range()"
-              ng-class="{active: n == currentPage}" ng-click="setPage(n)">
-              <a href="#">{{n+1}}</a>
-            </li>
-            <li ng-class="nextPageDisabled()">
-              <a href ng-click="nextPage()">Next »</a>
-            </li>
-            </ul>
-          </div>
+            <li class="next" ng-class="nextPageDisabled()"><a ng-click="nextPage()">Next &rarr;</a></li>
+          </ul>
         </td>
         </tfoot>
 
