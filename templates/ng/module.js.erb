@@ -100,7 +100,10 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       $scope.nextPageDisabled = function() {
         return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
       };
-  
+      
+      $scope.setPage = function(num) {
+        $scope.currentPage = num;
+      }
       
       /// end controller 
     }]);

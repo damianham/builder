@@ -192,6 +192,10 @@ angular.module('<%= appname || namespace || "mainapp" %>')
     $scope.prevPageDisabled = function() {
       return $scope.currentPage === 0 ? "disabled" : "";
     };
+    
+    $scope.setPage = function(num) {
+      $scope.currentPage = num;
+    }
 
     // end list <%= plural_table_name %>
 
