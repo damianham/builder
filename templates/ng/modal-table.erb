@@ -50,7 +50,7 @@ unless this_fields[:list].nil?
             <li class="previous" ng-class="prevPageDisabled()"><a ng-click="prevPage()">&larr; Previous</a></li>
             <li ng-repeat="n in pages"
                   ng-class="{active: n == currentPage}" ng-click="setPage(n)">
-                <a >{{n}}</a>
+                <a >{{n +1}}</a>
             </li>
             <li class="next" ng-class="nextPageDisabled()"><a ng-click="nextPage()">Next &rarr;</a></li>
           </ul>

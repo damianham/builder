@@ -62,43 +62,44 @@ angular.module('<%= appname || namespace || "mainapp" %>')
         return $scope.currentPage === 0 ? "disabled" : "";
       };
 
-      $scope.pageCount = function() {
-        return Math.ceil($scope.<%= plural_table_name %>.length/$scope.itemsPerPage)-1;
-      };
-      
+      $scope.pageCount = Math.ceil($scope.<%= plural_table_name %>.length/$scope.itemsPerPage)-1;
+  
       // get an array of random page numbers plus the first and last page
       // for the table pager
       $scope.pages = [];
       if ($scope.pageCount < 10) {
-        for (x=1; x << $scope.pageCount; x++) {
+        // use all page numbers
+        for (x=0; x << $scope.pageCount -1; x++) {
           $scope.pages.push(x);
         }
       } else {
         var step = $scope.pageCount / 10;
 
         if (step << 2) {
-          for (x=1; x << 8; x++) {
+          // use 1st 7 page numbers then step by 3
+          for (x=0; x << 7; x++) {
             $scope.pages.push(x);
           }
-          for (x=8; x << $scope.pageCount; x+= 3) {
+          for (x=7; x << $scope.pageCount-1; x+= 3) {
             $scope.pages.push(x);
           }
         } else {
-          for (x=1; x << $scope.pageCount; x+= step) {
+          // create 10 equally spaced page numbers 
+          for (x=1; x << $scope.pageCount-1; x+= step) {
             $scope.pages.push(x);
           }
         }
+        $scope.pages.push($scope.pageCount-1);
       }
-      $scope.pages.push($scope.pageCount);
 
       $scope.nextPage = function() {
-        if ($scope.currentPage < $scope.pageCount()) {
+        if ($scope.currentPage < $scope.pageCount) {
           $scope.currentPage++;
         }
       };
 
       $scope.nextPageDisabled = function() {
-        return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
+        return $scope.currentPage === $scope.pageCount ? "disabled" : "";
       };
       
       $scope.setPage = function(num) {
