@@ -69,23 +69,23 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       $scope.pages = [];
       if ($scope.pageCount < 10) {
         // use all page numbers
-        for (x=0; x << $scope.pageCount -1; x++) {
+        for (x=0; x < $scope.pageCount -1; x++) {
           $scope.pages.push(x);
         }
       } else {
         var step = $scope.pageCount / 10;
 
-        if (step << 2) {
+        if (step < 2) {
           // use 1st 7 page numbers then step by 3
-          for (x=0; x << 7; x++) {
+          for (x=0; x < 7; x++) {
             $scope.pages.push(x);
           }
-          for (x=7; x << $scope.pageCount-1; x+= 3) {
+          for (x=7; x < $scope.pageCount-1; x+= 3) {
             $scope.pages.push(x);
           }
         } else {
           // create 10 equally spaced page numbers 
-          for (x=1; x << $scope.pageCount-1; x+= step) {
+          for (x=1; x < $scope.pageCount-1; x+= step) {
             $scope.pages.push(x);
           }
         }

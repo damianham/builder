@@ -1,0 +1,93 @@
+
+ 
+function setup_paging($scope,service,callback) {
+   // list events
+    $scope.reverse = false;
+    $scope.itemsPerPage = 25;
+    $scope.currentPage = 0;
+
+    // data is setup by the promise on completion so set this to an empty array
+    // to avoid an undefined error in the filter definition in the main app module
+
+    service.getList().then(function(items) {
+      
+      // set these up once the data arrives
+      $scope.pageCount = Math.ceil(items.length/$scope.itemsPerPage)-1;
+
+      // get an array of random page numbers plus the first and last page
+      // for the table pager -  uses underscore js functions
+      if ($scope.pageCount < 10) {
+        // use all page numbers
+        $scope.pages = _.range(0,$scope.pageCount-1);
+      } else { 
+        $scope.pages = _.flatten([0,  // prepend the 1st page number
+          _.chain(_.range(1,$scope.pageCount-2))  // get a range of page numbers
+          .sample(8)   // sample produces a random selection unsorted
+          .sortBy( function(num){return num;})  // sort by numeric value
+          .value(),$scope.pageCount-1]);  // append the last page number
+      }
+
+      $scope.nextPage = function() {
+        if ($scope.currentPage < $scope.pageCount) {
+          $scope.currentPage++;
+        }
+      };
+
+      $scope.nextPageDisabled = function() {
+        return $scope.currentPage === $scope.pageCount ? "disabled" : "";
+      };
+      
+      // pass the items to the callback
+      callback(items);
+
+    });
+
+    $scope.orderProp = 'id';
+
+    $scope.prevPage = function() {
+      if ($scope.currentPage > 0) {
+        $scope.currentPage--;
+      }
+    };
+
+    $scope.prevPageDisabled = function() {
+      return $scope.currentPage === 0 ? "disabled" : "";
+    };
+    
+    $scope.setPage = function(num) {
+      $scope.currentPage = num;
+    }
+}
+
+function setup_datepicker($scope) {
+      //  stuff for datepicker form field
+    $scope.today = function() {
+      $scope.current_date = new Date();
+    };
+    $scope.today();
+
+    $scope.clear = function () {
+      $scope.current_date = null;
+    };
+
+    // Disable weekend selection
+    $scope.date_disabled = function(date, mode) {
+      return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+    };
+
+    $scope.date_open = function($event) {
+      $event.preventDefault();
+      $event.stopPropagation();
+
+      $scope.datepicker_opened = true;
+    };
+
+    $scope.dateOptions = {
+      formatYear: 'yy',
+      startingDay: 1
+    };
+
+    $scope.date_formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+    $scope.date_format = $scope.date_formats[0];
+      
+}

@@ -178,6 +178,9 @@ class AngularRailsBuilder < Builder::Base
     # create the services module
     finalize_services
     
+    # create the controllers module
+    finalize_controllers
+    
     # create the main app 
     finalize_angular_app
     
@@ -251,6 +254,21 @@ class AngularRailsBuilder < Builder::Base
     path = module_path("app",filename)
     puts "finalize Ng services in #{path}"
     template = File.read(template("ng/services.js.erb"))
+    
+    text = Erubis::Eruby.new(template).evaluate( self )
+   
+    # generate the output     
+    write_asset(path,text)
+    
+  end
+  
+  def finalize_controllers
+    return if skip_method(__method__)
+    
+    filename = 'controllers.js'    
+    path = module_path("app",filename)
+    puts "finalize Ng services in #{path}"
+    template = File.read(template("ng/controllers.js.erb"))
     
     text = Erubis::Eruby.new(template).evaluate( self )
    

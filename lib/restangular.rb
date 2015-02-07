@@ -43,8 +43,25 @@ class RestAngularBuilder < AngularRailsBuilder
     
   end
   
-  # add the generated javascripts to application.js
+  def create_controller_methods
+    return if skip_method(__method__)
+    
+    filename = 'controller_methods.js'    
+    path = module_path("app",filename)
+    puts "finalize Ng controller_methods in #{path}"
+    template = File.read(template(File.join("restangular","controller_methods.js.erb")))
+    
+    text = Erubis::Eruby.new(template).evaluate( self )
+   
+    # generate the output     
+    write_asset(path,text)
+  end
+  
+  # create the main app module
   def finalize_angular_app
+    
+    # calling this before skip method check means either can be skipped
+    create_controller_methods
     
     return if skip_method(__method__)
     

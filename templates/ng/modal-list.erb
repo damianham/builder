@@ -22,7 +22,6 @@ unless this_fields[:form].nil?
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span2">
-      <!--Sidebar content-->
 
       Search: <input ng-model="search_filter">
       Sort by:
@@ -32,6 +31,10 @@ unless this_fields[:form].nil?
           <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
         <% end %>
       </select>
+      
+      <div style="float: right">
+        create a <a ng-click="new_<%= singlename %>()">New</a> <%= model_name %>
+      </div>
 
 
     </div>

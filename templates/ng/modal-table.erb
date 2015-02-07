@@ -15,7 +15,7 @@ unless this_fields[:list].nil?
 
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span2" style="margin:15px;">
+    <div style="margin:15px;">
 
 
       Search: <input ng-model="query">
@@ -26,10 +26,13 @@ unless this_fields[:list].nil?
           <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
         <% end %>
       </select>
-
+      <div style="float: right">
+        create a <a ng-click="new_<%= singlename %>()">New</a> <%= model_name %>
+      </div>
+      
 
     </div>
-    <div class="span10">
+    <div >
 
 
       <table class="<%= singlename %>-table list-table table-striped">
