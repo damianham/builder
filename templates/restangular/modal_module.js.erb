@@ -18,18 +18,9 @@ singlename = singular_table_name
 
 /* module */
 
-/*
- * return a Restangular service
- */ 
-angular.module('<%= appname || namespace || "mainapp" %>')
-  .factory('<%= model_name %>', 
-    ['Restangular', function(Restangular){
-          return Restangular.service('<%= plural_table_name %>');
-      }
-  ]);
-  
+
 // setup the modal openers
-function setup_modal($scope,$modal,service) {
+function setup_<%= singlename %>_modal($scope,$modal,service) {
 
     // we can use the same modal function for each view 
     // the detail view will only have a close button
@@ -126,16 +117,18 @@ function setup_modal($scope,$modal,service) {
 angular.module('<%= appname || namespace || "mainapp" %>')
  // enclose dependencies as strings within brackets to avoid minification and create the
  // controller as an anonymous function
- .controller('<%= model_name %>ListCtrl', [ '$scope', '$filter', '$modal', '<%= model_name %>', 
-    function ($scope, $filter, $modal, <%= model_name %>) {
+ .controller('<%= model_name %>ListCtrl', [ '$scope', '$filter', '$modal', 'Restangular', 
+    function ($scope, $filter, $modal, Restangular) {
     
     // setup the <%= plural_table_name %> to an empty list initially
     $scope.<%= plural_table_name %> = [];
     
-    // setup the data and paging - defined in app/assets/javascripts/generated/app/controller_methods.js
-    setup_paging($scope,<%= model_name %>,function(<%= plural_table_name %>){$scope.<%= plural_table_name %> = <%= plural_table_name %>;});
+    var base = Restangular.all('<%= plural_table_name %>');
     
-    setup_modal($scope,$modal,<%= model_name %>);
+    // setup the data and paging - defined in app/assets/javascripts/generated/app/controller_methods.js
+    setup_paging($scope,base,function(<%= plural_table_name %>){$scope.<%= plural_table_name %> = <%= plural_table_name %>;});
+    
+    setup_<%= singlename %>_modal($scope,$modal,base);
     
     }]);
 
@@ -144,13 +137,16 @@ angular.module('<%= appname || namespace || "mainapp" %>')
 angular.module('<%= appname || namespace || "mainapp" %>')
  // enclose dependencies as strings within brackets to avoid minification and create the
  // controller as an anonymous function
- .controller('<%= model_name %>DetailCtrl', [ '$scope', '$routeParams', '$modal', '<%= model_name %>'   
-    , function($scope, $routeParams, $modal, <%= model_name %>) {
+ .controller('<%= model_name %>DetailCtrl', [ '$scope', '$routeParams', '$modal', 'Restangular'   
+    , function($scope, $routeParams, $modal, Restangular) {
       
-      <%= model_name %>.one($routeParams.<%= singlename %>Id).get().then(function(<%= singlename %>){
+    var base = Restangular.all('<%= plural_table_name %>');
+    
+      base.one($routeParams.<%= singlename %>Id).get().then(function(<%= singlename %>){
         $scope.<%= singlename %> = <%= singlename %>;
         
-        // get related objects
+        // get related objects  - enable/delete as appropriate
+        /*
         <%   
           table_info['belongs_to'].flatten.uniq.each do |key| 
             relation = key.singularize
@@ -169,10 +165,10 @@ angular.module('<%= appname || namespace || "mainapp" %>')
           $scope.<%= singlename %>_<%= relation %> = <%= relation %>;
         });
         <%  end %>
-      
+        //*/
       });
       
-      setup_modal($scope,$modal,<%= model_name %>);
+      setup_<%= singlename %>_modal($scope,$modal,base);
       
     }]);
   
@@ -180,15 +176,17 @@ angular.module('<%= appname || namespace || "mainapp" %>')
 angular.module('<%= appname || namespace || "mainapp" %>')
  // enclose dependencies as strings within brackets to avoid minification and create the
  // controller as an anonymous function
- .controller('<%= model_name %>ModalCtrl', [ '$scope',   '$modal', '<%= model_name %>', 
- 'Restangular', 'CurrentUser','UserResource' <%= classes.size == 0 ? '' : ",'" + classes.join("','") + "'" %>
-    , function($scope,  $modal, <%= model_name %>, Restangular, CurrentUser, UserResource <%= classes.size == 0 ? '' : "," + classes.join(",")  %>) {
+ .controller('<%= model_name %>ModalCtrl', [ '$scope',   '$modal', 'Restangular', 
+ 'CurrentUser','UserResource'  
+    , function($scope,  $modal, Restangular, CurrentUser, UserResource ) {
       
+    var base = Restangular.all('<%= plural_table_name %>');
+    
     // setup the <%= plural_table_name %> to an empty list initially
     $scope.<%= plural_table_name %> = [];
     
     // setup the data and paging - defined in app/assets/javascripts/generated/app/controller_methods.js
-    setup_paging($scope,<%= model_name %>,function(<%= plural_table_name %>){$scope.<%= plural_table_name %> = <%= plural_table_name %>;});
+    setup_paging($scope,base,function(<%= plural_table_name %>){$scope.<%= plural_table_name %> = <%= plural_table_name %>;});
     
     // edit/view <%= plural_table_name %>
     // get the current user - useful if the object belongs to a user
@@ -221,7 +219,7 @@ angular.module('<%= appname || namespace || "mainapp" %>')
   <% end %>
       
     // setup the event handlers to open modal dialog for new/view/edit <%= singlename %> actions
-    setup_modal($scope,$modal,<%= model_name %>);
+    setup_<%= singlename %>_modal($scope,$modal,base);
     
   }]);
   
