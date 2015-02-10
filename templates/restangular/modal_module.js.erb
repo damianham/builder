@@ -41,15 +41,17 @@ function setup_<%= singlename %>_modal($scope,$modal,service) {
     };
     
     // open the modal
-    $scope.<%= singlename %>_modal = function (size, template, alerts) {
+    $scope.<%= singlename %>_modal = function (size, template, alerts,locals) {
 
         $scope.alerts = alerts;
+        $scope.locals = locals;
 
         var modalInstance = $modal.open({
           templateUrl: template,
-          controller: function ($scope, $modalInstance, <%= singlename %>,alerts) {
+          controller: function ($scope, $modalInstance, <%= singlename %>,alerts,locals) {
             $scope.<%= singlename %> = <%= singlename %>;
             $scope.alerts = alerts;
+            $scope.locals = locals;
             $scope.selected = {
               <%= singlename %>: $scope.<%= singlename %>
             };
@@ -68,7 +70,8 @@ function setup_<%= singlename %>_modal($scope,$modal,service) {
             <%= singlename %>: function () {
               return $scope.<%= singlename %>;
             }, 
-            alerts: function() {return $scope.alerts}
+            alerts: function() {return $scope.alerts},
+            locals: function() {return $scope.locals}
           }
         });
 
@@ -76,7 +79,7 @@ function setup_<%= singlename %>_modal($scope,$modal,service) {
           console.log("saving <%= singlename %>");
           
           if (<%= singlename %>.id == undefined) {
-            service.post(<%= singlename %>).then(function (data) {
+            service.post({<%= singlename %>: <%= singlename %>}).then(function (data) {
               console.log("saved <%= singlename %> ok"); 
                 $scope.<%= plural_table_name %>.push(data); 
                 $scope.alerts = [{ type: 'success', msg: 'your new <%= model_name %> has been created'}] ;
