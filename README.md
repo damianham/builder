@@ -3,6 +3,9 @@
 
 Rake driven application builder from a database schema. 
 
+** This is an experiment in creating an application generator and as such changes 
+often**.  Keep up to date with git pull.
+
 A set of rake tasks and ruby classes to generate various types of application 
 artifacts using a database schema as the 
 source of data.  This is useful if you want to create a Ruby On Rails 
@@ -24,6 +27,35 @@ and it also generates artifacts for an AngularJS Single Page Application.
 
 Once you have generated the artifacts for your application you can then build your app 
 using the generated artifacts as a base.  A lot of the donkey work has been done for you. 
+
+You can utilize a couple of things to keep generated artifacts separate from modified/static
+artifacts.
+
+Use the gem **rack-static_fallback** to load a resource from a fallback location.  Add the 
+gem to your Gemfile and add the following to your config/environments/[development|production].rb
+
+    config.middleware.use ::Rack::StaticFallback,
+      :mode => :fallback,
+      :static_path_regex => %r{/(views|partials)},
+      :fallback_static_url => "/generated/"
+
+For a given url of '/views/users/form.html', if the resource form.html exists in 'public/views/users'
+then use that otherwise try 'public/generated/views/users/form.html'.  Thus views and partials are
+generated in public/generated and if you want to modify one of the generated artifacts then first
+copy it to the corresponding path in public/views or public/partials.
+
+In app/assets/javascripts/application.js override the generated artifacts with modified/artifacts. E.g.
+
+    //= require app/app
+    //= require app/routes
+    //= require app/services
+    //= require app/controllers
+    //= require app/directives
+    // include the generated modules first
+    //= require_tree ./generated
+    // override the generated modules with static modules
+    //= require_tree ./modules
+
 
 ## Dependencies
 
