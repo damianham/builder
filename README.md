@@ -283,8 +283,8 @@ list.html for each class.
 
 Edit builder/templates/(ng|rails|restangular) .erb template files.  These templates are used to generate
 the artifacts.  Note that if you are using the AngularRails builder then the templates
-that are used are in the folder **templates/ng**.   
-If you use a RestAngular based builder then some templates are in the folder **templates/restangular**.
+that are used are in the folder **templates/ng**.  If you use a RestAngular based builder 
+then some templates are in the folder **templates/restangular**.
 
 Some form fields need special rendering. For example a date field could be 
 rendered with a date picker rather than as a text field.
