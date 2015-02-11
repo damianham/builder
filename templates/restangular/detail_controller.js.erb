@@ -13,7 +13,7 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       $scope.<%= singlename %> = <%= singlename %>;
 
       // get related objects  - enable/delete as appropriate
-      /*
+      //*
       <%   
         table_info['belongs_to'].flatten.uniq.each do |key| 
           relation = key.singularize
@@ -21,6 +21,19 @@ angular.module('<%= appname || namespace || "mainapp" %>')
       // 
       $scope.<%= singlename %>.customGET("related", {relation: "<%= relation %>"}).then(function(<%= relation %>) {
         $scope.<%= singlename %>_<%= relation %> = <%= relation %>;
+        <% if relation == 'user' %>
+        CurrentUser.getUser(function (data) {
+          $scope.current_user = data;
+
+          if ($scope.<%= singlename %>_<%= relation %>.id === $scope.current_user.id) {
+            $scope.can_edit = true;
+            $scope.can_delete = true;
+          }
+          // get data related to the user, e.g.
+          //$scope.photos = UserResource.related({userId: $scope.current_user.id, relation: 'photos'});
+
+        });
+        <% end %>
       });
       <%  end %>
       <%   

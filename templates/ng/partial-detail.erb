@@ -73,10 +73,13 @@ unless descfield_name.nil?
       <!-- include the standard links   [back, edit, new, delete, history] -->
       <div style="margin-top: 10px;">
         <a class="btn btn-inverse" href="<%= angular_url(plural_table_name) %>">Back</a> 
-        <a class="btn btn-warning" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/edit" >Edit</a>
+        <span ng-if="can_edit == true">
+          <a class="btn btn-warning" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/edit" >Edit</a>
+        </span>
         <a class="btn btn-success" href="<%= angular_url(plural_table_name) %>/new" >New</a>
-        <a class="btn btn-danger" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/delete" data-confirm='Are you sure?'>Delete</a>
-
+        <span ng-if="can_delete == true">
+          <a class="btn btn-danger" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/delete" data-confirm='Are you sure?'>Delete</a>
+        </span>
         <!--
           <a class="btn btn-primary" href="<%= angular_url(plural_table_name) %>/{{ <%= singlename %>.id }}/history" >History</a>
 
