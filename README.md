@@ -3,8 +3,8 @@
 
 Rake driven application builder from a database schema. 
 
-** This is an experiment in creating an application generator and as such changes 
-often**.  Keep up to date with git pull.
+#### This is an experiment in creating an application generator and as such changes often.  
+Keep up to date with git pull.
 
 A set of rake tasks and ruby classes to generate various types of application 
 artifacts using a database schema as the 
@@ -281,7 +281,7 @@ list.html for each class.
 
 ### Step 4  - customize the view templates in the templates folder to your liking
 
-Edit builder/templates/(ng|rails|restangular)/*.erb.  These templates are used to generate
+Edit builder/templates/(ng|rails|restangular) .erb template files.  These templates are used to generate
 the artifacts.  Note that if you are using the AngularRails builder then the templates
 that are used are in the folder **templates/ng**.   
 If you use a RestAngular based builder then some templates are in the folder **templates/restangular**.
