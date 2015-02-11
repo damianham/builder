@@ -33,7 +33,7 @@ end
      	<% end %>
       </select>
       <div style="float: right">
-        create a <a href="<%= angular_url(plural_table_name) %>/new" >New</a><%= model_name %>
+        create a <a ui-sref="<%= plural_table_name %>.new" >New</a><%= model_name %>
       </div>
 
 
@@ -44,12 +44,13 @@ end
       <ul class="<%= singlename %>-list">
         <li ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:search_filter | orderBy:orderProp" >
            
-            <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename%>.id}}" >
+            <a ui-sref="<%= plural_table_name %>.detail({<%= singlename%>Id:<%= singlename%>.id})" >
             <i class="glyphicon glyphicon-search"></i>
             </a>
           
             <% unless namefield_name.nil?  %>
-              <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}">{{<%= singlename %>.<%= namefield_name %>}}</a>
+              <a ui-sref="<%= plural_table_name %>.detail({<%= singlename%>Id:<%= singlename%>.id})" >
+                {{<%= singlename %>.<%= namefield_name %>}}</a>
             <% end %>
           <% unless descfield_name.nil?  %>
             <p>{{<%= singlename %>.<%= descfield_name %> }}</p>

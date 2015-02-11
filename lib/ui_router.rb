@@ -1,26 +1,23 @@
-
-# build AngularJS (Ng) artifacts using Restangular with modal dialogs
-
-
-class RestAngularModalBuilder < RestAngularBuilder
+class UIrouterBuilder < RestAngularBuilder
   
   def build_view 
     return if skip_method(__method__)
     
-    build_modal_form_partial
+    build_uirouter_list_partial
     
-    build_modal_detail_partial     
+    build_uirouter_form_partial
     
-    build_modal_list_partial
+    build_uirouter_detail_partial     
+    
   end
   
-  def build_modal_form_partial
+  def build_uirouter_form_partial
     
     return if skip_method(__method__)
 
-    template = File.read(template("ng/modal-form.erb"))
+    template = File.read(template("ng/uirouter-form.erb"))
     
-    filename = "#{singular_table_name}/modal_form.html"
+    filename = "#{singular_table_name}/uirouter_form.html"
     
     path =  module_path("views",filename)
     puts "build Ng form partial for #{model_name} in #{path}"
@@ -29,14 +26,16 @@ class RestAngularModalBuilder < RestAngularBuilder
     
     # add a route for this partial
     @@ng_routes << {
+      :name => "#{plural_table_name}.new",
       :template => '/' + module_path('views', filename),
-      :controller => model_name + 'ModalCtrl',
-      :url => '/' + namespaced_url(plural_table_name) + '/new'
+      :controller => model_name + 'FormCtrl',
+      :url => '/new'
     }
     @@ng_routes << {
+      :name => "#{plural_table_name}.edit",
       :template => '/' + module_path('views', filename),
-      :controller => model_name + 'ModalCtrl',
-      :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id/edit'
+      :controller => model_name + 'FormCtrl',
+      :url => '/:' + singular_table_name + 'Id/edit'
     }
   
       
@@ -45,13 +44,13 @@ class RestAngularModalBuilder < RestAngularBuilder
     write_view(path,text)
   end
   
-  def build_modal_detail_partial  
+  def build_uirouter_detail_partial  
     
     return if skip_method(__method__)
 
-    template = File.read(template("ng/modal-detail.erb"))
+    template = File.read(template("ng/uirouter-detail.erb"))
     
-    filename = "#{singular_table_name}/modal_detail.html"
+    filename = "#{singular_table_name}/uirouter_detail.html"
     
     path =  module_path("views",filename)
     puts "build Ng detail partial for #{model_name} in #{path}"
@@ -60,9 +59,10 @@ class RestAngularModalBuilder < RestAngularBuilder
     
     # add a route for this partial
     @@ng_routes << {
+      :name => "#{plural_table_name}.detail",
       :template => '/' + module_path('views', filename),
       :controller => model_name + 'DetailCtrl',
-      :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id'
+      :url => '/:' + singular_table_name + 'Id'
     }
       
     # generate the output
@@ -71,13 +71,13 @@ class RestAngularModalBuilder < RestAngularBuilder
 
   end
   
-  def build_modal_list_partial 
+  def build_uirouter_list_partial 
     
     return if skip_method(__method__)
     
-    template = File.read(template("ng/modal-#{LIST_TYPE}.erb"))
+    template = File.read(template("ng/uirouter-#{LIST_TYPE}.erb"))
     
-    filename = "#{singular_table_name}/modal_list.html"
+    filename = "#{singular_table_name}/uirouter_list.html"
     
     path = module_path("views",filename)
     puts "build Ng #{LIST_TYPE} list partial for #{model_name} in #{path}"
@@ -86,17 +86,18 @@ class RestAngularModalBuilder < RestAngularBuilder
     
     # add a route for this partial
     @@ng_routes << {
+      :name => "#{plural_table_name}.list",
       :template => '/' + module_path('views', filename),
-      :controller => model_name + 'ModalCtrl',
-      :url => '/' + namespaced_url(plural_table_name) 
+      :controller => model_name + 'ListCtrl',
+      :url => ''  
     }
     
- 
     # generate the output
     
     write_view(path,text)
 
   end
+  
   
   def finalize_modules
     
@@ -108,14 +109,35 @@ class RestAngularModalBuilder < RestAngularBuilder
       path = module_path("modules",filename)
       puts "build Ng module for #{mod.model_name} in #{path}"
       
-      template = File.read(template(File.join("restangular","modal_module.js.erb")))
+      template = File.read(template(File.join("restangular","uirouter_module.js.erb")))
 
       module_text = Erubis::Eruby.new(template).evaluate( mod )
 
-      # generate the output 
+      # generate the output
      
       write_asset(path,module_text)
     end
+    
+  end
+  
+  # create the main app module
+  def finalize_angular_app
+    
+    # calling this before skip method check means either can be skipped
+    create_controller_methods
+    
+    return if skip_method(__method__)
+    
+    filename = (appname || namespace || "app") + ".js"
+    path = module_path("app",filename)
+    puts "finalize Ng app in #{path}"
+ 
+    template = File.read(template(File.join("restangular","uirouter_app.js.erb")))
+    
+    text = Erubis::Eruby.new(template).evaluate( self )
+
+    # write the routes output
+    write_asset(path,text) 
     
   end
   

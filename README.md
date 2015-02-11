@@ -35,7 +35,7 @@ using the generated artifacts as a base.  A lot of the donkey work has been done
 
 ## Installation
 
-git clone https://github.com/damianham/builder.git
+git clone --depth=10 https://github.com/damianham/builder.git
 
 ## Usage
 
@@ -113,6 +113,7 @@ Other generators available are
 * RailsVanillaBuilder (use instead of RailsBuilder to use rails scaffold generator)
 * RestAngularBuilder  (use instead of AngularRailsBuilder)
 * RestAngularModalBuilder  (use instead of RestAngularBuilder)
+* UIrouterBuilder (uses angular/ui-router - use instead of any other angular builder)
 
 The RailsBuilder generates controllers,models and views and the AngularRailsBuilder
 generates Angular service factories, controllers and view partials.  
@@ -250,8 +251,8 @@ list.html for each class.
 
 Edit builder/templates/(ng|rails|restangular)/*.erb.  These templates are used to generate
 the artifacts.  Note that if you are using the AngularRails builder then the templates
-that are used are in the folder **templates/ng**.   If you use the RestAngular builder
-instead then the templates used are in the folder **templates/restangular**.
+that are used are in the folder **templates/ng**.   
+If you use a RestAngular based builder then some templates are in the folder **templates/restangular**.
 
 Some form fields need special rendering. For example a date field could be 
 rendered with a date picker rather than as a text field.

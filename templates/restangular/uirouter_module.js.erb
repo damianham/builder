@@ -1,0 +1,50 @@
+'use strict';
+
+<% 
+
+# shorten the accessor name
+singlename = singular_table_name
+ 
+# add the belongs_to and has many related classes  
+ @classes = []
+ table_info['belongs_to'].flatten.uniq.each do |key|
+   @classes << key.to_model_name
+ end
+ 
+ table_info['has_many'].flatten.uniq.each do |key|
+   @classes << key.to_model_name
+ end
+%>
+
+/* module */
+<% 
+['list','detail','form'].each do |tmpl|
+template_path = template("restangular/#{tmpl}_controller.js.erb") %>
+
+<%= Erubis::Eruby.new(File.read(template_path)).evaluate( self ) %>
+
+<% end %>
+
+
+// setup the routes to the states
+
+angular.module('<%= appname || namespace || "mainapp" %>').config(['$stateProvider', 
+function (state_provider) {
+        state_provider
+  .state('<%= plural_table_name %>', {
+  abstract: true,
+  url: '/<%= plural_table_name %>', 
+  templateUrl:  '/views/<%= singlename %>/<%= plural_table_name %>.html' ,
+  controller: '<%= model_name %>ListCtrl'
+  })
+<% 
+path = namespaced_url(plural_table_name)
+models.select{|m| m[:name].match(path) }.each do |model|   %>     
+.state('<%= model[:name] %>', {
+  url: '<%= model[:url] %>', 
+  templateUrl:  '<%= model[:template] %>' ,
+  controller: '<%= model[:controller] %>'
+  })
+<% end %>
+ ;
+}]);

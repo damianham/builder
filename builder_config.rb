@@ -12,13 +12,17 @@
   
   AngularRailsBuilder => {:output => './mywebapp/ng',:appname => 'myapp',
    :except => [:finalize_application], :api_prefix => 'api/'
- },
+  },
  
   RestAngularBuilder => {:output => './mywebapp/restangular',:appname => 'myapp',
   :except => [:finalize_application], :api_prefix => 'api/'
-},
+  },
 
   RestAngularModalBuilder => {:output => './mywebapp/modal',:appname => 'myapp',
+  :except => [:finalize_application], :api_prefix => 'api/'
+  },
+  
+  UIrouterBuilder  => {:output => './mywebapp/uirouter',:appname => 'myapp',
   :except => [:finalize_application], :api_prefix => 'api/'
   }
   
@@ -68,5 +72,5 @@ We can also specify the fields to display for each type of display, e.g
 # for standard rails artifacts using the rails scaffold generator
 
 # define the tables to ignore e.g. IGNORE_TABLES = ['dodgy_table1','dummy_table2']
-IGNORE_TABLES = []
+IGNORE_TABLES = ['friendly_id_slugs']
 

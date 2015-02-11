@@ -28,7 +28,7 @@ end
       </select>
       
        <div style="float: right">
-        create a <a href="<%= angular_url(plural_table_name) %>/new" >New</a><%= model_name %>
+        create a <a ui-sref="<%= plural_table_name %>.new" >New</a><%= model_name %>
       </div>
 
 
@@ -66,7 +66,7 @@ end
           <tr ng-repeat="<%= singlename %> in <%= plural_table_name %> | offset: currentPage*itemsPerPage | filter:query | orderBy:orderProp:reverse | limitTo: itemsPerPage" ng-class="rowClass(<%= singlename %>)">
 
             <td>
-              <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename %>.id}}" >
+              <a ui-sref="<%= plural_table_name %>.detail({<%= singlename%>Id:<%= singlename%>.id})" >
                 <i class="glyphicon glyphicon-search"></i>
               </a>
             </td>
@@ -74,7 +74,7 @@ end
             <% field_names.each do |key| %>
               <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
                 <td>
-                    <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= key.sub(/_id$/,'').tableize %>/{{<%= singlename %>.<%= key %>}}" >
+                    <a ui-sref="<%= key.sub(/_id$/,'').tableize %>.detail({<%= key%>Id:<%= key%>.id})" >
                     {{<%= singlename %>.<%= key %>}}
                     </a>
                 </td>

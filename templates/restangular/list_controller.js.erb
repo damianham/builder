@@ -1,0 +1,19 @@
+
+// list controller
+angular.module('<%= appname || namespace || "mainapp" %>')
+ // enclose dependencies as strings within brackets to avoid minification and create the
+ // controller as an anonymous function
+ .controller('<%= model_name %>ListCtrl', [ '$scope', '$filter',  'Restangular', 
+    function ($scope, $filter,   Restangular) {
+    
+    // setup the <%= plural_table_name %> to an empty list initially
+    $scope.<%= plural_table_name %> = [];
+    
+    var base = Restangular.all('<%= plural_table_name %>');
+    
+    // setup the data and paging - defined in app/assets/javascripts/generated/app/controller_methods.js
+    setup_paging($scope,base,function(<%= plural_table_name %>){$scope.<%= plural_table_name %> = <%= plural_table_name %>;});
+    
+    }]);
+// end list controller
+    

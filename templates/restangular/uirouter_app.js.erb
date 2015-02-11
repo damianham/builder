@@ -1,0 +1,99 @@
+'use strict';
+
+/* App Module */
+/* download 'ui.bootstrap' from http://angular-ui.github.io/bootstrap/ */
+var app = angular.module('<%= appname || namespace || "mainapp" %>' , 
+['restangular','ngResource','ui.router','ngAnimate','ui.bootstrap'  ]);
+
+// Gets authentication token injected in the DOM
+app.config(["$httpProvider", function(provider) {
+  provider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
+}]);
+
+// Global configuration
+app.config(["RestangularProvider",  function(provider) {
+ <% if api_prefix %>
+  provider.setBaseUrl('<%= api_prefix %>');
+<% elsif namespace %>
+  provider.setBaseUrl('<%= namespace %>');
+<% end %>
+  provider.setRequestSuffix('.json');
+}]);
+
+ // enclose dependencies as strings within brackets to avoid minification and create the
+ // controller as an anonymous function
+ app.controller('HomeCtrl', ['$scope', '$http',
+  function ($scope, $http) {
+   // enable/delete as appropriate
+   // $http.get('/angular/dashboard.json').success(function(data) {
+   //   $scope.dashboard_data = data;
+   // });
+ 
+  }]);
+
+app.filter('offset', function() {
+  return function(input, start) {
+    start = parseInt(start, 10);
+    return input.slice(start);
+  };
+});
+
+
+
+app.run(
+  [          '$rootScope', '$state', '$stateParams',
+    function ($rootScope,   $state,   $stateParams) {
+
+    // It's very handy to add references to $state and $stateParams to the $rootScope
+    // so that you can access them from any scope within your applications.For example,
+    // <li ng-class="{ active: $state.includes('contacts.list') }"> will set the <li>
+    // to active whenever 'contacts.list' or one of its decendents is active.
+    $rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams;
+    }
+  ]
+);
+
+app.config(
+  [          '$stateProvider', '$urlRouterProvider',
+    function ($stateProvider,   $urlRouterProvider) {
+
+      /////////////////////////////
+      // Redirects and Otherwise //
+      /////////////////////////////
+
+      // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
+      $urlRouterProvider
+
+        // If the url is ever invalid, e.g. '/asdf', then redirect to '/' aka the home state
+        .otherwise('/');
+
+
+      //////////////////////////
+      // State Configurations //
+      //////////////////////////
+
+      // Use $stateProvider to configure your states.
+      $stateProvider
+
+        //////////
+        // Home //
+        //////////
+
+        .state("home", {
+
+          // Use a url of "/" to set a state as the "index".
+          url: "/",
+
+          // By default, templates
+          // will populate the ui-view within the parent state's template.
+          // For top level states, like this one, the parent template is
+          // the index.html file. So this template will be inserted into the
+          // ui-view within index.html.
+          template: '/partials/home.html'
+
+        })
+
+    }
+  ]
+);
