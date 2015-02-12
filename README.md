@@ -39,8 +39,8 @@ gem to your Gemfile and add the following to your config/environments/[developme
       :static_path_regex => %r{/(views|partials)},
       :fallback_static_url => "/generated/"
 
-For a given url of '/views/users/form.html', if the resource form.html exists in 'public/views/users'
-then use that otherwise try 'public/generated/views/users/form.html'.  Thus views and partials are
+For a given url of '/views/user/form.html', if the resource form.html exists in 'public/views/user'
+then use that otherwise try 'public/generated/views/user/form.html'.  Thus views and partials are
 generated in public/generated and if you want to modify one of the generated artifacts then first
 copy it to the corresponding path in public/views or public/partials.
 
@@ -267,7 +267,7 @@ IGNORE_TABLES = ['dodgy_table1','dummy_table2']
 Do not generate artifacts for dodgy_table1 and dummy_table2. The Rails migration
 version table **schema_migrations** is ignored by the column info generator tasks.
 
-define the type of list template to use - either 'list', or 'table'
+#### define the type of list template to use - either 'list', or 'table' for index routes
 ```
 # define the template type for all index routes e.g. /users
 # define to 'list' to use the list template
@@ -275,7 +275,7 @@ define the type of list template to use - either 'list', or 'table'
   LIST_TYPE = 'table'
 ```  
 
-Uses the public/generated/views/< model_name>/<prefix>_<LIST_TYPE>.html template for all index routes.
+Uses the public/generated/views/{model_name}/{prefix}_{LIST_TYPE}.html template for all index routes.
 For example, for the route '/contacts' (the model_name is 'contact') and a LIST_TYPE 'table', the
 prefix used depends on the builder, e.g.  
 
@@ -285,6 +285,26 @@ prefix used depends on the builder, e.g.
    'public/generated/views/contact/modal_table.html
 * UIrouterBuilder - prefix is 'uirouter' giving
    'public/generated/views/contact/uirouter_table.html
+
+
+Along with **rack_static_fallback** this all comes together in the generated 
+module files in *app/assets/javascripts/generated/modules*.  For example the
+AngularRailsBuilder and RestAngularBuilder will add the following routes to the angular
+route provider for the users table for a LIST_TYPE of 'table'.
+
+*app/assets/javascripts/generated/modules/UserModule.js*
+```
+ angular.module('mainapp').config(['$routeProvider',   function (provider) {
+        provider
+.when('/users/new', {templateUrl:  '/views/user/partial_form.html' ,controller: 'UserFormCtrl'})
+.when('/users/:userId/edit', {templateUrl:  '/views/user/partial_form.html' ,controller: 'UserFormCtrl'})
+.when('/users/:userId', {templateUrl:  '/views/user/partial_detail.html' ,controller: 'UserDetailCtrl'})
+.when('/users', {templateUrl:  '/views/user/partial_table.html' ,controller: 'UserListCtrl'})
+ ;
+}]);
+```
+
+
 
 ### Step 4  - customize the view templates in the templates folder to your liking
 
