@@ -5,8 +5,8 @@ singlename = singular_table_name
 field_names = field_list
 
 # override the defaults with a given field list
-unless this_fields[:form].nil?
-  field_names = this_fields[:form].map{|name| name.to_s  }
+unless this_fields[:list].nil?
+  field_names = this_fields[:list].map{|name| name.to_s  }
 
   # get the name of the principle field
   namefield_name = field_names.select{|name| ['name','title'].include?(name)}.first 
@@ -43,17 +43,17 @@ unless this_fields[:form].nil?
     <div class="col-md-4 <%= singlename %>-item" ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:search_filter | orderBy:orderProp" >
       <p>
       <% if namefield_name.nil?  %>
-        <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}"> view more details 
+        <a href="/#/<%= plural_table_name %>/{{<%= singlename %>.id}}"> view more details 
           <i class="glyphicon glyphicon-search"> </i>
         </a>
       <% else %>
-        <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}">
+        <a href="/#/<%= plural_table_name %>/{{<%= singlename %>.id}}">
           {{<%= singlename %>.<%= namefield_name %>}}
           <i class="glyphicon glyphicon-search"></i>
         </a>
       <% end %>
         <span ng-if="can_edit == true">
-          <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}/edit" > edit
+          <a href="/#/<%= plural_table_name %>/{{<%= singlename %>.id}}/edit" > edit
             <i class="glyphicon glyphicon-edit"></i>
           </a>
         </span>
@@ -65,11 +65,11 @@ unless this_fields[:form].nil?
 
       <dl>
       <% field_names.each do |key| %>
-        <dt><%= key.titleize %>
-        <dd>
+        <dt><%= key.titleize %></dt>
+        <dd class='<%= singlename %>-<%= key %>'>
         <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
           <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= key.sub(/_id$/,'').tableize %>/{{<%= singlename %>.<%= key %>}}" >
-            {{<%= singlename %>.<%= key %>}}
+            view <%= key.titleize %> {{<%= singlename %>.<%= key %>}}
           </a>
         <% else %>
           {{<%= singlename %>.<%= key %>}}

@@ -4,9 +4,13 @@ singlename = singular_table_name
 
 field_names = field_list
 
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+ 
+field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
+
 # override the defaults with a given field list
-unless this_fields[:form].nil?
-  field_names = this_fields[:form].map{|name| name.to_s  }
+unless this_fields[:list].nil?
+  field_names = this_fields[:list].map{|name| name.to_s  }
 
   # get the name of the principle field
   namefield_name = field_names.select{|name| ['name','title'].include?(name)}.first 
@@ -14,7 +18,7 @@ unless this_fields[:form].nil?
   # and the description field
   descfield_name = field_names.select{|name|['description','info',
       'summary','comment','snippet'].include?(name) }.first
-  end
+end
 
 %>
 
@@ -65,11 +69,11 @@ unless this_fields[:form].nil?
 
       <dl>
       <% field_names.each do |key| %>
-        <dt><%= key.titleize %>
-        <dd>
+        <dt><%= key.titleize %></dt>
+        <dd class='<%= singlename %>-<%= key %>'>
         <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
-          <a href="<%= key.sub(/_id$/,'').tableize %>.detail(<%=  key.sub(/_id$/,'')%>Id:{{<%= singlename %>.<%= key %>}})" >
-            {{<%= singlename %>.<%= key %>}}
+          <a ui-sref="<%= key.sub(/_id$/,'').tableize %>.detail({<%=  key.sub(/_id$/,'')%>Id:<%= singlename %>.<%= key %>})" >
+            view <%= key.titleize %> {{<%= singlename %>.<%= key %>}}
           </a>
         <% else %>
           {{<%= singlename %>.<%= key %>}}

@@ -5,8 +5,8 @@ singlename = singular_table_name
 field_names = field_list
 
 # override the defaults with a given field list
-unless this_fields[:form].nil?
-  field_names = this_fields[:form].map{|name| name.to_s  }
+unless this_fields[:list].nil?
+  field_names = this_fields[:list].map{|name| name.to_s  }
 
   # get the name of the principle field
   namefield_name = field_names.select{|name| ['name','title'].include?(name)}.first 
@@ -50,7 +50,7 @@ unless this_fields[:form].nil?
           
 
           <% unless namefield_name.nil?  %>
-            <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}">{{<%= singlename %>.<%= namefield_name %>}}</a>
+            <a href="/#/<%= plural_table_name %>/{{<%= singlename %>.id}}">{{<%= singlename %>.<%= namefield_name %>}}</a>
           <% end %>
           <% unless descfield_name.nil?  %>
             <p>{{<%= singlename %>.<%= descfield_name %> }}</p>
@@ -89,11 +89,11 @@ unless this_fields[:form].nil?
 
       <dl>
       <% field_names.each do |key| %>
-        <dt><%= key.titleize %>
-        <dd>
+        <dt><%= key.titleize %></dt>
+        <dd class='<%= singlename %>-<%= key %>'>
         <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
           <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= key.sub(/_id$/,'').tableize %>/{{<%= singlename %>.<%= key %>}}" >
-            {{<%= singlename %>.<%= key %>}}
+            view <%= key.titleize %> {{<%= singlename %>.<%= key %>}}
           </a>
         <% else %>
           {{<%= singlename %>.<%= key %>}}

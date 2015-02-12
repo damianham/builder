@@ -74,15 +74,15 @@ end
             </td>
 
             <% field_names.each do |key| %>
-              <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
-                <td>
-                    <a ui-sref="<%= key.sub(/_id$/,'').tableize %>.detail({<%= key%>Id:<%= key%>.id})" >
-                    {{<%= singlename %>.<%= key %>}}
-                    </a>
-                </td>
-              <% else %>
-                <td>{{<%= singlename %>.<%= key %>}}</td>
-              <% end %>
+            <td class='<%= singlename %>-<%= key %>'>
+            <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
+              <a ui-sref="<%= key.sub(/_id$/,'').tableize %>.detail({<%=  key.sub(/_id$/,'')%>Id:<%= singlename %>.<%= key %>})" >
+                view <%= key.titleize %> {{<%= singlename %>.<%= key %>}}
+              </a>                   
+            <% else %>
+              {{<%= singlename %>.<%= key %>}}
+            <% end %>
+            </td>
             <% end %>
           </tr>
         </tbody>

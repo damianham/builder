@@ -71,7 +71,8 @@ unless descfield_name.nil?
         <tbody>
           <% field_names.each do |key| %>
             <tr>
-              <th><%= key.titleize %> </th><td>{{<%= singlename %>.<%= key %>}}</td>
+              <th><%= key.titleize %> </th>
+              <td class='<%= singlename %>-<%= key %>'>{{<%= singlename %>.<%= key %>}}</td>
             </tr>
           <% end %>
 
