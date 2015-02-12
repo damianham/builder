@@ -38,9 +38,10 @@ function (state_provider) {
   })
 <% 
 path = namespaced_url(plural_table_name)
+# remove the leading plural table name for nested states
 models.select{|m| m[:name].match(path) }.each do |model|   %>     
 .state('<%= model[:name] %>', {
-  url: '<%= model[:url] %>', 
+  url: '<%= model[:url].sub("/#{plural_table_name}",'') %>', 
   templateUrl:  '<%= model[:template] %>' ,
   controller: '<%= model[:controller] %>'
   })

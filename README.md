@@ -267,17 +267,24 @@ IGNORE_TABLES = ['dodgy_table1','dummy_table2']
 Do not generate artifacts for dodgy_table1 and dummy_table2. The Rails migration
 version table **schema_migrations** is ignored by the column info generator tasks.
 
-#### Edit builder/lib/angular_rails.rb
-
 define the type of list template to use - either 'list', or 'table'
 ```
-# define to 'list' to use the list template 
+# define the template type for all index routes e.g. /users
+# define to 'list' to use the list template
 # or 'table' to use the table template
   LIST_TYPE = 'table'
 ```  
 
-Uses the builder/templates/ng/partial-table.erb template to produce the 
-list.html for each class.
+Uses the public/generated/views/< model_name>/<prefix>_<LIST_TYPE>.html template for all index routes.
+For example, for the route '/contacts' (the model_name is 'contact') and a LIST_TYPE 'table', the
+prefix used depends on the builder, e.g.  
+
+* AngularRailsBuilder and RestAngularBuilder  - prefix == 'partial' giving
+   'public/generated/views/contact/partial_table.html
+* RestangularModalBuilder - prefix == 'modal' giving
+   'public/generated/views/contact/modal_table.html
+* UIrouterBuilder - prefix is 'uirouter' giving
+   'public/generated/views/contact/uirouter_table.html
 
 ### Step 4  - customize the view templates in the templates folder to your liking
 

@@ -72,5 +72,11 @@ We can also specify the fields to display for each type of display, e.g
 # for standard rails artifacts using the rails scaffold generator
 
 # define the tables to ignore e.g. IGNORE_TABLES = ['dodgy_table1','dummy_table2']
+# schema_migrations is ignored by the schema extractor task
 IGNORE_TABLES = ['friendly_id_slugs']
 
+
+# define the template type for all index routes e.g. /users
+ # define to 'list' to use the list template
+ # or 'table' to use the table template
+ LIST_TYPE = 'table'

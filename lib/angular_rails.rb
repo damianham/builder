@@ -12,10 +12,6 @@ class AngularRailsBuilder < Builder::Base
     @@ng_modules = []
   end
   
-  # define to 'list' to use the list template
-  # or 'table' to use the table template
-  LIST_TYPE = 'table'
-  
   def build_controller 
     # add this instance as a module
 
@@ -34,50 +30,93 @@ class AngularRailsBuilder < Builder::Base
 
   end
 
-  def build_list_partial 
-    
+  def build_table_partial prefix
     return if skip_method(__method__)
     
-    template = File.read(template("ng/partial-#{LIST_TYPE}.erb"))
+    template_path = template("ng/#{prefix}-table.erb")
     
-    filename = "#{singular_table_name}/list.html"
+    return unless File.exist?(template_path)
+    
+    template = File.read(template_path)
+    
+    filename = "#{singular_table_name}/#{prefix}_table.html"
     
     path = module_path("views",filename)
-    puts "build Ng #{LIST_TYPE} list partial for #{model_name} in #{path}"
+    puts "build Ng #{prefix} table partial for #{model_name} in #{path}"
+    
+    text = Erubis::Eruby.new(template).evaluate( self )
+  
+    # generate the output
+    
+    write_view(path,text)
+    
+  end
+  
+  def build_grid_partial prefix
+    return if skip_method(__method__)
+    
+    template_path = template("ng/#{prefix}-grid.erb")
+    
+    return unless File.exist?(template_path)
+    
+    template = File.read(template_path)
+    
+    filename = "#{singular_table_name}/#{prefix}_grid.html"
+    
+    path = module_path("views",filename)
+    puts "build Ng #{prefix} grid partial for #{model_name} in #{path}"
+    
+    text = Erubis::Eruby.new(template).evaluate( self )
+  
+    # generate the output
+    
+    write_view(path,text)
+  end
+  
+  def build_list_partial prefix
+    return if skip_method(__method__)
+    
+    template_path = template("ng/#{prefix}-list.erb")
+    
+    return unless File.exist?(template_path)
+    
+    template = File.read(template_path)
+    
+    filename = "#{singular_table_name}/#{prefix}_list.html"
+    
+    path = module_path("views",filename)
+    puts "build Ng #{prefix} list partial for #{model_name} in #{path}"
     
     text = Erubis::Eruby.new(template).evaluate( self )
     
-    # add a route for this partial
-    @@ng_routes << {
-      :template => '/' + module_path('views', filename),
-      :controller => model_name + 'ListCtrl',
-      :url => '/' + namespaced_url(plural_table_name) 
-    }
-    
- 
     # generate the output
     
     write_view(path,text)
 
   end
 
-  def build_detail_partial  
+  def build_detail_partial prefix, controller
     
     return if skip_method(__method__)
 
-    template = File.read(template("ng/partial-detail.erb"))
+    template_path = template("ng/#{prefix}-detail.erb")
     
-    filename = "#{singular_table_name}/detail.html"
+    return unless File.exist?(template_path)
+    
+    template = File.read(template_path)
+    
+    filename = "#{singular_table_name}/#{prefix}_detail.html"
     
     path =  module_path("views",filename)
-    puts "build Ng detail partial for #{model_name} in #{path}"
+    puts "build Ng #{prefix} detail partial for #{model_name} in #{path}"
     
     text = Erubis::Eruby.new(template).evaluate( self )
     
     # add a route for this partial
     @@ng_routes << {
+      :name => "#{plural_table_name}.detail",
       :template => '/' + module_path('views', filename),
-      :controller => model_name + 'DetailCtrl',
+      :controller => model_name + controller,
       :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id'
     }
       
@@ -87,28 +126,34 @@ class AngularRailsBuilder < Builder::Base
 
   end
   
-  def build_form_partial
+  def build_form_partial prefix, controller
     
     return if skip_method(__method__)
 
-    template = File.read(template("ng/partial-form.erb"))
+    template_path = template("ng/#{prefix}-form.erb")
     
-    filename = "#{singular_table_name}/form.html"
+    return unless File.exist?(template_path)
+    
+    template = File.read(template_path)
+    
+    filename = "#{singular_table_name}/#{prefix}_form.html"
     
     path =  module_path("views",filename)
-    puts "build Ng form partial for #{model_name} in #{path}"
+    puts "build Ng #{prefix} form partial for #{model_name} in #{path}"
     
     text = Erubis::Eruby.new(template).evaluate( self )
     
     # add a route for this partial
     @@ng_routes << {
+      :name => "#{plural_table_name}.new",
       :template => '/' + module_path('views', filename),
-      :controller => model_name + 'FormCtrl',
+      :controller => model_name + controller,
       :url => '/' + namespaced_url(plural_table_name) + '/new'
     }
     @@ng_routes << {
+      :name => "#{plural_table_name}.edit",
       :template => '/' + module_path('views', filename),
-      :controller => model_name + 'FormCtrl',
+      :controller => model_name + controller,
       :url => '/' + namespaced_url(plural_table_name) + '/:' + singular_table_name + 'Id/edit'
     }
   
@@ -117,15 +162,34 @@ class AngularRailsBuilder < Builder::Base
     
     write_view(path,text)
   end
+  
+  def build_list_route prefix, controller
+    
+    filename = "#{singular_table_name}/#{prefix}_#{list_type}.html"
+    
+    # add a route for the list 
+    @@ng_routes << {
+      :name => "#{plural_table_name}.list",
+      :template => '/' + module_path('views', filename),
+      :controller => model_name + controller,
+      :url => '/' + namespaced_url(plural_table_name) 
+    }
+  end
 
   def build_view 
     return if skip_method(__method__)
      
-    build_form_partial
+    build_form_partial 'partial', 'FormCtrl'
     
-    build_detail_partial     
+    build_detail_partial 'partial', 'DetailCtrl'     
     
-    build_list_partial
+    build_list_partial 'partial'
+    
+    build_table_partial 'partial'
+    
+    build_grid_partial 'partial'
+    
+    build_list_route 'partial', 'ListCtrl'
   end
 
 

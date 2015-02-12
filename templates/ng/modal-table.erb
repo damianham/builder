@@ -13,9 +13,9 @@ unless this_fields[:list].nil?
 
 %>
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div style="margin:15px;">
+<div class="container table-container <%= singlename %>-table-container">
+  <div class="row search-row">
+    <div class="col-md-12">
 
 
       Search: <input ng-model="query">
@@ -29,10 +29,13 @@ unless this_fields[:list].nil?
       <div style="float: right">
         create a <a ng-click="new_<%= singlename %>()">New</a> <%= model_name %>
       </div>
-      
+
 
     </div>
-    <div >
+  </div>
+
+  <div class="row table-row">
+    <div class="col-md-12">
 
 
       <table class="<%= singlename %>-table list-table table-striped">
@@ -52,8 +55,8 @@ unless this_fields[:list].nil?
           <ul class="pager">
             <li class="previous" ng-class="prevPageDisabled()"><a ng-click="prevPage()">&larr; Previous</a></li>
             <li ng-repeat="n in pages"
-                  ng-class="{active: n == currentPage}" ng-click="setPage(n)">
-                <a >{{n +1}}</a>
+                ng-class="{active: n == currentPage}" ng-click="setPage(n)">
+              <a >{{n + 1}}</a>
             </li>
             <li class="next" ng-class="nextPageDisabled()"><a ng-click="nextPage()">Next &rarr;</a></li>
           </ul>

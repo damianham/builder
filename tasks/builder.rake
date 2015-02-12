@@ -33,6 +33,8 @@ task :build_classes, :database,:namespace do |t, args|
           :schema => schema['schema'],
           :table_info => table_info, :fields => @fields })
       
+      table_options[:list_type] ||= LIST_TYPE
+      
       if builder.nil?
         # build the artifacts for this table
         builder = klass.new(table_options)

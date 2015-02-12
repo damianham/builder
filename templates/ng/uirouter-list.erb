@@ -14,50 +14,70 @@ unless this_fields[:form].nil?
   # and the description field
   descfield_name = field_names.select{|name|['description','info',
       'summary','comment','snippet'].include?(name) }.first
-end
+  end
 
 %>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span2">
-      <!--Sidebar content-->
+<div class="container list-container <%= singlename %>-list-container">
+  <div class="row search-row">
+    <div class="col-md-12">
 
       Search: <input ng-model="search_filter">
       Sort by:
       <select ng-model="orderProp">
-        
-     	<%  field_names.each do |name|  %> 
-     	  <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
-     	<% end %>
+
+        <%  field_names.each do |name|  %> 
+          <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
+        <% end %>
       </select>
       <div style="float: right">
         create a <a ui-sref="<%= plural_table_name %>.new" >New</a> <%= model_name %>
       </div>
 
-
-    </div>
-    <div class="span10">
-      
-      
-      <ul class="<%= singlename %>-list">
-        <li ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:search_filter | orderBy:orderProp" >
-           
-            <a ui-sref="<%= plural_table_name %>.detail({<%= singlename%>Id:<%= singlename%>.id})" >
-            <i class="glyphicon glyphicon-search"></i>
-            </a>
-          
-            <% unless namefield_name.nil?  %>
-              <a ui-sref="<%= plural_table_name %>.detail({<%= singlename%>Id:<%= singlename%>.id})" >
-                {{<%= singlename %>.<%= namefield_name %>}}</a>
-            <% end %>
-          <% unless descfield_name.nil?  %>
-            <p>{{<%= singlename %>.<%= descfield_name %> }}</p>
-          <% end %>
-        </li>
-      </ul>
-
     </div>
   </div>
+
+  <div class="row list-row <%= singlename %>-list">
+
+    <div class="col-md-4 <%= singlename %>-item" ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:search_filter | orderBy:orderProp" >
+      <p>
+      <% if namefield_name.nil?  %>
+        <a ui-sref="<%= plural_table_name %>.detail({<%= singlename%>Id:<%= singlename%>.id})" > view more details
+          <i class="glyphicon glyphicon-search">  </i>
+        </a>
+      <% else %>
+        <a ui-sref="<%= plural_table_name %>.detail({<%= singlename%>Id:<%= singlename%>.id})" >
+          {{<%= singlename %>.<%= namefield_name %>}}
+          <i class="glyphicon glyphicon-search"></i>
+        </a>
+      <% end %>
+        <span ng-if="can_edit == true">
+          <a ui-sref="<%= plural_table_name %>.edit({<%= singlename%>Id:<%= singlename%>.id})" > edit
+            <i class="glyphicon glyphicon-search">  </i>
+          </a>
+        </span>
+      </p>
+      
+    <% unless descfield_name.nil?  %>
+      <p>{{<%= singlename %>.<%= descfield_name %> }}</p>
+    <% end %>
+
+      <dl>
+      <% field_names.each do |key| %>
+        <dt><%= key.titleize %>
+        <dd>
+        <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
+          <a href="<%= key.sub(/_id$/,'').tableize %>.detail(<%=  key.sub(/_id$/,'')%>Id:{{<%= singlename %>.<%= key %>}})" >
+            {{<%= singlename %>.<%= key %>}}
+          </a>
+        <% else %>
+          {{<%= singlename %>.<%= key %>}}
+        <% end %>
+        </dd>
+      <% end %>
+    </dl>
+    </div>
+
+  </div>  
 </div>

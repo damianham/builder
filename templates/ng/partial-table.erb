@@ -13,10 +13,9 @@ end
 
 %>
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span2" style="margin:15px;">
-
+<div class="container table-container <%= singlename %>-table-container">
+  <div class="row search-row">
+    <div class="col-md-12">
 
       Search: <input ng-model="query">
       Sort by:
@@ -31,10 +30,11 @@ end
         create a <a href="<%= angular_url(plural_table_name) %>/new" >New</a> <%= model_name %>
       </div>
 
-
     </div>
-    <div class="span10">
+  </div>
 
+  <div class="row table-row">
+    <div class="col-md-12">
 
       <table class="<%= singlename %>-table list-table table-striped">
         <thead>

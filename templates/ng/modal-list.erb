@@ -19,9 +19,9 @@ unless this_fields[:form].nil?
 %>
 
 
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span2">
+<div class="container list-container <%= singlename %>-list-container">
+  <div class="row search-row">
+    <div class="col-md-12">
 
       Search: <input ng-model="search_filter">
       Sort by:
@@ -31,25 +31,23 @@ unless this_fields[:form].nil?
           <%= "<option value='#{name}'>#{name.titleize}</option>"  %>
         <% end %>
       </select>
-      
+
       <div style="float: right">
         create a <a ng-click="new_<%= singlename %>()">New</a> <%= model_name %>
       </div>
 
 
     </div>
-    <div class="span10">
+  </div>
+
+  <div class="row list-row">
+    <div class="col-md-4">
 
 
       <ul class="<%= singlename %>-list">
         <li ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:search_filter | orderBy:orderProp" >
 
-          <a ng-click="view_<%= singlename%>(<%= singlename%>)" >
-            <i class="glyphicon glyphicon-search"></i>
-          </a>
-          <a ng-click="edit_<%= singlename%>(<%= singlename%>)" >
-            <i class="glyphicon glyphicon-edit"></i>
-          </a>
+          
 
           <% unless namefield_name.nil?  %>
             <a href="#/<%= plural_table_name %>/{{<%= singlename %>.id}}">{{<%= singlename %>.<%= namefield_name %>}}</a>
@@ -62,4 +60,51 @@ unless this_fields[:form].nil?
 
     </div>
   </div>
+  
+ 
+  <div class="row list-row">
+
+    <div class="col-md-4 <%= singlename %>-item" ng-repeat="<%= singlename %> in <%= plural_table_name %> | filter:search_filter | orderBy:orderProp" >
+      <p>
+      <% if namefield_name.nil?  %>
+        <a ng-click="view_<%= singlename%>(<%= singlename%>)"> view more details
+          <i class="glyphicon glyphicon-search">  </i>
+        </a>
+      <% else %>
+        <a ng-click="view_<%= singlename%>(<%= singlename%>)">
+          {{<%= singlename %>.<%= namefield_name %>}}
+          <i class="glyphicon glyphicon-search"></i>
+        </a>
+      <% end %>
+        <span ng-if="can_edit == true">
+          <a ng-click="edit_<%= singlename%>(<%= singlename%>)" > edit
+            <i class="glyphicon glyphicon-edit"></i>
+          </a>
+        </span>
+      </p>
+      
+    <% unless descfield_name.nil?  %>
+      <p>{{<%= singlename %>.<%= descfield_name %> }}</p>
+    <% end %>
+
+      <dl>
+      <% field_names.each do |key| %>
+        <dt><%= key.titleize %>
+        <dd>
+        <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
+          <a href="/#/<%= namespace.nil? ? "" : namespace + '/' %><%= key.sub(/_id$/,'').tableize %>/{{<%= singlename %>.<%= key %>}}" >
+            {{<%= singlename %>.<%= key %>}}
+          </a>
+        <% else %>
+          {{<%= singlename %>.<%= key %>}}
+        <% end %>
+        </dd>
+      <% end %>
+    </dl>
+    </div>
+
+  </div> 
+  
+  
+  
 </div>
