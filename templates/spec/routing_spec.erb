@@ -3,6 +3,7 @@ require "rails_helper"
 base_route = namespace.nil? ? plural_table_name : namespace + '/' + plural_table_name
 controller = namespace.nil? ? plural_table_name : namespace + '_' + plural_table_name
 %>
+#  - generated from builder/templates/spec/routing_spec.erb
 RSpec.describe <%= model_name %>Controller, :type => :routing do
   describe "routing" do
 

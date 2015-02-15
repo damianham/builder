@@ -22,8 +22,27 @@ class RailsBuilder < Builder::Base
     write_artifact(filename,content)
   end
  
-  # create a controller for a table 
+  def build_controller_service
+    return if skip_method(__method__)
+    
+    filename = plural_table_name + '_controller_service.rb'
+    
+    path = namespaced_path(File.join("app","services") ,filename)
+    
+    # do not overwrite an existing file
+    unless File.exist?( File.join(destination,path)) 
+      template = File.read(template(File.join("rails","controller_service.erb")))
+      text = Erubis::Eruby.new(template).evaluate( self )
+        
+      puts "build Rails controller service for #{controller_name} in #{path}"
+      write_module_artifact(path,text)
+    end
+
+  end
+  # create a controller for a table
   def build_controller
+    
+    build_controller_service
     
     return if skip_method(__method__)
     
@@ -39,7 +58,7 @@ class RailsBuilder < Builder::Base
 
   end
 
-  # build a model for a table 
+  # build a model for a table
   def build_model
     
     return if skip_method(__method__)
@@ -49,13 +68,14 @@ class RailsBuilder < Builder::Base
     template = File.read(template("rails/model.erb"))
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path("app/models",filename)
+    path = File.join("app","models",filename) 
     puts "build Rails model for #{model_name} in #{path}"
-    write_module_artifact(path,text)
+    write_artifact(path,text)
 
   end
 
-  # define some methods required to build the Rails artifacts using the Rails 4 templates
+  # define some methods required to build the Rails artifacts using the Rails 4
+  # templates
   def uncountable?
     singular_table_name == plural_table_name
   end
@@ -72,8 +92,7 @@ class RailsBuilder < Builder::Base
     yield(*args)
   end
    
-  # Wrap block with namespace of current application
-  # if namespace exists 
+  # Wrap block with namespace of current application if namespace exists
   def module_namespacing(&block)
     content = capture(&block)
     content = wrap_with_namespace(content) if namespace
@@ -106,7 +125,7 @@ class RailsBuilder < Builder::Base
       text = ERB.new(template, nil, '-').result(binding)
 
       filename = "#{file}.html.erb"
-      #puts "build Rails view"
+      # #puts "build Rails view"
       
       path = namespaced_path("app/views","#{plural_table_name}/"+filename)
       puts "build Rails #{file} view for #{model_name} in #{path}"
@@ -121,7 +140,7 @@ class RailsBuilder < Builder::Base
       text = ERB.new(template, nil, '-').result(binding)
     
       filename = "#{file}.json.jbuilder"
-      #puts "build Rails JSON view "
+      # #puts "build Rails JSON view "
       
       path = namespaced_path("app/views","#{plural_table_name}/"+filename)
       puts "build Rails #{file} JSON view for #{model_name} in #{path}"
@@ -141,10 +160,10 @@ class RailsBuilder < Builder::Base
     # build model test
       
     template = File.read(template("rails/test/unit_test.rb"))
-    #text = ERB.new(template, nil, '-').result(binding)
+    # #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path("test/models",filename)
+    path = File.join("test","models",filename)
     write_artifact(path,text)
   end
   
@@ -157,7 +176,7 @@ class RailsBuilder < Builder::Base
     puts "build Rails functional test for #{model_name} in test/controllers"
 
     template = File.read(template("rails/test/functional_test.rb"))
-    #text = ERB.new(template, nil, '-').result(binding)
+    # #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
     path = namespaced_path("test/controllers",filename)
@@ -173,7 +192,7 @@ class RailsBuilder < Builder::Base
     puts "build Rails integration test for #{model_name} in test/integration"
 
     template = File.read(template("rails/test/integration_test.rb"))
-    #text = ERB.new(template, nil, '-').result(binding)
+    # #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
     path = namespaced_path("test/integration",filename)
@@ -189,10 +208,10 @@ class RailsBuilder < Builder::Base
     
     filename = "#{plural_table_name}.yml"
     template = File.read(template("rails/test/fixtures.yml"))
-    #text = ERB.new(template, nil, '-').result(binding)
+    # #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path("test/fixtures",filename)
+    path = File.join("test","fixtures",filename)
     write_artifact(path,text)  
   end
   
@@ -205,7 +224,7 @@ class RailsBuilder < Builder::Base
     filename = "#{plural_table_name}_helper_test.rb"
 
     template = File.read(template("rails/test/helper_test.rb"))
-    #text = ERB.new(template, nil, '-').result(binding)
+    # #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
     path = namespaced_path("test/helpers",filename)
@@ -227,14 +246,15 @@ class RailsBuilder < Builder::Base
   # add the table to the menus
   def build_menu
     comment = table_info['comment']
-    #puts "build Rails menu for #{model_name} (#{comment}) in app/views/shared"
+    # #puts "build Rails menu for #{model_name} (#{comment}) in
+    # app/views/shared"
     @@menus << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
     
   end
 
   # add the table to the routes
   def build_route 
-    #puts "build Rails route for #{@model_name} in config/routes.rb"
+    # #puts "build Rails route for #{@model_name} in config/routes.rb"
     
     template = File.read(template("rails/route.erb"))
     text = Erubis::Eruby.new(template).evaluate( self )
@@ -297,7 +317,8 @@ class RailsBuilder < Builder::Base
     # save the menu items in a partial for inclusion in main menu
     template = File.read(template("rails/menu_container.erb"))
 
-    #text = Erubis::Eruby.new(template).result(:menus => @@menus, :comments => @@comments)
+    # #text = Erubis::Eruby.new(template).result(:menus => @@menus, :comments =>
+    # @@comments)
     
     text = Erubis::Eruby.new(template).evaluate( self )
     
@@ -310,7 +331,8 @@ class RailsBuilder < Builder::Base
     # create a single page that lists the database tables with their comments
     template = File.read(template("rails/table_index.erb"))
 
-    #text = Erubis::Eruby.new(template).result(:menus => @@menus, :comments => @@comments)
+    # #text = Erubis::Eruby.new(template).result(:menus => @@menus, :comments =>
+    # @@comments)
     
     text = Erubis::Eruby.new(template).evaluate( self )
     

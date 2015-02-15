@@ -17,6 +17,7 @@ require 'rails_helper'
 base_route = namespace.nil? ? plural_table_name : namespace + '/' + plural_table_name
 controller = namespace.nil? ? plural_table_name : namespace + '_' + plural_table_name
 %>
+#  - generated from builder/templates/spec/request_spec.erb
 RSpec.describe "<%= model_name %>s", :type => :request do
   describe "GET /<%= base_route %>" do
     it "works! (now write some real specs)" do

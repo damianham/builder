@@ -1,4 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+#  - generated from builder/templates/rails/test/fixures.yml 
 <% unless attributes.empty? -%>
 <% %w(one two).each do |name| %>
 <%= name %>:

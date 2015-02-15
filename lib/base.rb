@@ -62,7 +62,8 @@ module Builder
       # do setup specific to the builder class
     end
     
-    # skip the named method based on the contents of the :only and :except options
+    # skip the named method based on the contents of the :only and :except
+    #   options
     def skip_method(methodname)
       (@options[:only] && ! @options[:only].include?(methodname) ) || 
         (@options[:except] && @options[:except].include?(methodname))
@@ -111,7 +112,7 @@ module Builder
       # ensure the target folder exists
       FileUtils.mkdir_p(File.dirname(path))
       
-      #puts "write to " + path
+      # #puts "write to " + path
     
       # write the given content or yield the open output file to a block
       File.open(path, 'wb') { |file| 
@@ -151,7 +152,8 @@ module Builder
       File.expand_path("../../templates", __FILE__) + "/#{filename}"
     end
     
-    # try to find a template file for a table column, model name is lowercase singlename
+    # try to find a template file for a table column, model name is lowercase
+    #   singlename
     def template_by_name_and_type prefix,model_name, column_name, column_type
       # 1. model_name, column_name
       path = File.join(File.expand_path("../../templates", __FILE__),prefix, "field_partials",'models', model_name,'_'+column_name + '.erb')
@@ -222,12 +224,32 @@ module Builder
       ["rows='#{rows}'" ,"cols='#{cols}'"]
     end
     
-    # if this field_name is suffixed with '_id' and there is a matching key in the
-    # belongs_to hash 
+    # if this field_name is suffixed with '_id' and there is a matching key in
+    # the belongs_to hash
     def is_foreign_key?(field_name)
       return false unless field_name =~ /\w*_id$/ 
       relation = field_name.gsub(/_id$/,'').pluralize
       table_info['belongs_to'].flatten.include? relation 
+    end
+    
+    def build_artifact template_path, filename, output, description
+      
+      text = Erubis::Eruby.new(File.read(template(template_path))).evaluate( self )
+      
+      path = namespaced_path(output,filename)
+      puts "build #{description} for #{model_name} in #{path}"
+      write_artifact(path,text)
+    
+    end
+    
+    # do not overwrite the artifact if it already exists
+    def build_artifact_unless_exists(template_path,filename,output,description)
+      
+      path = namespaced_path(output,filename)
+      unless File.exist?( File.join(destination,path)) 
+        build_artifact template_path, filename, output, description
+      end
+      
     end
     
     # default implementations that do nothing
@@ -296,7 +318,7 @@ module Builder
     end
 
     def default
-      @default ||= case type
+      @default ||= @field['column_default'] || case type
       when :int,:integer                then 1
       when :float                       then 1.5
       when :decimal                     then "9.99"

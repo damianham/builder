@@ -31,7 +31,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","models"),filename)
+    path = File.join("spec","models",filename)
     write_artifact(path,text)
     
   end
@@ -122,7 +122,7 @@ class RSpecBuilder < Builder::Base
     #text = ERB.new(template, nil, '-').result(binding)
     text = Erubis::Eruby.new(template).evaluate( self )
 
-    path = namespaced_path(File.join("spec","fixtures"),filename)
+    path = File.join("spec","fixtures",filename)
     write_artifact(path,text)  
   end
   

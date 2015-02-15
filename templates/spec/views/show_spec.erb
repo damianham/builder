@@ -23,6 +23,7 @@ attributes.select{|attr| field_names.include?(attr.name)}.each do |attr|
 end 
 
 %>
+#   - generated from builder/templates/spec/views/show_spec.erb
 RSpec.describe "<%= namespace.nil? ? '' : namespace + '/' %><%= plural_table_name %>/show", :type => :view do
   before(:each) do
     @<%= singular_table_name %> = assign(:<%= singular_table_name %>, <%= model_name %>.create!(

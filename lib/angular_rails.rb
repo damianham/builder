@@ -1,5 +1,3 @@
-require 'yaml'
-require 'fileutils'
 
 # build AngularJS (Ng) artifacts
 

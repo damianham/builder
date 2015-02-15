@@ -24,7 +24,7 @@ attributes.select{|attr| field_names.include?(attr.name)}.each do |attr|
   end 
 end
 %>
-
+#   - generated from builder/templates/spec/views/index_spec.erb
 RSpec.describe "<%= namespace.nil? ? '' : namespace + '/' %><%= plural_table_name %>/index", :type => :view do
   before(:each) do
     assign(:<%= plural_table_name %>, [

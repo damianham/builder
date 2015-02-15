@@ -1,0 +1,71 @@
+<%  rejected_columns = fields.fetch(:except,['id','updated_at','created_at']) %>
+module <%= controller_name %>Service
+  # - generated from builder/templates/rails/controller_service.erb
+  # business logic methods for <%= controller_name %>
+  # define service methods and/or action methods to replace the standard Rails CRUD methods
+  # uncomment and implement any method to override the action in the controller
+  
+  # get a named range from a table
+  #def do_range
+  #end
+ 
+  # get the records that are related to an object instance by the named relation
+  # works for belongs_to, has_one and has_many relationships 
+  # we use Rails magic in the model to specify the relation 
+  #def do_related   
+  #end
+  
+  # perform a search
+  #def do_search
+  #end
+ 
+ #############  standard Rails actions
+ 
+  # GET /<%= plural_table_name %>
+  # GET /<%= plural_table_name %>.json
+  #def do_index
+  #  # do something instead of the normal index handling
+  #  # this is used for the index action instead of <%= plural_table_name %>#index
+  #end
+
+  # GET /<%= plural_table_name %>/1
+  # GET /<%= plural_table_name %>/1.json
+  #def do_show
+  #end
+
+  # GET /<%= plural_table_name %>/new
+  #def do_new
+  #end
+
+  # GET /<%= plural_table_name %>/1/edit
+  #def do_edit
+  #end
+
+  # POST /<%= plural_table_name %>
+  # POST /<%= plural_table_name %>.json
+  #def do_create
+  #end
+
+  # PATCH/PUT /<%= plural_table_name %>/1
+  # PATCH/PUT /<%= plural_table_name %>/1.json
+  #def do_update
+  #end
+
+  # DELETE /<%= plural_table_name %>/1
+  # DELETE /<%= plural_table_name %>/1.json
+  #def do_destroy
+  #end
+ 
+  # Use callbacks to share common setup or constraints between actions.
+  # these cannot be private
+
+  # load the identified instance the id parameter could be :<%= singular_table_name %>_id
+  # e.g. api/users/1/related/photos.json would give user_id => 1
+  #def do_set_<%= singular_table_name %>
+  #  @<%= singular_table_name %> = <%= model_name %>.find(params[:id] || params[:<%= singular_table_name %>_id])
+  #end
+
+  #  only allow the white listed params through.
+  #def do_<%= singular_table_name %>_params
+  #end
+end

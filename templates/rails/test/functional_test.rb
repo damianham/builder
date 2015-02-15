@@ -1,5 +1,5 @@
 require 'test_helper'
-
+# - generated from builder/templates/rails/test/functional_test.rb 
 <% module_namespacing do -%>
 class <%= class_name %>ControllerTest < ActionController::TestCase
   setup do

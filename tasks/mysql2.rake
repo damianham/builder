@@ -13,7 +13,7 @@ task :build_schema, :database, :username, :password do |t, args|
   puts "Args with defaults were: #{args}"
 
   rel_columns = "column_name,referenced_table_schema,referenced_table_name,referenced_column_name"
-  column_fields = "column_name,ordinal_position,data_type,is_nullable,character_maximum_length,numeric_precision,column_comment"
+  column_fields = "column_name,ordinal_position,data_type,is_nullable,character_maximum_length,numeric_precision,column_comment,column_default"
   result = {'schema' => {}}
 
   # create the schema object then export to a yaml file

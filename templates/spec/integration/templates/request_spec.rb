@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+#   - generated from builder/templates/spec/integration/templates/request_spec.erb
 describe "<%= class_name.pluralize %>" do
   describe "GET /<%= table_name %>" do
     it "works! (now write some real specs)" do

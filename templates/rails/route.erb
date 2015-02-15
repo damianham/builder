@@ -1,4 +1,4 @@
-
+# generated from builder/templates/rails/route.erb
   resources :<%= plural_table_name %> do
     concerns :common_routes 
     <% table_info['has_many'].flatten.each do |rel| %>

@@ -1,5 +1,9 @@
 <%  rejected_columns = fields.fetch(:except,['id','updated_at','created_at']) %>
 class <%= controller_name %> < ApplicationController
+  #   - generated from builder/templates/rails/controller.erb  
+  # include the methods that may override the methods in this file
+  include <%= controller_name %>Service
+  
   before_action :set_<%= singular_table_name %>, only: [:show, :edit, :update, :destroy, :related]
  
   respond_to :html, :json
@@ -14,38 +18,50 @@ class <%= controller_name %> < ApplicationController
   
   # get a named range from a table
   def range
-  <% if namefield_name.nil? %>
-    # could not automatically determine a suitable value field
-    # replace  XXX with a field name
-    # @values = <%= model_name %>.find_each.collect{|item| {value: item.id, key: item.XXX } }
-    @values = []
-  <% else %>
-    @values = <%= model_name %>.find_each.collect{|item| {value: item.id, key: item.<%= namefield_name %>} }
-  <% end %>
-    respond_with(@values)
+    if self.respond_to? :do_range
+      do_range
+    else
+    <% if namefield_name.nil? %>
+      # could not automatically determine a suitable value field
+      # replace  XXX with a field name
+      # @values = <%= model_name %>.find_each.collect{|item| {value: item.id, key: item.XXX } }
+      @values = []
+    <% else %>
+      @values = <%= model_name %>.find_each.collect{|item| {value: item.id, key: item.<%= namefield_name %>} }
+    <% end %>
+      respond_with(@values)
+    end
   end
  
   # get the records that are related to an object instance by the named relation
   # works for belongs_to, has_one and has_many relationships 
   # we use Rails magic in the model to specify the relation 
-  def related   
-    @values = @<%= singular_table_name %>.send(params['relation'].to_sym)
-    respond_with(@values)
+  def related
+    if self.respond_to? :do_related
+      do_related
+    else
+      @values = @<%= singular_table_name %>.send(params['relation'].to_sym)
+      respond_with(@values)
+    end
   end
   
   # perform a search
   def search
-    # convert JSON string to hash and verify column names
-    conditions = ActiveSupport::JSON.decode(params[:where]).keep_if{|k,v| FIELDS.include?(k)}
-    
-    @<%= plural_table_name %> = <%= model_name %>.where(conditions)
-   
-    @<%= plural_table_name %> = @<%= plural_table_name %>.order(params[:order]) unless params[:order].nil?
-   
-    @<%= plural_table_name %> = @<%= plural_table_name %>.limit(params[:limit]) unless params[:limit].nil?
-   
-    @<%= plural_table_name %> = @<%= plural_table_name %>.offset(params[:offset]) unless params[:offset].nil?
-    respond_with(@<%= plural_table_name %>)
+    if self.respond_to? :do_search
+      do_search
+    else
+      # convert JSON string to hash and verify column names
+      conditions = ActiveSupport::JSON.decode(params[:where]).keep_if{|k,v| FIELDS.include?(k)}
+
+      @<%= plural_table_name %> = <%= model_name %>.where(conditions)
+
+      @<%= plural_table_name %> = @<%= plural_table_name %>.order(params[:order]) unless params[:order].nil?
+
+      @<%= plural_table_name %> = @<%= plural_table_name %>.limit(params[:limit]) unless params[:limit].nil?
+
+      @<%= plural_table_name %> = @<%= plural_table_name %>.offset(params[:offset]) unless params[:offset].nil?
+      respond_with(@<%= plural_table_name %>)
+    end
   end
  
  #############  standard Rails actions
@@ -53,62 +69,81 @@ class <%= controller_name %> < ApplicationController
   # GET /<%= plural_table_name %>
   # GET /<%= plural_table_name %>.json
   def index
-  <% if this_fields[:list].nil? %>
-    @<%= plural_table_name %> = <%= model_name %>.all
-  <% else %>
-    # select just the fields that will be displayed in the list/table + the id
-    @<%= plural_table_name %> = <%= model_name %>.select(:id, <%=  this_fields[:list].map{|x| ':'+x.to_s}.join(',') %> )
-  <% end %>
-  <% table_info['belongs_to'].flatten.each do |key| %>
-    if params[:<%= key.singularize %>_id]
-      @<%= plural_table_name %> = @<%= plural_table_name %>.where(<%= key.singularize %>_id: params[:<%= key.singularize %>_id])  
+    if self.respond_to? :do_index
+      do_index
+    else
+    <% if this_fields[:list].nil? %>
+      @<%= plural_table_name %> = <%= model_name %>.all
+    <% else %>
+      # select just the fields that will be displayed in the list/table + the id
+      @<%= plural_table_name %> = <%= model_name %>.select(:id, <%=  this_fields[:list].map{|x| ':'+x.to_s}.join(',') %> )
+    <% end %>
+    <% table_info['belongs_to'].flatten.each do |key| %>
+      if params[:<%= key.singularize %>_id]
+        @<%= plural_table_name %> = @<%= plural_table_name %>.where(<%= key.singularize %>_id: params[:<%= key.singularize %>_id])  
+      end
+    <%  end %>
+      respond_with(@<%= plural_table_name %>.all)
     end
-  <%  end %>
-    
-    respond_with(@<%= plural_table_name %>.all)
   end
 
   # GET /<%= plural_table_name %>/1
   # GET /<%= plural_table_name %>/1.json
   def show
-  <% unless this_fields[:detail].nil? %>
-    # keep just the fields that will be displayed in the view
-    @<%= singular_table_name %>.attributes.keep_if{|k,v| [:id,<%=  this_fields[:detail].map{|x| ':'+x.to_s}.join(',') %>].include?(k.to_sym) }
-  <% end %>
-    respond_with(@<%= singular_table_name %>)
+    if self.respond_to? :do_show
+      do_show
+    else
+    <% unless this_fields[:detail].nil? %>
+      # keep just the fields that will be displayed in the view
+      @<%= singular_table_name %>.attributes.keep_if{|k,v| [:id,<%=  this_fields[:detail].map{|x| ':'+x.to_s}.join(',') %>].include?(k.to_sym) }
+    <% end %>
+      respond_with(@<%= singular_table_name %>)
+    end
   end
 
   # GET /<%= plural_table_name %>/new
   def new
-    @<%= singular_table_name %> = <%= model_name %>.new
-    <% unless this_fields[:form].nil? %>
-    # keep just the fields that will be displayed in the form
-    @<%= singular_table_name %>.attributes.keep_if{|k,v| [<%=  this_fields[:form].map{|x| ':'+x.to_s}.join(',') %>].include?(k.to_sym) } 
-    <% end %>
-    respond_with(@<%= singular_table_name %>)
+    if self.respond_to? :do_new
+      do_new
+    else
+      @<%= singular_table_name %> = <%= model_name %>.new
+      <% unless this_fields[:form].nil? %>
+      # keep just the fields that will be displayed in the form
+      @<%= singular_table_name %>.attributes.keep_if{|k,v| [<%=  this_fields[:form].map{|x| ':'+x.to_s}.join(',') %>].include?(k.to_sym) } 
+      <% end %>
+      respond_with(@<%= singular_table_name %>)
+    end
   end
 
   # GET /<%= plural_table_name %>/1/edit
   def edit
-  <% unless this_fields[:form].nil? %>
-    # keep just the fields that will be displayed in the form
-    @<%= singular_table_name %>.attributes.keep_if{|k,v| [:id, <%=  this_fields[:form].map{|x| ':'+x.to_s}.join(',') %>].include?(k.to_sym) } 
-  <% end %>
-    respond_with(@<%= singular_table_name %>)
+    if self.respond_to? :do_edit
+      do_edit
+    else
+    <% unless this_fields[:form].nil? %>
+      # keep just the fields that will be displayed in the form
+      @<%= singular_table_name %>.attributes.keep_if{|k,v| [:id, <%=  this_fields[:form].map{|x| ':'+x.to_s}.join(',') %>].include?(k.to_sym) } 
+    <% end %>
+      respond_with(@<%= singular_table_name %>)
+    end
   end
 
   # POST /<%= plural_table_name %>
   # POST /<%= plural_table_name %>.json
   def create
-    @<%= singular_table_name %> = <%= model_name %>.new(<%= singular_table_name %>_params)
-    
-    respond_to do |format|
-      if @<%= singular_table_name %>.save
-        format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>), notice: '<%= model_name %> was successfully created.' }
-        format.json  { respond_with(<%= namespace.nil? ? '' : ':' +namespace + ',' %> @<%= singular_table_name %>)}
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @<%= singular_table_name %>.errors, status: :unprocessable_entity }
+    if self.respond_to? :do_create
+      do_create
+    else
+      @<%= singular_table_name %> = <%= model_name %>.new(<%= singular_table_name %>_params)
+
+      respond_to do |format|
+        if @<%= singular_table_name %>.save
+          format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>), notice: '<%= model_name %> was successfully created.' }
+          format.json  { respond_with(<%= namespace.nil? ? '' : ':' +namespace + ',' %> @<%= singular_table_name %>)}
+        else
+          format.html { render action: 'new' }
+          format.json { render json: @<%= singular_table_name %>.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -116,14 +151,18 @@ class <%= controller_name %> < ApplicationController
   # PATCH/PUT /<%= plural_table_name %>/1
   # PATCH/PUT /<%= plural_table_name %>/1.json
   def update
-    @<%= singular_table_name %>.update(<%= singular_table_name %>_params)
-    respond_to do |format|
-      if @<%= singular_table_name %>.save
-        format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>), notice: '<%= model_name %> was successfully updated.' }
-        format.json  { respond_with(@<%= singular_table_name %>)}
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @<%= singular_table_name %>.errors, status: :unprocessable_entity }
+    if self.respond_to? :do_update
+      do_update
+    else
+      @<%= singular_table_name %>.update(<%= singular_table_name %>_params)
+      respond_to do |format|
+        if @<%= singular_table_name %>.save
+          format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= singular_table_name %>_path(@<%= singular_table_name %>), notice: '<%= model_name %> was successfully updated.' }
+          format.json  { respond_with(@<%= singular_table_name %>)}
+        else
+          format.html { render action: 'edit' }
+          format.json { render json: @<%= singular_table_name %>.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -131,10 +170,14 @@ class <%= controller_name %> < ApplicationController
   # DELETE /<%= plural_table_name %>/1
   # DELETE /<%= plural_table_name %>/1.json
   def destroy
-    @<%= singular_table_name %>.destroy
-    respond_to do |format|
-      format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= plural_table_name %>_path() }
-      format.json  { respond_with(@<%= singular_table_name %>)}
+    if self.respond_to? :do_destroy
+      do_destroy
+    else
+      @<%= singular_table_name %>.destroy
+      respond_to do |format|
+        format.html { redirect_to <%= namespace.nil? ? '' : namespace + '_' %><%= plural_table_name %>_path() }
+        format.json  { respond_with(@<%= singular_table_name %>)}
+      end
     end
   end
  
@@ -144,19 +187,27 @@ class <%= controller_name %> < ApplicationController
     # load the identified instance the id parameter could be :<%= singular_table_name %>_id
     # e.g. api/users/1/related/photos.json would give user_id => 1
     def set_<%= singular_table_name %>
-      @<%= singular_table_name %> = <%= model_name %>.find(params[:id] || params[:<%= singular_table_name %>_id])
+      if self.respond_to? :do_set_<%= singular_table_name %>
+        do_set_<%= singular_table_name %>
+      else
+        @<%= singular_table_name %> = <%= model_name %>.find(params[:id] || params[:<%= singular_table_name %>_id])
+      end
     end
 
     #  only allow the white listed params through.
     def <%= singular_table_name %>_params
-    <% 
-      column_symbols = []
-      table_info['columns'].keys.reject{|key| rejected_columns.include? key}.each do |key | 
-        column_symbols << ":#{key}"
+      if self.respond_to? :do_<%= singular_table_name %>_params
+        do_<%= singular_table_name %>_params
+      else
+      <% 
+        column_symbols = []
+        table_info['columns'].keys.reject{|key| rejected_columns.include? key}.each do |key | 
+          column_symbols << ":#{key}"
+        end
+      %>
+        # ensure id and timestamps are removed from the input
+        params.require(:<%= singular_table_name %>).extract!(<%= rejected_columns.map{|x| ':'+x.to_s}.join(',') %>)
+        params.require(:<%= singular_table_name %>).permit( <%= column_symbols.join(', ') %>)
       end
-    %>
-      # ensure id and timestamps are removed from the input
-      params.require(:<%= singular_table_name %>).extract!(<%= rejected_columns.map{|x| ':'+x.to_s}.join(',') %>)
-      params.require(:<%= singular_table_name %>).permit( <%= column_symbols.join(', ') %>)
     end
 end
