@@ -1,0 +1,82 @@
+'use strict';
+<% 
+# shorten the accessor name
+singlename = singular_table_name
+ 
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+attribs = []
+attributes.reject{|attr| rejected_columns.include? attr.column_name}.each do |attr| 
+  if attr.password_digest? 
+    attribs << "password_digest: '#{BCrypt::Password.create('secret')}'"
+  else 
+    attribs << "#{attr.column_name}: '#{attr.default}'"
+  end 
+  if attr.polymorphic? 
+    attribs << "#{attr.column_name}_type: '#{attr.default}'" 
+  end 
+end 
+  
+%>
+/**
+ * Module dependencies.  - generated from builder/templates/mean/server_model_test.js.erb
+ */
+var should = require('should'),
+	mongoose = require('mongoose'),
+	User = mongoose.model('User'),
+	<%= model_name %> = mongoose.model('<%= model_name %>');
+
+/**
+ * Globals
+ */
+var user, <%= singlename %>;
+
+/**
+ * Unit tests
+ */
+describe('<%= model_name %> Model Unit Tests:', function() {
+	beforeEach(function(done) {
+		user = new User({
+			firstName: 'Full',
+			lastName: 'Name',
+			displayName: 'Full Name',
+			email: 'test@test.com',
+			username: 'username',
+			password: 'password'
+		});
+
+		user.save(function() { 
+			<%= singlename %> = new <%= model_name %>({
+				<%= attribs.join(",\n") %>,
+				user: user
+			});
+
+			done();
+		});
+	});
+
+	describe('Method Save', function() {
+		it('should be able to save without problems', function(done) {
+			return <%= singlename %>.save(function(err) {
+				should.not.exist(err);
+				done();
+			});
+		});
+
+    // adjust to a valid attribute name that can't be null
+		it('should be able to show an error when try to save without name', function(done) { 
+			<%= singlename %>.name = '';
+
+			return <%= singlename %>.save(function(err) {
+				should.exist(err);
+				done();
+			});
+		});
+	});
+
+	afterEach(function(done) { 
+		<%= model_name %>.remove().exec();
+		User.remove().exec();
+
+		done();
+	});
+});

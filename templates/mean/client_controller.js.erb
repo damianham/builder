@@ -1,0 +1,76 @@
+'use strict';
+<% 
+# shorten the accessor name
+singlename = singular_table_name
+ 
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+attribs = []
+attributes.reject{|attr| rejected_columns.include? attr.column_name}.each do |attr|  
+  attribs << "#{attr.column_name}: this.#{attr.column_name}"
+end 
+  
+%>
+// <%= model_name %>s controller  - generated from builder/templates/mean/client_controller.js.erb
+angular.module('<%= plural_table_name %>').controller('<%= model_name %>sController', ['$scope', '$stateParams', '$location', 'Authentication', '<%= model_name %>s',
+	function($scope, $stateParams, $location, Authentication, <%= model_name %>s) {
+		$scope.authentication = Authentication;
+
+		// Create new <%= model_name %>
+		$scope.create = function() {
+			// Create new <%= model_name %> object
+			var <%= singlename %> = new <%= model_name %>s ({
+				<%= attribs.join(",\n") %>
+			});
+
+			// Redirect after save
+			<%= singlename %>.$save(function(response) {
+				$location.path('<%= plural_table_name %>/' + response._id);
+
+				// Clear form fields
+				$scope.name = '';
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		// Remove existing <%= model_name %>
+		$scope.remove = function(<%= singlename %>) {
+			if ( <%= singlename %> ) { 
+				<%= singlename %>.$remove();
+
+				for (var i in $scope.<%= plural_table_name %>) {
+					if ($scope.<%= plural_table_name %> [i] === <%= singlename %>) {
+						$scope.<%= plural_table_name %>.splice(i, 1);
+					}
+				}
+			} else {
+				$scope.<%= singlename %>.$remove(function() {
+					$location.path('<%= plural_table_name %>');
+				});
+			}
+		};
+
+		// Update existing <%= model_name %>
+		$scope.update = function() {
+			var <%= singlename %> = $scope.<%= singlename %>;
+
+			<%= singlename %>.$update(function() {
+				$location.path('<%= plural_table_name %>/' + <%= singlename %>._id);
+			}, function(errorResponse) {
+				$scope.error = errorResponse.data.message;
+			});
+		};
+
+		// Find a list of <%= model_name %>s
+		$scope.find = function() {
+			$scope.<%= plural_table_name %> = <%= model_name %>s.query();
+		};
+
+		// Find existing <%= model_name %>
+		$scope.findOne = function() {
+			$scope.<%= singlename %> = <%= model_name %>s.get({ 
+				<%= singlename %>Id: $stateParams.<%= singlename %>Id
+			});
+		};
+	}
+]);

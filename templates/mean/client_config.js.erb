@@ -1,0 +1,11 @@
+'use strict';
+
+// Configuring the <%= model_name %> module - generated from builder/templates/mean/client_config.js.erb
+angular.module('<%= plural_table_name %>').run(['Menus',
+	function(Menus) {
+		// Set top bar menu items
+		Menus.addMenuItem('topbar', '<%= model_name %>s', '<%= plural_table_name %>', 'dropdown', '/<%= plural_table_name %>(/create)?');
+		Menus.addSubMenuItem('topbar', '<%= plural_table_name %>', 'List <%= model_name %>s', '<%= plural_table_name %>');
+		Menus.addSubMenuItem('topbar', '<%= plural_table_name %>', 'New <%= model_name %>', '<%= plural_table_name %>/create');
+	}
+]);

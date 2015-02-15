@@ -1,0 +1,28 @@
+'use strict';
+<% 
+# shorten the accessor name
+singlename = singular_table_name
+%>
+//Setting up route  - generated from builder/templates/mean/client_routes.js.erb
+angular.module('<%= plural_table_name %>').config(['$stateProvider',
+	function($stateProvider) {
+		// <%= model_name %>s state routing
+		$stateProvider.
+		state('list<%= model_name %>s', {
+			url: '/<%= plural_table_name %>',
+			templateUrl: 'modules/<%= plural_table_name %>/views/list-<%= plural_table_name %>.client.view.html'
+		}).
+		state('create<%= model_name %>', {
+			url: '/<%= plural_table_name %>/create',
+			templateUrl: 'modules/<%= plural_table_name %>/views/create-<%= singlename %>.client.view.html'
+		}).
+		state('view<%= model_name %>', {
+			url: '/<%= plural_table_name %>/:<%= singlename %>Id',
+			templateUrl: 'modules/<%= plural_table_name %>/views/view-<%= singlename %>.client.view.html'
+		}).
+		state('edit<%= model_name %>', {
+			url: '/<%= plural_table_name %>/:<%= singlename %>Id/edit',
+			templateUrl: 'modules/<%= plural_table_name %>/views/edit-<%= singlename %>.client.view.html'
+		});
+	}
+]);

@@ -1,0 +1,25 @@
+'use strict';
+<% 
+# shorten the accessor name
+singlename = singular_table_name
+%>
+//  - generated from builder/templates/mean/server_routes.js.erb
+module.exports = function(app) {
+	var users = require('../../app/controllers/users.server.controller');
+  <% unless plural_table_name == 'users' %>
+	var <%= plural_table_name %> = require('../../app/controllers/<%= plural_table_name %>.server.controller');
+  <% end %>
+  
+	// <%= model_name %>s Routes
+	app.route('/<%= plural_table_name %>')
+		.get(<%= plural_table_name %>.list)
+		.post(users.requiresLogin, <%= plural_table_name %>.create);
+
+	app.route('/<%= plural_table_name %>/:<%= singlename %>Id')
+		.get(<%= plural_table_name %>.read)
+		.put(users.requiresLogin, <%= plural_table_name %>.hasAuthorization, <%= plural_table_name %>.update)
+		.delete(users.requiresLogin, <%= plural_table_name %>.hasAuthorization, <%= plural_table_name %>.delete);
+
+	// Finish by binding the <%= model_name %> middleware
+	app.param('<%= singlename %>Id', <%= plural_table_name %>.<%= singlename %>ByID);
+};

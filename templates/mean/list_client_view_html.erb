@@ -1,0 +1,55 @@
+<% 
+# shorten this
+singlename = singular_table_name
+
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+ 
+field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
+
+# override the defaults with a given field list
+unless this_fields[:list].nil?
+  field_names = this_fields[:list].map{|name| name.to_s  }
+
+  # get the name of the principle field
+  namefield_name = field_names.select{|name| ['name','title'].include?(name)}.first 
+
+  # and the description field
+  descfield_name = field_names.select{|name|['description','info',
+      'summary','comment','snippet'].include?(name) }.first
+end
+
+%>
+<!--  - generated from builder/templates/mean/list_client_view_html.erb -->
+<section data-ng-controller="<%= model_name %>sController" data-ng-init="find()">
+    <div class="page-header">
+        <h1><%= model_name %>s</h1>
+    </div>
+    <div class="list-group">
+        <a data-ng-repeat="<%= singlename %> in <%= plural_table_name %>" data-ng-href="#!/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename %>._id}}" class="list-group-item">
+			<small class="list-group-item-text">
+				Posted on
+				<span data-ng-bind="<%= singlename %>.created | date:'medium'"></span>
+				by
+				<span data-ng-bind="<%= singlename %>.user.displayName"></span>
+			</small>
+			<h4 class="list-group-item-heading" data-ng-bind="<%= singlename %>.<%= namefield_name %>"></h4>
+        </a>
+      <dl>
+      <% field_names.each do |key| %>
+        <dt><%= key.titleize %></dt>
+        <dd class='<%= singlename %>-<%= key %>'>
+        <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
+          <a data-ng-href="#!/<%= namespace.nil? ? "" : namespace + '/' %><%= key.sub(/_id$/,'').tableize %>/{{<%= singlename %>.<%= key %>}}" >
+            view <%= key.titleize %> {{<%= singlename %>.<%= key %>}}
+          </a>
+        <% else %>
+          {{<%= singlename %>.<%= key %>}}
+        <% end %>
+        </dd>
+      <% end %>
+    </dl>
+    </div>
+    <div class="alert alert-warning text-center" data-ng-hide="!<%= plural_table_name %>.$resolved || <%= plural_table_name %>.length">
+    	No <%= model_name %>s yet, why don't you <a href="/#!/<%= plural_table_name %>/create">create one</a>?
+    </div>
+</section>

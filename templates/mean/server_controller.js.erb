@@ -1,0 +1,110 @@
+'use strict';
+<% 
+# shorten the accessor name
+singlename = singular_table_name
+%>
+/**
+ * Module dependencies.  - generated from builder/templates/mean/server_controller.js.erb
+ */
+var mongoose = require('mongoose'),
+	errorHandler = require('./errors.server.controller'),
+	<%= model_name %> = mongoose.model('<%= model_name %>'),
+	_ = require('lodash');
+
+/**
+ * Create a <%= model_name %>
+ */
+exports.create = function(req, res) {
+	var <%= singlename %> = new <%= model_name %>(req.body);
+	<%= singlename %>.user = req.user;
+
+	<%= singlename %>.save(function(err) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(<%= singlename %>);
+		}
+	});
+};
+
+/**
+ * Show the current <%= model_name %>
+ */
+exports.read = function(req, res) {
+	res.jsonp(req.<%= singlename %>);
+};
+
+/**
+ * Update a <%= model_name %>
+ */
+exports.update = function(req, res) {
+	var <%= singlename %> = req.<%= singlename %> ;
+
+	<%= singlename %> = _.extend(<%= singlename %> , req.body);
+
+	<%= singlename %>.save(function(err) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(<%= singlename %>);
+		}
+	});
+};
+
+/**
+ * Delete a <%= model_name %>
+ */
+exports.delete = function(req, res) {
+	var <%= singlename %> = req.<%= singlename %> ;
+
+	<%= singlename %>.remove(function(err) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(<%= singlename %>);
+		}
+	});
+};
+
+/**
+ * List of <%= model_name %>s
+ */
+exports.list = function(req, res) { 
+	<%= model_name %>.find().sort('-created').populate('user', 'displayName').exec(function(err, <%= plural_table_name %>) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			res.jsonp(<%= plural_table_name %>);
+		}
+	});
+};
+
+/**
+ * <%= model_name %> middleware
+ */
+exports.<%= singlename %>ByID = function(req, res, next, id) { 
+	<%= model_name %>.findById(id).populate('user', 'displayName').exec(function(err, <%= singlename %>) {
+		if (err) return next(err);
+		if (! <%= singlename %>) return next(new Error('Failed to load <%= model_name %> ' + id));
+		req.<%= singlename %> = <%= singlename %> ;
+		next();
+	});
+};
+
+/**
+ * <%= model_name %> authorization middleware
+ */
+exports.hasAuthorization = function(req, res, next) {
+	if (req.<%= singlename %>.user.id !== req.user.id) {
+		return res.status(403).send('User is not authorized');
+	}
+	next();
+};

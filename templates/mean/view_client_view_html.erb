@@ -1,0 +1,58 @@
+<% 
+# shorten this
+singlename = singular_table_name
+
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+
+field_names = field_list.reject{|col_name| rejected_columns.include?(col_name.to_sym)}
+
+# override the defaults with a given field list
+unless this_fields[:detail].nil?
+  field_names = this_fields[:detail].map{|name| name.to_s  }
+
+  # get the name of the principle field
+  namefield_name = field_names.select{|name| ['name','title'].include?(name)}.first 
+
+  # and the description field
+  descfield_name = field_names.select{|name|['description','info',
+      'summary','comment','snippet'].include?(name) }.first
+  end
+
+%>
+<!--  - generated from builder/templates/mean/view_client_view_html.erb -->
+<section data-ng-controller="<%= model_name %>sController" data-ng-init="findOne()">
+  <div class="page-header">
+    <h1 data-ng-bind="<%= singlename %>.<%= namefield_name %>"></h1>
+  </div>
+  <div class="pull-right" data-ng-show="((authentication.user) && (authentication.user._id == <%= singlename %>.user._id))">
+    <a class="btn btn-primary" href="/#!/<%= plural_table_name %>/{{<%= singlename %>._id}}/edit">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" data-ng-click="remove();">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span data-ng-bind="<%= singlename %>.created | date:'mediumDate'"></span>
+      by
+      <span data-ng-bind="<%= singlename %>.user.displayName"></span>
+    </em>
+  </small>
+
+  <dl>
+      <% field_names.each do |key| %>
+      <dt><%= key.titleize %></dt>
+      <dd class='<%= singlename %>-<%= key %>'>
+        <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
+          <a data-ng-href="#!/<%= namespace.nil? ? "" : namespace + '/' %><%= key.sub(/_id$/,'').tableize %>/{{<%= singlename %>.<%= key %>}}" >
+            view <%= key.titleize %> {{<%= singlename %>.<%= key %>}}
+          </a>
+        <% else %>
+          {{<%= singlename %>.<%= key %>}}
+        <% end %>
+      </dd>
+    <% end %>
+  </dl>
+</section>

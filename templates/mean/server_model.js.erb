@@ -1,0 +1,44 @@
+'use strict';
+<% 
+columns = []
+# avoid duplicates - in the case where two ids reference the same table
+seen = {}
+# do not add 'id' column
+table_info['columns'].reject{|k| k == 'id'}.each_pair do |name,column| 
+  type = bson_data_type(column['data_type'].to_sym)
+  text = name + ": {\n"
+  text += "\ttype: " + type + ",\n" 
+  text += "\tdefault: " + (bson_default_value(column['column_default'],column['data_type'].to_sym) || "''") 
+  
+  if type == 'String'
+    text += ",\n\ttrim: true"
+  end
+  if name != 'id' && column['is_nullable'] == 'NO'
+    text += ",\n\trequired: '#{name} cannot be blank'" 
+  end
+  columns << text + '}'
+  seen[name] = true
+  end 
+
+table_info['belongs_to'].flatten.each do |key|
+  columns << "#{key.singularize}: {type: Schema.ObjectId, ref: '#{key.to_model_name}'}" unless seen[key] == true
+  seen[key] = true
+end
+
+%>
+/**
+ * Module dependencies.  - generated from builder/templates/mean/server_model.js.erb
+ */
+var mongoose = require('mongoose'),
+	Schema = mongoose.Schema;
+
+/**
+ * <%= model_name %> Schema
+ */
+var <%= model_name %>Schema = new Schema({
+
+  <%= columns.join(",\n") %>
+
+});
+
+mongoose.model('<%= model_name %>', <%= model_name %>Schema);

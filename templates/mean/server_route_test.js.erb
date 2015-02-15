@@ -1,0 +1,285 @@
+'use strict';
+<% 
+# shorten the accessor name
+singlename = singular_table_name
+ 
+rejected_columns = fields.fetch(:except,['id','updated_at','created_at'])
+attribs = []
+attributes.reject{|attr| rejected_columns.include? attr.column_name}.each do |attr| 
+  if attr.password_digest? 
+    attribs << "password_digest: '#{BCrypt::Password.create('secret')}'"
+  else 
+    attribs << "#{attr.column_name}: '#{attr.default}'"
+  end 
+  if attr.polymorphic? 
+    attribs << "#{attr.column_name}_type: '#{attr.default}'" 
+  end 
+end 
+  
+%>
+var should = require('should'),
+	request = require('supertest'),
+	app = require('../../server'),
+	mongoose = require('mongoose'),
+	User = mongoose.model('User'),
+	<%= model_name %> = mongoose.model('<%= model_name %>'),
+	agent = request.agent(app);
+
+/**
+ * Globals  - generated from builder/templates/mean/server_route_test.js.erb
+ */
+var credentials, user, <%= singlename %>;
+
+/**
+ * <%= model_name %> routes tests
+ */
+describe('<%= model_name %> CRUD tests', function() {
+	beforeEach(function(done) {
+		// Create user credentials
+		credentials = {
+			username: 'username',
+			password: 'password'
+		};
+
+		// Create a new user
+		user = new User({
+			firstName: 'Full',
+			lastName: 'Name',
+			displayName: 'Full Name',
+			email: 'test@test.com',
+			username: credentials.username,
+			password: credentials.password,
+			provider: 'local'
+		});
+
+		// Save a user to the test db and create new <%= model_name %>
+		user.save(function() {
+			<%= singlename %> = {
+				<%= attribs.join(",\n") %>
+			};
+
+			done();
+		});
+	});
+
+	it('should be able to save <%= model_name %> instance if logged in', function(done) {
+		agent.post('/auth/signin')
+			.send(credentials)
+			.expect(200)
+			.end(function(signinErr, signinRes) {
+				// Handle signin error
+				if (signinErr) done(signinErr);
+
+				// Get the userId
+				var userId = user.id;
+
+				// Save a new <%= model_name %>
+				agent.post('/<%= plural_table_name %>')
+					.send(<%= singlename %>)
+					.expect(200)
+					.end(function(<%= singlename %>SaveErr, <%= singlename %>SaveRes) {
+						// Handle <%= model_name %> save error
+						if (<%= singlename %>SaveErr) done(<%= singlename %>SaveErr);
+
+						// Get a list of <%= model_name %>s
+						agent.get('/<%= plural_table_name %>')
+							.end(function(<%= plural_table_name %>GetErr, <%= plural_table_name %>GetRes) {
+								// Handle <%= model_name %> save error
+								if (<%= plural_table_name %>GetErr) done(<%= plural_table_name %>GetErr);
+
+								// Get <%= model_name %>s list
+								var <%= plural_table_name %> = <%= plural_table_name %>GetRes.body;
+
+								// Set assertions
+								(<%= plural_table_name %>[0].user._id).should.equal(userId);
+								(<%= plural_table_name %>[0].name).should.match('<%= model_name %> Name');
+
+								// Call the assertion callback
+								done();
+							});
+					});
+			});
+	});
+
+	it('should not be able to save <%= model_name %> instance if not logged in', function(done) {
+		agent.post('/<%= plural_table_name %>')
+			.send(<%= singlename %>)
+			.expect(401)
+			.end(function(<%= singlename %>SaveErr, <%= singlename %>SaveRes) {
+				// Call the assertion callback
+				done(<%= singlename %>SaveErr);
+			});
+	});
+
+	it('should not be able to save <%= model_name %> instance if no name is provided', function(done) {
+		// Invalidate name field
+		<%= singlename %>.name = '';
+
+		agent.post('/auth/signin')
+			.send(credentials)
+			.expect(200)
+			.end(function(signinErr, signinRes) {
+				// Handle signin error
+				if (signinErr) done(signinErr);
+
+				// Get the userId
+				var userId = user.id;
+
+				// Save a new <%= model_name %>
+				agent.post('/<%= plural_table_name %>')
+					.send(<%= singlename %>)
+					.expect(400)
+					.end(function(<%= singlename %>SaveErr, <%= singlename %>SaveRes) {
+						// Set message assertion
+						(<%= singlename %>SaveRes.body.message).should.match('Please fill <%= model_name %> name');
+						
+						// Handle <%= model_name %> save error
+						done(<%= singlename %>SaveErr);
+					});
+			});
+	});
+
+	it('should be able to update <%= model_name %> instance if signed in', function(done) {
+		agent.post('/auth/signin')
+			.send(credentials)
+			.expect(200)
+			.end(function(signinErr, signinRes) {
+				// Handle signin error
+				if (signinErr) done(signinErr);
+
+				// Get the userId
+				var userId = user.id;
+
+				// Save a new <%= model_name %>
+				agent.post('/<%= plural_table_name %>')
+					.send(<%= singlename %>)
+					.expect(200)
+					.end(function(<%= singlename %>SaveErr, <%= singlename %>SaveRes) {
+						// Handle <%= model_name %> save error
+						if (<%= singlename %>SaveErr) done(<%= singlename %>SaveErr);
+
+						// Update <%= model_name %> name
+						<%= singlename %>.name = 'WHY YOU GOTTA BE SO MEAN?';
+
+						// Update existing <%= model_name %>
+						agent.put('/<%= plural_table_name %>/' + <%= singlename %>SaveRes.body._id)
+							.send(<%= singlename %>)
+							.expect(200)
+							.end(function(<%= singlename %>UpdateErr, <%= singlename %>UpdateRes) {
+								// Handle <%= model_name %> update error
+								if (<%= singlename %>UpdateErr) done(<%= singlename %>UpdateErr);
+
+								// Set assertions
+								(<%= singlename %>UpdateRes.body._id).should.equal(<%= singlename %>SaveRes.body._id);
+								(<%= singlename %>UpdateRes.body.name).should.match('WHY YOU GOTTA BE SO MEAN?');
+
+								// Call the assertion callback
+								done();
+							});
+					});
+			});
+	});
+
+	it('should be able to get a list of <%= model_name %>s if not signed in', function(done) {
+		// Create new <%= model_name %> model instance
+		var <%= singlename %>Obj = new <%= model_name %>(<%= singlename %>);
+
+		// Save the <%= model_name %>
+		<%= singlename %>Obj.save(function() {
+			// Request <%= model_name %>s
+			request(app).get('/<%= plural_table_name %>')
+				.end(function(req, res) {
+					// Set assertion
+					res.body.should.be.an.Array.with.lengthOf(1);
+
+					// Call the assertion callback
+					done();
+				});
+
+		});
+	});
+
+
+	it('should be able to get a single <%= model_name %> if not signed in', function(done) {
+		// Create new <%= model_name %> model instance
+		var <%= singlename %>Obj = new <%= model_name %>(<%= singlename %>);
+
+		// Save the <%= model_name %>
+		<%= singlename %>Obj.save(function() {
+			request(app).get('/<%= plural_table_name %>/' + <%= singlename %>Obj._id)
+				.end(function(req, res) {
+					// Set assertion
+					res.body.should.be.an.Object.with.property('name', <%= singlename %>.name);
+
+					// Call the assertion callback
+					done();
+				});
+		});
+	});
+
+	it('should be able to delete <%= model_name %> instance if signed in', function(done) {
+		agent.post('/auth/signin')
+			.send(credentials)
+			.expect(200)
+			.end(function(signinErr, signinRes) {
+				// Handle signin error
+				if (signinErr) done(signinErr);
+
+				// Get the userId
+				var userId = user.id;
+
+				// Save a new <%= model_name %>
+				agent.post('/<%= plural_table_name %>')
+					.send(<%= singlename %>)
+					.expect(200)
+					.end(function(<%= singlename %>SaveErr, <%= singlename %>SaveRes) {
+						// Handle <%= model_name %> save error
+						if (<%= singlename %>SaveErr) done(<%= singlename %>SaveErr);
+
+						// Delete existing <%= model_name %>
+						agent.delete('/<%= plural_table_name %>/' + <%= singlename %>SaveRes.body._id)
+							.send(<%= singlename %>)
+							.expect(200)
+							.end(function(<%= singlename %>DeleteErr, <%= singlename %>DeleteRes) {
+								// Handle <%= model_name %> error error
+								if (<%= singlename %>DeleteErr) done(<%= singlename %>DeleteErr);
+
+								// Set assertions
+								(<%= singlename %>DeleteRes.body._id).should.equal(<%= singlename %>SaveRes.body._id);
+
+								// Call the assertion callback
+								done();
+							});
+					});
+			});
+	});
+
+	it('should not be able to delete <%= model_name %> instance if not signed in', function(done) {
+		// Set <%= model_name %> user 
+		<%= singlename %>.user = user;
+
+		// Create new <%= model_name %> model instance
+		var <%= singlename %>Obj = new <%= model_name %>(<%= singlename %>);
+
+		// Save the <%= model_name %>
+		<%= singlename %>Obj.save(function() {
+			// Try deleting <%= model_name %>
+			request(app).delete('/<%= plural_table_name %>/' + <%= singlename %>Obj._id)
+			.expect(401)
+			.end(function(<%= singlename %>DeleteErr, <%= singlename %>DeleteRes) {
+				// Set message assertion
+				(<%= singlename %>DeleteRes.body.message).should.match('User is not logged in');
+
+				// Handle <%= model_name %> error error
+				done(<%= singlename %>DeleteErr);
+			});
+
+		});
+	});
+
+	afterEach(function(done) {
+		User.remove().exec();
+		<%= model_name %>.remove().exec();
+		done();
+	});
+});

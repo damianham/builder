@@ -1,0 +1,13 @@
+'use strict';
+//  - generated from builder/templates/mean/client_service.js.erb
+//<%= model_name %>s service used to communicate <%= model_name %>s REST endpoints
+angular.module('<%= plural_table_name %>').factory('<%= model_name %>s', ['$resource',
+	function($resource) {
+		return $resource('<%= plural_table_name %>/:<%= singular_table_name %>Id', { <%= singular_table_name %>Id: '@_id'
+		}, {
+			update: {
+				method: 'PUT'
+			}
+		});
+	}
+]);

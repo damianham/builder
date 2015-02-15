@@ -24,6 +24,9 @@
   
   UIrouterBuilder  => {:output => './mywebapp/uirouter',:appname => 'myapp',
   :except => [:finalize_application], :api_prefix => 'api/'
+  },
+  MeanBuilder  => {:output => './mywebapp/mean',:appname => 'myapp',
+  :except => [:finalize_application], :api_prefix => 'api/'
   }
   
 }
