@@ -24,7 +24,7 @@ exports.create = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(<%= singlename %>);
+			res.json(<%= singlename %>);
 		}
 	});
 };
@@ -33,7 +33,7 @@ exports.create = function(req, res) {
  * Show the current <%= model_name %>
  */
 exports.read = function(req, res) {
-	res.jsonp(req.<%= singlename %>);
+	res.json(req.<%= singlename %>);
 };
 
 /**
@@ -50,7 +50,7 @@ exports.update = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(<%= singlename %>);
+			res.json(<%= singlename %>);
 		}
 	});
 };
@@ -67,7 +67,7 @@ exports.delete = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(<%= singlename %>);
+			res.json(<%= singlename %>);
 		}
 	});
 };
@@ -82,7 +82,7 @@ exports.list = function(req, res) {
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.jsonp(<%= plural_table_name %>);
+			res.json(<%= plural_table_name %>);
 		}
 	});
 };

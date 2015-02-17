@@ -5,6 +5,8 @@ columns = []
 seen = {}
 # do not add 'id' column
 table_info['columns'].reject{|k| k == 'id'}.each_pair do |name,column| 
+  # change the name to a name  according to MEAN apps conventions
+  name = name_to_mongo(name)
   type = bson_data_type(column['data_type'].to_sym)
   text = name + ": {\n"
   text += "\ttype: " + type + ",\n" 

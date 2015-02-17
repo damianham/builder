@@ -14,15 +14,7 @@ class MeanBuilder < Builder::Base
     end
   end
 =begin
-mongoose types
-String
-Number
-Date
-Buffer
-Boolean
-Mixed
-ObjectId
-Array
+mongoose types String Number Date Buffer Boolean Mixed ObjectId Array
 =end  
   def bson_data_type type
     case type
@@ -37,6 +29,32 @@ Array
     else
       raise "cannot determine BSON data type for #{type}"
     end
+  end
+  
+  # MEAN apps use created rather than created_at
+  def name_to_mongo name
+    return ['created_at','updated_at'].include?(name) ? name.sub(/_at$/,'') : name
+  end
+  
+  def form_attributes(column)
+    attributes = [
+      "id='#{column['column_name']}'",
+      "name='#{column['column_name']}'" ,
+      "class='form-control'",
+      "placeholder='#{column['column_comment'] || column['column_name'].titleize}'",
+      "data-ng-model='#{column['column_name']}'"
+    ]
+      
+    if column['data_type'] == 'int'
+      attributes << "min='0' max='4294967295'"   # max unsigned int
+      attributes << 'integer'
+    elsif ['char','varchar','text'].include?(column['data_type']) 
+      attributes << "ng-maxlength='#{column['character_maximum_length']}'"
+    end
+       
+    attributes << 'required' if column['is_nullable'] == 'NO'
+      
+    attributes
   end
   
   def setup

@@ -4,12 +4,13 @@
 singlename = singular_table_name
 %>
 //  - generated from builder/templates/mean/server_routes.js.erb
-module.exports = function(app) {
-	var users = require('../../app/controllers/users.server.controller');
-  <% unless plural_table_name == 'users' %>
-	var <%= plural_table_name %> = require('../../app/controllers/<%= plural_table_name %>.server.controller');
-  <% end %>
+
+var users = require('../../app/controllers/users.server.controller');
+<% unless plural_table_name == 'users' %>
+var <%= plural_table_name %> = require('../../app/controllers/<%= plural_table_name %>.server.controller');
+<% end %>
   
+module.exports = function(app) {
 	// <%= model_name %>s Routes
 	app.route('/<%= plural_table_name %>')
 		.get(<%= plural_table_name %>.list)

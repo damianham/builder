@@ -202,7 +202,7 @@ module Builder
       attributes = [
         "name='#{column['column_name']}'" ,
         "class='form-control'",
-        "placeholder='#{column['column_comment']}'",
+        "placeholder='#{column['column_comment'] || column['column_name'].titleize}'",
         "ng-model='#{singular_table_name}.#{column['column_name']}'"
       ]
       

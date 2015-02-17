@@ -27,7 +27,9 @@ angular.module('<%= plural_table_name %>').controller('<%= model_name %>sControl
 				$location.path('<%= plural_table_name %>/' + response._id);
 
 				// Clear form fields
-				$scope.name = '';
+				<% attributes.reject{|attr| rejected_columns.include? attr.column_name}.each do |attr| %>
+        $scope.<%=  attr.column_name %> = '';
+        <% end %>
 			}, function(errorResponse) {
 				$scope.error = errorResponse.data.message;
 			});
@@ -35,11 +37,11 @@ angular.module('<%= plural_table_name %>').controller('<%= model_name %>sControl
 
 		// Remove existing <%= model_name %>
 		$scope.remove = function(<%= singlename %>) {
-			if ( <%= singlename %> ) { 
+			if (<%= singlename %>) {
 				<%= singlename %>.$remove();
 
 				for (var i in $scope.<%= plural_table_name %>) {
-					if ($scope.<%= plural_table_name %> [i] === <%= singlename %>) {
+					if ($scope.<%= plural_table_name %>[i] === <%= singlename %>) {
 						$scope.<%= plural_table_name %>.splice(i, 1);
 					}
 				}
@@ -68,7 +70,7 @@ angular.module('<%= plural_table_name %>').controller('<%= model_name %>sControl
 
 		// Find existing <%= model_name %>
 		$scope.findOne = function() {
-			$scope.<%= singlename %> = <%= model_name %>s.get({ 
+			$scope.<%= singlename %> = <%= model_name %>s.get({
 				<%= singlename %>Id: $stateParams.<%= singlename %>Id
 			});
 		};

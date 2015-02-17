@@ -21,33 +21,33 @@ end
 %>
 <!--  - generated from builder/templates/mean/create_client_view_html.erb -->
 <section data-ng-controller="<%= model_name %>sController">
-    <div class="page-header">
-        <h1>New <%= model_name %></h1>
-    </div>
-    <div class="col-md-12">
-        <form class="form-horizontal" data-ng-submit="create()" novalidate>
-            <fieldset>
-              <% field_names.each do |column_name| 
-                  @column = columns[column_name]
-                  if @column.nil?
-                    puts "no such column #{column_name}" 
-                    next
-                  end
-                  # get a path to a partial to render the field based on the name and type
-                  # default to _any_field
-                  template_path = template_by_name_and_type 'ng', @singlename, column_name, @column['data_type']
-                  #puts "rendering form field  #{@singlename}:#{column_name}:#{@column['data_type']} with #{template_path}"
-                %>
-                <%= Erubis::Eruby.new(File.read(template_path)).evaluate( self ) %>
-                  
-                <% end %>
-                <div class="form-group">
-                    <input type="submit" class="btn btn-default">
-                </div>
-				<div data-ng-show="error" class="text-danger">
-					<strong data-ng-bind="error"></strong>
-				</div>
-            </fieldset>
-        </form>
-    </div>
+  <div class="page-header">
+    <h1>New <%= model_name %></h1>
+  </div>
+  <div class="col-md-12">
+    <form name="<%= @singlename %>Form" class="form-horizontal" data-ng-submit="create()" novalidate>
+      <fieldset>
+      <% field_names.each do |column_name| 
+          @column = columns[column_name]
+          if @column.nil?
+            puts "no such column #{column_name}" 
+            next
+          end
+          # get a path to a partial to render the field based on the name and type
+          # default to _any_field
+          template_path = template_by_name_and_type 'mean', @singlename, column_name, @column['data_type']
+          #puts "rendering form field  #{@singlename}:#{column_name}:#{@column['data_type']} with #{template_path}"
+        %>
+        <%= Erubis::Eruby.new(File.read(template_path)).evaluate( self ) %>
+
+      <% end %>
+        <div class="form-group">
+            <input type="submit" class="btn btn-success">
+        </div>
+        <div data-ng-show="error" class="text-danger">
+          <strong data-ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
 </section>
