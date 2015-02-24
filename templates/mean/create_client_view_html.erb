@@ -18,6 +18,8 @@ unless this_fields[:form].nil?
       'summary','comment','snippet'].include?(name) }.first
 end
 
+# no prefix for the create form
+@prefix = ''
 %>
 <!--  - generated from builder/templates/mean/create_client_view_html.erb -->
 <section data-ng-controller="<%= model_name %>sController">

@@ -42,7 +42,7 @@ mongoose types String Number Date Buffer Boolean Mixed ObjectId Array
       "name='#{column['column_name']}'" ,
       "class='form-control'",
       "placeholder='#{column['column_comment'] || column['column_name'].titleize}'",
-      "data-ng-model='#{column['column_name']}'"
+      "data-ng-model='#{@prefix}#{column['column_name']}'"
     ]
       
     if column['data_type'] == 'int'

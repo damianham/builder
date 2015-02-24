@@ -18,6 +18,8 @@ unless this_fields[:form].nil?
       'summary','comment','snippet'].include?(name) }.first
 end
 
+# prefix data model bindings with the object name
+@prefix = "#{@singlename}."
 %>
 <!--  - generated from builder/templates/mean/edit_client_view_html.erb -->
 <section data-ng-controller="<%= model_name %>sController" data-ng-init="findOne()">
