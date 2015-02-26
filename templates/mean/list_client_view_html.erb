@@ -36,7 +36,9 @@ end
 			</small>
 			<h4 class="list-group-item-heading" data-ng-bind="<%= singlename %>.<%= namefield_name %>"></h4>
       <% field_names.each do |key| %>
+      <span class='list-value <%= singlename %>-list-value <%= singlename %>-<%= key %>-value'>
         {{<%= singlename %>.<%= key %>}}
+      </span>
       <% end %>
         </a>
     

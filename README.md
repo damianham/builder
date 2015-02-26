@@ -9,9 +9,10 @@ Keep up to date with git pull.
 A set of rake tasks and ruby classes to generate various types of application 
 artifacts using a database schema as the 
 source of data.  This is useful if you want to create a Ruby On Rails 
-(with AngularJS) application and you already have a legacy database or you 
+(with AngularJS) or NodeJS (with Express, MongoDB and Angular) application and 
+you already have a legacy database or you 
 prefer to create the database DDL manually to take advantage of the powerful 
-features of your database engine.
+features of your database engine.  
 
 Writing a web application often means writing lots of boilerplate code.  The Rails
 scaffold generator can be used to generate much of the boilerplate code which is very useful, 
@@ -64,6 +65,7 @@ In app/assets/javascripts/application.js override the generated artifacts with m
 - Erubis
 - AngularUI (for datepicker)
 - Restangular (and underscore or lodash) if using RestAngularBuilder
+
 
 ## Installation
 
@@ -146,6 +148,7 @@ Other generators available are
 * RestAngularBuilder  (use instead of AngularRailsBuilder)
 * RestAngularModalBuilder  (use instead of RestAngularBuilder)
 * UIrouterBuilder (uses angular/ui-router - use instead of any other angular builder)
+* MEAN (MongoDB, Express, AngularJS, NodeJS - see http://meanjs.org)
 
 The RailsBuilder generates controllers,models and views and the AngularRailsBuilder
 generates Angular service factories, controllers and view partials.  
@@ -308,7 +311,7 @@ route provider for the users table for a LIST_TYPE of 'table'.
 
 ### Step 4  - customize the view templates in the templates folder to your liking
 
-Edit builder/templates/(ng|rails|restangular) .erb template files.  These templates are used to generate
+Edit builder/templates/(ng|rails|restangular|mean) .erb template files.  These templates are used to generate
 the artifacts.  Note that if you are using the AngularRails builder then the templates
 that are used are in the folder **templates/ng**.  If you use a RestAngular based builder 
 then some templates are in the folder **templates/restangular**.
@@ -472,6 +475,24 @@ app/assets/javascrips/application.js
 //= require app/services
 //= require_tree ./modules
 ```
+### Step 7  - integrate generated artifacts into your MEANjs web application
+
+If you are using the **mean** generator integration is simple.  Follow the
+instructions on http://meanjs.org/generator.html to create a new MEAN application. 
+Essentially once you have NodeJS (and thus npm) installed the commands are;
+
+- npm install -g yo
+- npm install -g generator-meanjs
+- yo meanjs
+- grunt
+
+This should give you a basic working application running on http://localhost:3000
+
+Before running the builder task you may want to add **users** to the list of
+ignored tables in the builder_config file as the MEAN application already has 
+useful support for users with authentication from a variety of oauth providers.
+
+Run the builder task and your database tables are added to the MEAN application.
 
 ##  Complete run through
 
@@ -487,10 +508,25 @@ rake -f builder/tasks/mysql2.rake build_schema[testdb,testuser,testpass]
 rails new mywebapp
 cp builder/builder_config.rb .
 edit builder_config.rb
-edit builder/lib/angular_rails.rb
 rake -f builder/tasks/builder.rake build_classes[testdb]
 edit mywebapp/app/views/layouts/application.html.erb
 edit mywebapp/app/assets/javascripts/application.js
+```
+
+Conversely for a MEAN app
+```
+cd ~/workspace  
+git clone https://github.com/damianham/builder.git
+rake -f builder/tasks/mysql2.rake build_schema[testdb,testuser,testpass]
+cp builder/builder_config.rb .
+edit builder_config.rb
+npm install -g yo
+npm install -g generator-meanjs
+mkdir mywebapp
+(cd mywebapp ; yo meanjs)
+rake -f builder/tasks/builder.rake build_classes[testdb]
+cd mywebapp
+grunt
 ```
 
 

@@ -40,19 +40,24 @@ unless this_fields[:detail].nil?
       <span data-ng-bind="<%= singlename %>.user.displayName"></span>
     </em>
   </small>
+  
+  <div class="view-detail-table <%= singlename %>-detail-table">
 
-  <dl>
-      <% field_names.each do |key| %>
-      <dt><%= key.titleize %></dt>
-      <dd class='<%= singlename %>-<%= key %>'>
+    <% field_names.each do |key| %>
+    <div class='view-field <%= singlename %>-view-field <%= singlename %>-<%= key %>-field'>
+      <span class='view-field-title <%= singlename %>-field-title <%= singlename %>-<%= key %>-title'><%= key.titleize %></span>
+      <span class='view-field-value <%= singlename %>-field-value <%= singlename %>-<%= key %>-value'>
         <% if key =~ /_id$/ && key.sub(/_id$/,'') != singlename %>
           <a data-ng-href="#!/<%= namespace.nil? ? "" : namespace + '/' %><%= key.sub(/_id$/,'').tableize %>/{{<%= singlename %>.<%= key %>}}" >
-            view <%= key.titleize %> {{<%= singlename %>.<%= key %>}}
+            {{<%= singlename %>.<%= key %>}}
           </a>
         <% else %>
           {{<%= singlename %>.<%= key %>}}
         <% end %>
-      </dd>
-    <% end %>
-  </dl>
+      </span>
+    </div>
+    
+  <% end %>
+
+  </div>
 </section>
