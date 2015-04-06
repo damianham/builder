@@ -8,7 +8,8 @@ angular.module('<%= plural_table_name %>').factory('<%= model_name %>s', ['$reso
 		}, {
 			update: {
 				method: 'PUT'
-			}
+			},
+      search: {method:'GET', url: '<%= plural_table_name %>/search' , isArray:true, cache:true}
 		});
 	}
 ]);

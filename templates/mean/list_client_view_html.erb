@@ -23,27 +23,34 @@ end
 %>
 <!--  - generated from builder/templates/mean/list_client_view_html.erb -->
 <section data-ng-controller="<%= model_name %>sController" data-ng-init="find()">
+  <div class="container">
     <div class="page-header">
         <h1><%= model_name %>s</h1>
     </div>
     <div class="list-group">
         <a data-ng-repeat="<%= singlename %> in <%= plural_table_name %>" data-ng-href="#!/<%= namespace.nil? ? "" : namespace + '/' %><%= plural_table_name %>/{{<%= singlename %>._id}}" class="list-group-item">
-			<small class="list-group-item-text">
-				Posted on
-				<span data-ng-bind="<%= singlename %>.created | date:'medium'"></span>
-				by
-				<span data-ng-bind="<%= singlename %>.user.displayName"></span>
-			</small>
-			<h4 class="list-group-item-heading" data-ng-bind="<%= singlename %>.<%= namefield_name %>"></h4>
-      <% field_names.each do |key| %>
-      <span class='list-value <%= singlename %>-list-value <%= singlename %>-<%= key %>-value'>
-        {{<%= singlename %>.<%= key %>}}
-      </span>
-      <% end %>
+			    <div class="pull-left" ng-if="model_has_image()">
+            
+          </div>
+          <div>
+            <small class="list-group-item-text">
+            Posted on
+            <span data-ng-bind="<%= singlename %>.created | date:'medium'"></span>
+            by
+            <span data-ng-bind="<%= singlename %>.user.displayName"></span>
+            </small>
+            <h4 class="list-group-item-heading" data-ng-bind="<%= singlename %>.<%= namefield_name %>"></h4>
+          <% field_names.each do |key| %>
+            <span class='list-value <%= singlename %>-list-value <%= singlename %>-<%= key %>-value'>
+            {{<%= singlename %>.<%= key %>}}
+            </span>
+          <% end %>
+          </div>
         </a>
     
     </div>
     <div class="alert alert-warning text-center" data-ng-hide="!<%= plural_table_name %>.$resolved || <%= plural_table_name %>.length">
     	No <%= model_name %>s yet, why don't you <a href="/#!/<%= plural_table_name %>/create">create one</a>?
     </div>
+  </div>
 </section>

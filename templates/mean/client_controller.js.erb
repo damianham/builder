@@ -37,6 +37,12 @@ angular.module('<%= plural_table_name %>').controller('<%= model_name %>sControl
 
 		// Remove existing <%= model_name %>
 		$scope.remove = function(<%= singlename %>) {
+    
+      var result = confirm('Are you sure?');
+      if (!result) {
+        return;
+      }
+      
 			if (<%= singlename %>) {
 				<%= singlename %>.$remove();
 
@@ -65,7 +71,9 @@ angular.module('<%= plural_table_name %>').controller('<%= model_name %>sControl
 
 		// Find a list of <%= model_name %>s
 		$scope.find = function() {
-			$scope.<%= plural_table_name %> = <%= model_name %>s.query();
+    <%= model_name %>s.query(function(items) {
+        $scope.<%= plural_table_name %> = items;
+      });
 		};
 
 		// Find existing <%= model_name %>
@@ -74,5 +82,21 @@ angular.module('<%= plural_table_name %>').controller('<%= model_name %>sControl
 				<%= singlename %>Id: $stateParams.<%= singlename %>Id
 			});
 		};
+    
+    // determine if the model has a photo
+    $scope.model_has_photo = function() {
+       if ($scope.<%= singlename %>.image_url) return true;
+       if ($scope.<%= singlename %>.photo) return true;
+    };
+    
+    $scope.image_url = function(model) {
+      if (model.image_url) return model.image_url;
+      if (typeof model.photo === 'String') return model.photo;
+      if (typeof model.photo === 'Object) {
+        // requires specific model attributes
+        return '/' + model.photo.stored_at + '/' + model.photo.filename;
+      }
+      return null;
+    };
 	}
 ]);

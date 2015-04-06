@@ -533,7 +533,7 @@ grunt
 ##  TODO
 
 - So many things
-- Create Cucumber, CoffeeScript and Node.js generators
+- Create Cucumber, CoffeeScript generators
 - Create schema extractors for other database engines
 
 please fork and contribute

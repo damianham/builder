@@ -15,6 +15,10 @@ module.exports = function(app) {
 	app.route('/<%= plural_table_name %>')
 		.get(<%= plural_table_name %>.list)
 		.post(users.requiresLogin, <%= plural_table_name %>.create);
+    
+  // free text search
+  app.route('/<%= plural_table_name %>/search')
+		.get(<%= plural_table_name %>.search);
 
 	app.route('/<%= plural_table_name %>/:<%= singlename %>Id')
 		.get(<%= plural_table_name %>.read)

@@ -1,29 +1,37 @@
 'use strict';
 <% 
-columns = []
+columns = ["  user: {type: Schema.ObjectId, ref: 'User'}"]
 # avoid duplicates - in the case where two ids reference the same table
-seen = {}
+seen = {'users' => true}
 # do not add 'id' column
 table_info['columns'].reject{|k| k == 'id'}.each_pair do |name,column| 
   # change the name to a name  according to MEAN apps conventions
   name = name_to_mongo(name)
-  type = bson_data_type(column['data_type'].to_sym)
-  text = name + ": {\n"
-  text += "\ttype: " + type + ",\n" 
-  text += "\tdefault: " + (bson_default_value(column['column_default'],column['data_type'].to_sym) || "''") 
   
-  if type == 'String'
-    text += ",\n\ttrim: true"
+  # if this is an ID column then add it as a reference field instead
+  if name =~ /_id$/
+    colname = name.gsub(/_id/,'')
+    columns << "  #{colname.singularize}: {type: Schema.ObjectId, ref: '#{colname.to_model_name}'}"
+  else
+    type = bson_data_type(column['data_type'].to_sym)
+    text = "  " + name + ": {\n"
+    text += "    type: " + type + ",\n" 
+    text += "    default: " + (bson_default_value(column['column_default'],column['data_type'].to_sym) || "''") 
+
+    if type == 'String'
+      text += ",\n    trim: true"
+    end
+    if column['is_nullable'] == 'NO'
+      text += ",\n    required: '#{name} cannot be blank'" 
+    end
+    columns << text + '}'
   end
-  if name != 'id' && column['is_nullable'] == 'NO'
-    text += ",\n\trequired: '#{name} cannot be blank'" 
-  end
-  columns << text + '}'
+  
   seen[name] = true
   end 
 
 table_info['belongs_to'].flatten.each do |key|
-  columns << "#{key.singularize}: {type: Schema.ObjectId, ref: '#{key.to_model_name}'}" unless seen[key] == true
+  columns << "  #{key.singularize}: {type: Schema.ObjectId, ref: '#{key.to_model_name}'}" unless seen[key] == true
   seen[key] = true
 end
 
@@ -39,7 +47,7 @@ var mongoose = require('mongoose'),
  */
 var <%= model_name %>Schema = new Schema({
 
-  <%= columns.join(",\n") %>
+<%= columns.join(",\n") %>
 
 });
 

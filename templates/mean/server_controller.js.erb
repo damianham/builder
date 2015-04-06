@@ -73,10 +73,20 @@ exports.delete = function(req, res) {
 };
 
 /**
- * List of <%= model_name %>s
+ * List of <%= model_name %>s - with request query performs selection matching query attributes
  */
 exports.list = function(req, res) { 
-	<%= model_name %>.find().sort('-created').populate('user', 'displayName').exec(function(err, <%= plural_table_name %>) {
+  var user = req.user ;
+  var qparams = {};
+
+  if (req.query) {
+    qparams = req.query;
+  } else if (user) {
+    // find <%= plural_table_name %> belonging to the user
+    qparams = {user: user._id};
+  }
+  
+	<%= model_name %>.find(qparams).sort('-created').populate('user', 'displayName').exec(function(err, <%= plural_table_name %>) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
@@ -85,6 +95,28 @@ exports.list = function(req, res) {
 			res.json(<%= plural_table_name %>);
 		}
 	});
+};
+
+/**
+ * Text search <%= model_name %>s
+ */
+exports.search = function (req, res) {
+  
+  <%= model_name %>.find(
+    {$text: {$search: req.query.term}},
+  {score: {$meta: 'textScore'}}
+  )
+    .sort({score: {$meta: 'textScore'}})
+    .populate('user', 'displayName')
+    .exec(function (err, results) {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(results);
+      }
+    });
 };
 
 /**
