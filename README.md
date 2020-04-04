@@ -521,7 +521,7 @@ Run the builder task and your database tables are added to the MEAN application.
 ##  Complete run through
 
 The following steps will create application artifacts from scratch based on
-a mysql database existing called testdb and a database user with the logon 
+an existing mysql database called testdb and a database user with the logon 
 username:password credentials of testuser:testpass
 
 ### Amber
@@ -539,7 +539,6 @@ amber watch
 
 ### Rails
 ```
-# we don't want everything in the home folder so let's use Eclipse convention
 cd ~/workspace  
 git clone https://github.com/damianham/builder.git
 rake -f builder/tasks/mysql2.rake build_schema[dbhostname,testdb,testuser,testpass]
