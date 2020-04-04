@@ -30,12 +30,7 @@ the best way to use this tool is to generate a set of commands to generate artif
 the framework's scaffold generator.  Consequently the only generators that are now recommended are
 the Amber and RailsVanilla generators.
 
-**Amber:**
-
-[Amber](https://www.amberframework.org) is a web application framework for the [Crystal language](https://crystal-lang.org) programming language.  Crystal syntax is heavily inspired by Ruby and Amber shares many conventions with Rails
-so Ruby on Rails developers can get up and running with Amber very quickly.  This project will take you go one step further by helping you to get an Amber project up and running for an existing database with the default CRUD operations.
-
-Amber also has application recipes, so you can generate applications with many different layouts and SPA frontend frameworks, you aren't limited to the default internal generator.
+**Amber:** [Amber](https://www.amberframework.org) is a web application framework for the [Crystal language](https://crystal-lang.org) programming language.  Crystal syntax is heavily inspired by Ruby and Amber shares many conventions with Rails so Ruby on Rails developers can get up and running with Amber very quickly.  This project will take you go one step further by helping you to get an Amber project up and running for an existing database with the default CRUD operations. Amber also has application recipes, so you can generate applications with many different layouts and SPA frontend frameworks, you aren't limited to the default internal generator.
 
 Once you have generated the artifacts for your application you can then build your app 
 using the generated artifacts as a base.  A lot of the donkey work has been done for you. 
