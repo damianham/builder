@@ -14,7 +14,7 @@ desc "Build the schema definition file from the database schema using JDBC conne
 
 # to specify default values,
 # we take advantage of args being a Rake::TaskArguments object
-task :build_schema, :database, :username, :password do |t, args|
+task :build_schema, :host, :database, :username, :password do |t, args|
   args.with_defaults( :username => "test", :password => "test")
   puts "Args with defaults were: #{args}"
 
@@ -26,7 +26,7 @@ task :build_schema, :database, :username, :password do |t, args|
 
   # Prep the connection
   Java::com.mysql.jdbc.Driver
-  userurl = "jdbc:mysql://localhost/information_schema"
+  userurl = "jdbc:mysql://#{args['host']}/information_schema"
   connSelect = java.sql.DriverManager.get_connection(userurl, args['username'], args['password'])
   stmtSelect = connSelect.create_statement
   colSelect = connSelect.create_statement

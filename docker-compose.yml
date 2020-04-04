@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  ruby:
+    build: .
+    command: tail -f /dev/null
+    environment:
+      - DBHOST=mariadb
+    depends_on:
+      - mariadb
+    working_dir: /app
+
+  mariadb:
+    image: mariadb/server
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysqlRoot123
+    volumes:
+        - ./dockerctx/mariadb/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+        - ./dockerctx/mariadb/var/data:/var/lib/mysql
+        - ./dockerctx/mariadb/dump:/mnt
+    ports:
+      - "3306:3306"

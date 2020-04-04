@@ -8,7 +8,7 @@ desc "Build the schema definition file from the database schema using Mysql2 dri
 
 # to specify default values,
 # we take advantage of args being a Rake::TaskArguments object
-task :build_schema, :database, :username, :password do |t, args|
+task :build_schema, :host, :database, :username, :password do |t, args|
   args.with_defaults( :username => "test",   :format => :yaml)
   puts "Args with defaults were: #{args}"
 
@@ -17,7 +17,7 @@ task :build_schema, :database, :username, :password do |t, args|
   result = {'schema' => {}}
 
   # create the schema object then export to a yaml file
-  options = {:host => "localhost", :username => args['username'],
+  options = {:host => args["host"], :username => args['username'],
      :database => 'information_schema'}
    
   if args['password']

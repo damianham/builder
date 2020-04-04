@@ -13,7 +13,7 @@ module Builder
     def initialize(options)
       
       @destination ||= options[:output]
-      puts "initialize " + self.class.name + " with #{destination}" 
+      #puts "initialize " + self.class.name + " with #{destination}" 
       
       @options = options
       @namespace ||= options[:namespace]

@@ -23,24 +23,21 @@ class RailsVanillaBuilder < Builder::Base
   end
 
   def scaffold
-    puts "build scaffold for #{model_name}  " 
   # build edit _form index new show
   
     # ignore the columns that rails adds
     attributes = table_info['columns'].values.reject{|col| 
       col['column_name'] == "id" ||
-      col['column_name'] == "updated_at"
+      col['column_name'] == "updated_at" ||
       col['column_name'] == "created_at"
     }
     
     # collect the column names and types into a set of tuples
     text = attributes.collect{|col| "#{col['column_name']}:#{db_type_to_type(col['data_type'].to_sym).to_s}" }.join(' ')
     
-    puts "run rails generate scaffold #{model_name} #{text}"
-    `rails generate scaffold #{model_name} #{text}`
+    puts "rails generate scaffold #{model_name} #{text}"
   
     comment = table_info['comment']
-    puts "build menu for #{model_name} (#{comment}) in app/views/shared"
     @@menus << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
     
     @@comments << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
@@ -64,7 +61,6 @@ class RailsVanillaBuilder < Builder::Base
     text = template.result(:menus => @@menus, :comments => @@comments)
     
     filename = "app/views/shared/_menu.html.erb"
-    puts "finalize menu in #{filename}"
 
     FileUtils.mkdir_p("app/views/shared")
     # generate the output
@@ -78,7 +74,6 @@ class RailsVanillaBuilder < Builder::Base
     text = template.result(:menus => @@menus, :comments => @@comments)
     
     filename = "app/views/tables/index.html.erb"
-    puts "finalize menu in #{filename}"
 
     FileUtils.mkdir_p("app/views/tables")
     # generate the output

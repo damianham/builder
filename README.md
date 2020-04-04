@@ -75,10 +75,10 @@ git clone --depth=10 https://github.com/damianham/builder.git
 
 ### Step 1  - generate the column info schema file from the database
 ```
- rake -f builder/tasks/mysql2.rake build_schema[testdb,testuser,testpass]    
+ rake -f builder/tasks/mysql2.rake build_schema[host,testdb,testuser,testpass]    
 ```
 
-Generates a testdb_column_info.yml file from the testdb database schema 
+Generates a testdb_column_info.yml file from the testdb database schema on host
 using a username of testuser and password of testpass 
 using the mysql2 gem.  Use jdbc_mysql.rake if using JRuby.  To get the 
 best results the tables in the database should define foreign key constraints 

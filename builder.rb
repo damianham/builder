@@ -13,3 +13,5 @@ autoload :CucumberBuilder, File.expand_path( './lib/cucumber.rb', File.dirname(_
 autoload :CoffeeBuilder, File.expand_path( './lib/coffee.rb', File.dirname(__FILE__))
 autoload :UIrouterBuilder, File.expand_path( './lib/ui_router.rb', File.dirname(__FILE__))
 autoload :MeanBuilder, File.expand_path( './lib/mean.rb', File.dirname(__FILE__))
+autoload :AmberBuilder, File.expand_path( './lib/amber.rb', File.dirname(__FILE__))
+
