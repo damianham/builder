@@ -5,11 +5,6 @@ require 'fileutils'
 
 class AmberBuilder < Builder::Base
 
-  @@rails_routes = []
-  @@menus = []
-  @@comments = []
-  
-
   def db_type_to_type(col)
     type = col['data_type'].to_sym
     case type 
@@ -43,12 +38,6 @@ class AmberBuilder < Builder::Base
     text = attributes.collect{|col| column_text(col) }.join(' ')
     
     puts "amber generate scaffold #{model_name} #{text}"
-  
-    comment = table_info['comment']
-    @@menus << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
-    
-    @@comments << { :model_name => model_name, :comment => comment, :route => "/"+ plural_table_name}
-
 
   end
   

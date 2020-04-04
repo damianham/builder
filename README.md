@@ -1,21 +1,20 @@
 # builder
 
-
 Rake driven application builder from a database schema. 
 
-#### This is an experiment in creating an application generator and as such changes often.  
+#### This is an experiment in creating an application generator.  
 Keep up to date with git pull.
 
 A set of rake tasks and ruby classes to generate various types of application 
 artifacts using a database schema as the 
-source of data.  This is useful if you want to create a Ruby On Rails 
+source of data.  This is useful if you want to create an Amber, Ruby On Rails 
 (with AngularJS) or NodeJS (with Express, MongoDB and Angular) application and 
 you already have a legacy database or you 
 prefer to create the database DDL manually to take advantage of the powerful 
 features of your database engine.  
 
-Writing a web application often means writing lots of boilerplate code.  The Rails
-scaffold generator can be used to generate much of the boilerplate code which is very useful, 
+Writing a web application often means writing lots of boilerplate code.  The Amber and Rails
+scaffold generators can be used to generate much of the boilerplate code which is very useful, 
 especially for the views which would otherwise involve lots of tedious keystrokes.  The only
 problem with the rails scaffold generator is that you need to know your database 
 schema up front and then type lots of column_name:column_type arguments to the
@@ -25,6 +24,18 @@ fields.
 This project does much the same thing only the emphasis is on generating application
 artifacts using a database schema as the source of information about columns and their types
 and it also generates artifacts for an AngularJS Single Page Application.
+
+**Note:**  Because the frameworks change often but the scaffold generator arguments change rarely,
+the best way to use this tool is to generate a set of commands to generate artifacts using
+the framework's scaffold generator.  Consequently the only generators that are now recommended are
+the Amber and RailsVanilla generators.
+
+**Amber:**
+
+[Amber](https://www.amberframework.org) is a web application framework for the [Crystal language](https://crystal-lang.org) programming language.  Crystal syntax is heavily inspired by Ruby and Amber shares many conventions with Rails
+so Ruby on Rails developers can get up and running with Amber very quickly.  This project will take you go one step further by helping you to get an Amber project up and running for an existing database with the default CRUD operations.
+
+Amber also has application recipes, so you can generate applications with many different layouts and SPA frontend frameworks, you aren't limited to the default internal generator.
 
 Once you have generated the artifacts for your application you can then build your app 
 using the generated artifacts as a base.  A lot of the donkey work has been done for you. 
@@ -62,6 +73,10 @@ In app/assets/javascripts/application.js override the generated artifacts with m
 
 - Mysql2 or JDBC-Mysql connector
 - Rake
+
+### Additional dependencies
+
+If you are not using the Amber builder then additional dependencies may be required
 - Erubis
 - AngularUI (for datepicker)
 - Restangular (and underscore or lodash) if using RestAngularBuilder
@@ -69,13 +84,13 @@ In app/assets/javascripts/application.js override the generated artifacts with m
 
 ## Installation
 
-git clone --depth=10 https://github.com/damianham/builder.git
+git clone https://github.com/damianham/builder.git
 
 ## Usage
 
 ### Step 1  - generate the column info schema file from the database
 ```
- rake -f builder/tasks/mysql2.rake build_schema[host,testdb,testuser,testpass]    
+ rake -f builder/tasks/mysql2.rake build_schema[dbhostname,testdb,testuser,testpass]    
 ```
 
 Generates a testdb_column_info.yml file from the testdb database schema on host
@@ -123,11 +138,23 @@ create table `comments` (
 
 ### Step 2 - create any other application structures using other generators
 
-For example you may want to create a Ruby on Rails application using the rails application generator
+For example you may want to create an Amber or Ruby on Rails application using an application generator
 
 ```
-rails new mywebapp
+$ amber new mywebapp -d mysql 
+
+# or
+
+$ rails new mywebapp
 ```
+
+In particular - with Amber you can use a recipe to generate an application according the structure and templates
+of the recipe. E.g.
+```
+$ amber new -d mysql -r damianham/amber_material_kit
+```
+
+See the [Amber documentation](https://www.amberframework.org) for more information on getting started with Amber.
 
 ### Step 3 - Configure the builder
 
@@ -138,13 +165,13 @@ The builders are defined in a hash with the name of the builder as the key and t
 builder options, including the output folder, as the value.  The default
 builders are
 
-* RailsBuilder
-* AngularRailsBuilder
+* AmberBuilder
+* RailsVanillaBuilder
 
 Other generators available are 
-
+* RailsBuilder
+* AngularRailsBuilder
 * RSpecBuilder 
-* RailsVanillaBuilder (use instead of RailsBuilder to use rails scaffold generator)
 * RestAngularBuilder  (use instead of AngularRailsBuilder)
 * RestAngularModalBuilder  (use instead of RestAngularBuilder)
 * UIrouterBuilder (uses angular/ui-router - use instead of any other angular builder)
@@ -358,8 +385,10 @@ At the moment this only works for Angular Form views.
 ```
 rake -f builder/tasks/builder.rake build_classes[testdb[,namespace]]
 ```
+For the Amber and RailsVanilla builders outputs the scaffold generator commands for the framework. 
+Pipe the output through a bash shell in the application folder to generate the scaffold artifacts.
 
-generates the application artifacts in the output folder using the 
+For other builders generates the application artifacts in the output folder using the 
 generated testdb_column_info.yml file as input.  The namespace argument will 
 place the artifacts in a subfolder with that namespace.  If no appname is 
 supplied in the builder options then the Angular module name will adopt 
@@ -500,11 +529,25 @@ The following steps will create application artifacts from scratch based on
 a mysql database existing called testdb and a database user with the logon 
 username:password credentials of testuser:testpass
 
+### Amber
+```
+cd ~/workspace  
+git clone https://github.com/damianham/builder.git
+rake -f builder/tasks/mysql2.rake build_schema[dbhostname,testdb,testuser,testpass]
+cp builder/builder_config.rb .
+edit builder_config.rb
+amber new mywebapp
+rake -f builder/tasks/builder.rake build_classes[testdb] | (cd mywebapp && bash)
+cd mywebapp
+amber watch
+```
+
+### Rails
 ```
 # we don't want everything in the home folder so let's use Eclipse convention
 cd ~/workspace  
 git clone https://github.com/damianham/builder.git
-rake -f builder/tasks/mysql2.rake build_schema[testdb,testuser,testpass]
+rake -f builder/tasks/mysql2.rake build_schema[dbhostname,testdb,testuser,testpass]
 rails new mywebapp
 cp builder/builder_config.rb .
 edit builder_config.rb
@@ -513,11 +556,11 @@ edit mywebapp/app/views/layouts/application.html.erb
 edit mywebapp/app/assets/javascripts/application.js
 ```
 
-Conversely for a MEAN app
+### MEAN
 ```
 cd ~/workspace  
 git clone https://github.com/damianham/builder.git
-rake -f builder/tasks/mysql2.rake build_schema[testdb,testuser,testpass]
+rake -f builder/tasks/mysql2.rake build_schema[dbhostname,testdb,testuser,testpass]
 cp builder/builder_config.rb .
 edit builder_config.rb
 npm install -g yo
@@ -528,7 +571,6 @@ rake -f builder/tasks/builder.rake build_classes[testdb]
 cd mywebapp
 grunt
 ```
-
 
 ##  TODO
 

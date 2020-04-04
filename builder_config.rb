@@ -1,12 +1,18 @@
 
 
-# define the builders with their output destinations
+# uncomment the appropriate builder
+@builders = {
+  # AmberBuilder => { },
+  # RailsVanillaBuilder => { },
+}
+
+# deprecated builders with their output destinations
 # javascript modules are written to $output/app/assets/javascripts/generated/modules
 # html view templates are written to $output/public/generated/partials 
 # and $output/public/generated/views
 # Rails and Rspec artifacts are written to $output/generated
 
-@builders = {
+@deprecated_builders = {
   RailsBuilder => {:output => './mywebapp/rails',:appname => 'myapp', :namespace => 'api'  },
   RSpecBuilder => {:output => './mywebapp/rails',:appname => 'myapp', :namespace => 'api'},
   

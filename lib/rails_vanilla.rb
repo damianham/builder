@@ -7,11 +7,9 @@ require 'erb'
 
 class RailsVanillaBuilder < Builder::Base
 
-  @@rails_routes = []
   @@menus = []
   @@comments = []
   
-
   def db_type_to_type(type)
     case type 
     when :char, :varchar    then :string
@@ -49,7 +47,7 @@ class RailsVanillaBuilder < Builder::Base
   def finalize_artifacts
  
     # create the navigation menu
-    finalize_menu
+    # finalize_menu
     
   end
   
